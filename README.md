@@ -4,8 +4,8 @@
 - frontend app: npm run dev
 
 - required local database: 
- - MySQL 8.0.15
- - name: db_booking
- - port: 3306
- - username: root
- - password: root
+  MySQL 8.0.15
+  name: db_booking
+  port: 3306
+  username: root
+  password: root
