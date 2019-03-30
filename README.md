@@ -8,4 +8,4 @@
   name: db_booking,
   port: 3306,
   username: root,
-  password: root,
+  password: root
