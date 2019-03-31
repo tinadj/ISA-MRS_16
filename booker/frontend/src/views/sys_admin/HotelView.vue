@@ -24,6 +24,7 @@
 </template>
 
 <script>
+/*eslint-disable */
 import AddHotel from "../../components/addHotel.vue"
 import axios from "axios"
 

@@ -25,8 +25,8 @@
 </template>
 
 <script>
+/*eslint-disable */
 import AddRentACar from "../../components/addRentACar.vue"
-import axios from "axios"
 
 export default {
     data() {
@@ -44,9 +44,6 @@ export default {
         }
     },
     mounted() {
-        axios.get("http://localhost:8081/rent_a_cars/all")
-        .then(res => this.rent_a_car_services = res.data)
-        .catch(err => console.log(err));
 	}
 }
 </script>
