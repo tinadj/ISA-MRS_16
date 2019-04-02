@@ -25,8 +25,8 @@
 </template>
 
 <script>
-/*eslint-disable */
 import AddRentACar from "../../components/addRentACar.vue"
+import {AXIOS} from "../../http-common.js"
 
 export default {
     data() {
@@ -40,10 +40,18 @@ export default {
     },
     methods: {
         addRentACar(newRentACar) {
-            this.rent_a_car_services = [...this.rent_a_car_services, newRentACar]
-        }
+            
+            AXIOS.post('/rent_a_cars/add', {
+                newRentACar
+            })
+            .then(res => this.rent_a_car_services = [...this.rent_a_car_services, newRentACar])
+            .catch(err => console.log(err));
+        } 
     },
     mounted() {
+        AXIOS.post('/rent_a_cars/all')
+        .then(res => (this.rent_a_car_services = res.data)
+        .catch(err => console.log(err)));
 	}
 }
 </script>

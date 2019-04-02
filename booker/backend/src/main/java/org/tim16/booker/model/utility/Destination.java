@@ -16,9 +16,7 @@ public class Destination {
 
     private String state;
 
-    private BigDecimal latitude;
 
-    private BigDecimal longitude;
 
     public Destination() {}
 
@@ -44,21 +42,5 @@ public class Destination {
 
     public void setState(String state) {
         this.state = state;
-    }
-
-    public BigDecimal getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(BigDecimal latitude) {
-        this.latitude = latitude;
-    }
-
-    public BigDecimal getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(BigDecimal longitude) {
-        this.longitude = longitude;
     }
 }

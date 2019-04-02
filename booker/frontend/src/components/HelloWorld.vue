@@ -17,7 +17,7 @@ export default {
   mounted() {
     AXIOS.get('/test/hello')
         .then(response => {
-          console.log(response.data)
+          this.msg = response.data
         })
         .catch(e => {
           this.errors.push(e)
