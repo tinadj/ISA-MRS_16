@@ -11,29 +11,28 @@
 </template>
 
 <script>
-/*eslint-disable */
 export default {
-    name: "AddRentACar",
-    data() {
-        return {
-            name: '',
-            address: '',
-            description: ''
-        }
-    },
-    methods: {
-        add(e) {
-            e.preventDefault();
-
-            const rent_a_car = {
-                'name': this.name,
-                'address': this.address,
-                'description': this.description
-            }
-
-            this.$emit('addRentACar', rent_a_car)
-        }
+  name: 'AddRentACar',
+  data () {
+    return {
+      name: '',
+      address: '',
+      description: ''
     }
+  },
+  methods: {
+    add (e) {
+      e.preventDefault()
+
+      const rentACar = {
+        'name': this.name,
+        'address': this.address,
+        'description': this.description
+      }
+
+      this.$emit('addRentACar', rentACar)
+    }
+  }
 }
 </script>
 

@@ -3,16 +3,16 @@
         <div class="row">
             <table class="table table-sm col-sm">
                 <thead>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Description</th>
+                  <th>Name</th>
+                  <th>Address</th>
+                  <th>Description</th>
                 </thead>
                 <tbody>
-                    <tr v-for="hotel in hotels">
-                        <td>{{hotel.name}}</td>
-                        <td>{{hotel.address}}</td>
-                        <td>{{hotel.description}}</td>
-                    </tr>
+                  <tr v-for="hotel in hotels" :key="hotel.name">
+                    <td>{{hotel.name}}</td>
+                    <td>{{hotel.address}}</td>
+                    <td>{{hotel.description}}</td>
+                  </tr>
                 </tbody>
             </table>
             <div class="col-sm">
@@ -24,27 +24,24 @@
 </template>
 
 <script>
-/*eslint-disable */
-import AddHotel from "../../components/addHotel.vue"
-import axios from "axios"
+import AddHotel from '../../components/hotels/addHotel.vue'
 
 export default {
-    data() {
-        return {
-            hotels: [],
-            addWin: false
-        }
-    },
-    components: {
-        AddHotel
-    },
-    methods: {
-        addHotel(newHotel) {
-            this.hotels = [...this.hotels, newHotel]
-        }
-    },
-    mounted() {
-	}
+  data () {
+    return {
+      hotels: [],
+      addWin: false
+    }
+  },
+  components: {
+    AddHotel
+  },
+  methods: {
+    addHotel (newHotel) {
+      this.hotels = [...this.hotels, newHotel]
+    }
+  },
+  mounted () {
+  }
 }
 </script>
-

@@ -1,0 +1,48 @@
+<template>
+  <div>
+    <form @submit="add">
+      <b-form-input v-model="name" placeholder="Name"></b-form-input>
+      <b-form-input v-model="address" placeholder="Address"></b-form-input>
+      <b-form-input v-model="description" placeholder="Description"></b-form-input>
+
+      <b-button variant="outline-primary" type="submit">Add</b-button>
+      <b-button @click="onCancel">Cancel</b-button>
+    </form>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'AddAirline',
+  data () {
+    return {
+      id: '',
+      name: '',
+      address: '',
+      description: ''
+    }
+  },
+  methods: {
+    add (e) {
+      e.preventDefault()
+
+      const airline = {
+        'name': this.name,
+        'address': this.address,
+        'description': this.description
+      }
+
+      this.$emit('addAirline', airline)
+      this.$router.push('/airlines')
+    },
+    onCancel (e) {
+      e.preventDefault()
+      this.$router.push('/airlines')
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>

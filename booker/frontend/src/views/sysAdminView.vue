@@ -1,41 +1,41 @@
 <template>
     <div class="container">
-        <div class="row">
-            <nav class="col-sm">
-                <ul>
-                    <li><a href="#" v-on:click.prevent="airline()">Airlines Management</a></li>
-                    <li> <a href="#" v-on:click.prevent="hotels()">Hotels Management</a></li>
-                    <li> <a href="#" v-on:click.prevent="rentACar()">Rent-a-car Management</a></li>
-                </ul>
-            </nav>
-            <component  class="component-view col-sm" :is="currentView"></component>
-        </div>
-	</div>
+      <div class="row">
+          <nav class="col-sm">
+              <ul>
+                <li><a href="#" v-on:click.prevent="airline()">Airlines Management</a></li>
+                <li> <a href="#" v-on:click.prevent="hotels()">Hotels Management</a></li>
+                <li> <a href="#" v-on:click.prevent="rentACar()">Rent-a-car Management</a></li>
+              </ul>
+          </nav>
+          <component  class="component-view col-sm" :is="currentView"></component>
+      </div>
+    </div>
 </template>
 
 <script>
-import RentACarView from "./sys_admin/RentACarView.vue"
-import AirlineView from "./sys_admin/AirlineView.vue"
-import HotelView from "./sys_admin/HotelView.vue"
+import RentACarView from './sys_admin/RentACarView.vue'
+import AirlineView from './sys_admin/AirlineView.vue'
+import HotelView from './sys_admin/HotelView.vue'
 
 export default {
-    name: "SysAdminView",
-    data() {
-        return {
-            currentView: RentACarView,
-        }
-    },
-    methods: {
-        rentACar: function() {
-            this.currentView = RentACarView
-        },
-        airline: function() {
-            this.currentView = AirlineView
-        },
-        hotels: function() {
-            this.currentView = HotelView
-        },
+  name: 'SysAdminView',
+  data () {
+    return {
+      currentView: RentACarView
     }
+  },
+  methods: {
+    rentACar: function () {
+      this.currentView = RentACarView
+    },
+    airline: function () {
+      this.currentView = AirlineView
+    },
+    hotels: function () {
+      this.currentView = HotelView
+    }
+  }
 }
 </script>
 

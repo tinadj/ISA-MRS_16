@@ -8,7 +8,7 @@
                     <th>Description</th>
                 </thead>
                 <tbody>
-                    <tr v-for="airline in airlines">
+                    <tr v-for="airline in airlines" :key="airline.name">
                         <td>{{airline.name}}</td>
                         <td>{{airline.address}}</td>
                         <td>{{airline.description}}</td>
@@ -24,31 +24,29 @@
 </template>
 
 <script>
-/*eslint-disable */
-import AddAirline from "../../components/addAirline.vue"
-import axios from "axios"
+import AddAirline from '../../components/airlines/addAirline.vue'
 
 export default {
-    data() {
-        return {
-            airlines: [],
-            addWin: false
-        }
-    },
-    components: {
-        AddAirline
-    },
-    methods: {
-        addAirline(newAirline) {
-            this.airlines = [...this.airlines, newAirline]
-        }
-    },
-    mounted() {
-        
-	}
+  data () {
+    return {
+      airlines: [],
+      addWin: false
+    }
+  },
+  components: {
+    AddAirline
+  },
+  methods: {
+    addAirline (newAirline) {
+      this.airlines = [...this.airlines, newAirline]
+    }
+  },
+  mounted () {
+
+  }
 }
 </script>
 
 <style>
-    
+
 </style>
