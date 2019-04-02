@@ -90,6 +90,15 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
+  },
+  mounted() {
+    AXIOS.get('/test/hello')
+        .then(response => {
+          this.msg = response.data
+        })
+        .catch(e => {
+          this.errors.push(e)
+        })
   }
 }
 </script>

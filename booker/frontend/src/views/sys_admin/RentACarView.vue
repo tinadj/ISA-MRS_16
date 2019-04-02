@@ -25,24 +25,33 @@
 </template>
 
 <script>
-import AddRentACar from '../../components/rentACar/addRentACar.vue'
+import AddRentACar from "../../components/addRentACar.vue"
+import {AXIOS} from "../../http-common.js"
 
 export default {
-  data () {
-    return {
-      rent_a_car_services: [],
-      addWin: false
-    }
-  },
-  components: {
-    AddRentACar
-  },
-  methods: {
-    addRentACar (newRentACar) {
-      this.rent_a_car_services = [...this.rent_a_car_services, newRentACar]
-    }
-  },
-  mounted () {
-  }
+    data() {
+        return {
+            rent_a_car_services: [],
+            addWin: false
+        }
+    },
+    components: {
+        AddRentACar
+    },
+    methods: {
+        addRentACar(newRentACar) {
+            
+            AXIOS.post('/rent_a_cars/add', {
+                newRentACar
+            })
+            .then(res => this.rent_a_car_services = [...this.rent_a_car_services, newRentACar])
+            .catch(err => console.log(err));
+        } 
+    },
+    mounted() {
+        AXIOS.post('/rent_a_cars/all')
+        .then(res => (this.rent_a_car_services = res.data)
+        .catch(err => console.log(err)));
+	}
 }
 </script>
