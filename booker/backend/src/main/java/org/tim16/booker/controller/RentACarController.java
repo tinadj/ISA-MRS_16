@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/rent_a_cars")
-public class RentACarsController {
+public class RentACarController {
 
     @Autowired
     private RentACarService service;
