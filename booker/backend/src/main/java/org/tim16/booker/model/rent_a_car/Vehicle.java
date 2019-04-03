@@ -1,5 +1,6 @@
 package org.tim16.booker.model.rent_a_car;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.utility.Rate;
 
@@ -34,7 +35,7 @@ public class Vehicle {
 
     private String description;
 
-    @JsonManagedReference("rent_a_car-vehicles")
+    @JsonBackReference("rent_a_car-vehicles")
     @ManyToOne
     @JoinColumn(name = "rentACar", referencedColumnName = "id", nullable = false)
     private RentACar rentACar;
