@@ -2,9 +2,9 @@
   <div>
     <br />
     <div>
-      <b-link :to="{ path: 'add'}" append>Add new hotel</b-link>
+      <b-link :to="{ path: 'add'}" append>Add new rent a car</b-link>
     </div>
-    <b-table hover :items="hotels"></b-table>
+    <b-table hover :items="rentACars"></b-table>
   </div>
 </template>
 
@@ -13,7 +13,7 @@
 export default {
   data () {
     return {
-      hotels: []
+      rentACars: []
     }
   },
   mounted () {

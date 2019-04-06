@@ -1,11 +1,13 @@
 <template>
   <div>
-    <form @submit="add">
+    <form @submit="edit">
+        {{ $route.params.id }}
       <b-form-input v-model="name" placeholder="Name"></b-form-input>
-      <b-form-input v-model="address" placeholder="Address"></b-form-input>
+      <b-form-input v-model="city" placeholder="City"></b-form-input>
+      <b-form-input v-model="city" placeholder="State"></b-form-input>
       <b-form-input v-model="description" placeholder="Description"></b-form-input>
 
-      <b-button variant="outline-primary" type="submit">Add</b-button>
+      <b-button variant="outline-primary" type="submit">Edit</b-button>
       <b-button @click="onCancel">Cancel</b-button>
     </form>
   </div>
@@ -13,18 +15,23 @@
 
 <script>
 export default {
-  name: 'AddRentACar',
+  name: 'editHotel',
   data () {
     return {
+      id: '',
       name: '',
-      address: '',
+      city: '',
+      state: '',
       description: ''
     }
   },
-  methods: {
-    add (e) {
-      e.preventDefault()
+  mounted(){
 
+  }
+  ,
+  methods: {
+    edit (e) {
+      e.preventDefault()
       this.$router.push('/hotels')
     },
     onCancel (e) {

@@ -2,7 +2,8 @@
   <div>
     <form @submit="add">
       <b-form-input v-model="name" placeholder="Name"></b-form-input>
-      <b-form-input v-model="address" placeholder="Address"></b-form-input>
+      <b-form-input v-model="city" placeholder="City"></b-form-input>
+      <b-form-input v-model="city" placeholder="State"></b-form-input>
       <b-form-input v-model="description" placeholder="Description"></b-form-input>
 
       <b-button variant="outline-primary" type="submit">Add</b-button>
@@ -18,7 +19,8 @@ export default {
     return {
       id: '',
       name: '',
-      address: '',
+      city: '',
+      state: '',
       description: ''
     }
   },

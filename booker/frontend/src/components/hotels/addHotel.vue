@@ -1,13 +1,15 @@
 <template>
-    <div>
-        <form v-on:submit="add">
-            <input type="text" v-model="name" placeholder="Name"><br>
-            <input type="text" v-model="address" placeholder="Address"><br>
-            <input type="text" v-model="description" placeholder="Description"><br>
-            <input type="submit" value="Add">
-            <button v-on:click="$emit('close')">Close</button>
-        </form>
-    </div>
+  <div>
+    <form @submit="add">
+      <b-form-input v-model="name" placeholder="Name"></b-form-input>
+      <b-form-input v-model="city" placeholder="City"></b-form-input>
+      <b-form-input v-model="city" placeholder="State"></b-form-input>
+      <b-form-input v-model="description" placeholder="Description"></b-form-input>
+
+      <b-button variant="outline-primary" type="submit">Add</b-button>
+      <b-button @click="onCancel">Cancel</b-button>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -15,8 +17,10 @@ export default {
   name: 'AddHotel',
   data () {
     return {
+      id: '',
       name: '',
-      address: '',
+      city: '',
+      state: '',
       description: ''
     }
   },
@@ -24,13 +28,11 @@ export default {
     add (e) {
       e.preventDefault()
 
-      const hotel = {
-        'name': this.name,
-        'address': this.address,
-        'description': this.description
-      }
-
-      this.$emit('addHotel', hotel)
+      this.$router.push('/hotels')
+    },
+    onCancel (e) {
+      e.preventDefault()
+      this.$router.push('/hotels')
     }
   }
 }
