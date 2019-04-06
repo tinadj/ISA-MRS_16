@@ -36,7 +36,6 @@ public class VehicleController {
         if (dto.getRentACar() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
         RentACar rentACar = rentACarService.findOne(dto.getRentACar().getId());
 
         if (rentACar == null) {

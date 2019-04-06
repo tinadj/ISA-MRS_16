@@ -14,10 +14,9 @@ public class FlightReservation {
 
     @Id
     private Integer id;
+
     //private Flight flight;
     //private User user;
-    //private Set<Invitation> invitations = new HashSet<Invitation>();
-    //private Set<Passanger> passangers = new HashSet<Passanger>();
     private Float totalPrice;
 
     public FlightReservation() {}

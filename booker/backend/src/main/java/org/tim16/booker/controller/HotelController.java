@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.HotelDTO;
 import org.tim16.booker.model.hotel.Hotel;
+import org.tim16.booker.model.utility.Destination;
+import org.tim16.booker.service.DestinationService;
 import org.tim16.booker.service.HotelService;
 
 import javax.persistence.EntityNotFoundException;
@@ -17,6 +19,8 @@ public class HotelController {
 
     @Autowired
     private HotelService service;
+    @Autowired
+    private DestinationService destinationService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<Hotel>> getAll() {
@@ -31,13 +35,22 @@ public class HotelController {
         hotel.setLatitude(dto.getLatitude());
         hotel.setLongitude(dto.getLongitude());
 
+        Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
+
+        if (destination == null) {
+            destination = new Destination();
+            destination.setCity(dto.getAddress().getCity());
+            destination.setState(dto.getAddress().getState());
+            destinationService.create(destination);
+        }
+        hotel.setAddress(destination);
+
         try {
             hotel = service.create(hotel);
             return new ResponseEntity<>(hotel, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -61,6 +74,17 @@ public class HotelController {
             hotel.setDescription(dto.getDescription());
             hotel.setLatitude(dto.getLatitude());
             hotel.setLongitude(dto.getLongitude());
+
+            Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
+
+            if (destination == null) {
+                destination = new Destination();
+                destination.setCity(dto.getAddress().getCity());
+                destination.setState(dto.getAddress().getState());
+                destinationService.create(destination);
+            }
+            hotel.setAddress(destination);
+
             return new ResponseEntity<>(service.update(hotel), HttpStatus.OK);
         }
         catch (EntityNotFoundException e) {

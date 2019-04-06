@@ -1,46 +1,48 @@
 <template>
   <div>
-    <br />
-    <div>
-      <b-link :to="{ path: 'add'}" append>Add new rent a car</b-link>
-    </div>
+    <br/>
     <table class="center">
       <thead>
         <tr>
           <th>ID</th>
           <th>Name</th>
-          <th>City</th>
-          <th>State</th>
+          <th>Brand</th>
+          <th>Model</th>
+          <th>Production year</th>
+          <th>Number of seats </th>
+          <th>Type</th>
           <th>Description</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="rentACar in rentACars">
-          <td>{{rentACar.id}}</td>
-          <td>{{rentACar.name}}</td>
-          <td>{{rentACar.address.city}}</td>
-          <td>{{rentACar.address.state}}</td>
-          <td>{{rentACar.description}}</td>
+        <tr v-for="vehicle in vehicles">
+          <td>{{vehicle.id}}</td>
+          <td>{{vehicle.name}}</td>
+          <td>{{vehicle.brand}}</td>
+          <td>{{vehicle.model}}</td>
+          <td>{{vehicle.poductionYear}}</td>
+          <td>{{vehicle.seatNum}}</td>
+          <td>{{vehicle.type}}</td>
+          <td>{{vehicle.description}}</td>
         </tr>
       </tbody>
     </table>
-    
+
   </div>
 </template>
 
 <script>
 import {AXIOS} from '../../http-common'
-
 export default {
   data () {
     return {
-      
-      rentACars: []
+      vehicles: []
     }
   },
   mounted () {
-    AXIOS.get('/rent-a-cars/all')
-    .then(response => { this.rentACars = response.data})
+    let api = 'rent-a-cars/' + + this.$route.params.id + '/vehicles'
+    AXIOS.get(api)
+    .then(response => { this.vehicles = response.data})
     .catch(err => console.log(err))
   }
 }

@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.AirlineDTO;
 import org.tim16.booker.model.airline.Airline;
+import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.AirlineService;
+import org.tim16.booker.service.DestinationService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -17,6 +19,8 @@ public class AirlinesController {
 
     @Autowired
     private AirlineService service;
+    @Autowired
+    private DestinationService destinationService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<Airline>> getAll() {
@@ -28,6 +32,18 @@ public class AirlinesController {
         Airline airline = new Airline();
         airline.setName(dto.getName());
         airline.setDescription(dto.getDescription());
+        airline.setLatitude(dto.getLatitude());
+        airline.setLongitude(dto.getLongitude());
+
+        Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
+
+        if (destination == null) {
+            destination = new Destination();
+            destination.setCity(dto.getAddress().getCity());
+            destination.setState(dto.getAddress().getState());
+            destinationService.create(destination);
+        }
+        airline.setAddress(destination);
 
         try {
             airline = service.create(airline);
@@ -54,9 +70,21 @@ public class AirlinesController {
 
         try {
             Airline airline = service.findOne(dto.getId());
-
             airline.setName(dto.getName());
             airline.setDescription(dto.getDescription());
+            airline.setLatitude(dto.getLatitude());
+            airline.setLongitude(dto.getLongitude());
+
+            Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
+
+            if (destination == null) {
+                destination = new Destination();
+                destination.setCity(dto.getAddress().getCity());
+                destination.setState(dto.getAddress().getState());
+                destinationService.create(destination);
+            }
+            airline.setAddress(destination);
+
             return new ResponseEntity<>(service.update(airline), HttpStatus.OK);
         }
         catch (EntityNotFoundException e) {

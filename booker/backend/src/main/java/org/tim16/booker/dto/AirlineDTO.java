@@ -1,16 +1,24 @@
 package org.tim16.booker.dto;
 
+import java.math.BigDecimal;
+
 public class AirlineDTO {
     private Integer id;
     private String name;
     private String description;
+    private DestinationDTO address;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
 
     public AirlineDTO() {}
 
-    public AirlineDTO(Integer id, String name, String description) {
+    public AirlineDTO(Integer id, String name, String description, DestinationDTO address, BigDecimal latitude, BigDecimal longitude) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Integer getId() {
@@ -35,5 +43,29 @@ public class AirlineDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public DestinationDTO getAddress() {
+        return address;
+    }
+
+    public void setAddress(DestinationDTO address) {
+        this.address = address;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
     }
 }

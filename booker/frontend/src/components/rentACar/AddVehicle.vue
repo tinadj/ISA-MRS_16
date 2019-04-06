@@ -2,10 +2,10 @@
     <div>
         <form @submit="add">
           <b-form-input v-model="name" placeholder="Name"></b-form-input>
-          <b-form-input v-model="city" placeholder="City"></b-form-input>
-          <b-form-input v-model="state" placeholder="State"></b-form-input>
-          <b-form-input v-model="latitude" placeholder="Latitude" type="number"></b-form-input>
-          <b-form-input v-model="longitude" placeholder="Longitude" type="number"></b-form-input>
+          <b-form-input v-model="brand" placeholder="Brand"></b-form-input>
+          <b-form-input v-model="model" placeholder="Model"></b-form-input>
+          <b-form-input v-model="productionYear" placeholder="Production year" type="number"></b-form-input>
+          <b-form-input v-model="seatsNum" placeholder="Number of seats" type="number"></b-form-input>
           <b-form-textarea v-model="description" placeholder="Description" rows="3"></b-form-textarea>
 
           <b-button variant="outline-primary" type="submit">Add</b-button>
@@ -20,16 +20,16 @@
 import {AXIOS} from '../../http-common'
 
 export default {
-  name: 'AddRentACar',
+  name: 'AddVehicle',
   data () {
     return {
-      id: '',
       name: '',
-      city: '',
-      state: '',
-      latitude: '',
-      longitude: '',
+      brand: '',
+      model: '',
+      productionYear: '',
+      seatsNum: '',
       description: '',
+      rentACar: '',
       success: false,
       error: false
     }
@@ -38,18 +38,17 @@ export default {
     add (e) {
       e.preventDefault()
 
-      const airline = {
+      const vehicle = {
         'name': this.name,
-        'address': {
-     	    'city': this.city,
-     	    'state': this.state
-          },
-        'latitude': this.latitude,
-        'longitude': this.longitude,
+        'brand': this.brand,
+        'model': this.model,
+        'productionYear': this.productionYear,
+        'seatsNum': this.seatsNum,
+        'rentACar': this.rentACar,
         'description': this.description
       }
 
-      AXIOS.post('/rent-a-cars/add', airline)
+      AXIOS.post('/vehicles/add', vehicle)
       .then(response => {
         this.success = true;
         this.error = false;
@@ -61,8 +60,15 @@ export default {
     },
     onCancel (e) {
       e.preventDefault()
-      this.$router.push('/rent-a-cars')
     }
+  },
+  mounted() {
+    let api = '/rent-a-cars/' + this.$route.params.id;
+    
+    AXIOS.get(api)
+    .then(response => { 
+      this.rentACar = response.data
+    })
   }
 }
 </script>

@@ -26,11 +26,9 @@ public class Vehicle {
 
     private Integer productionYear;
 
-    @Column(nullable = false)
     private Integer seatsNum;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private VehicleType type;
 
     private String description;

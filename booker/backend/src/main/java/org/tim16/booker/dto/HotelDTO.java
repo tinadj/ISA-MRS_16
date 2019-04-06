@@ -5,15 +5,17 @@ import java.math.BigDecimal;
 public class HotelDTO {
     private Integer id;
     private String name;
+    private DestinationDTO address;
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String description;
 
     public HotelDTO() {}
 
-    public HotelDTO(Integer id, String name, BigDecimal latitude, BigDecimal longitude, String description) {
+    public HotelDTO(Integer id, String name, BigDecimal latitude, BigDecimal longitude, DestinationDTO dto, String description) {
         this.id = id;
         this.name = name;
+        this.address = dto;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
@@ -57,5 +59,13 @@ public class HotelDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public DestinationDTO getAddress() {
+        return address;
+    }
+
+    public void setAddress(DestinationDTO address) {
+        this.address = address;
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.RentACarDTO;
 import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.rent_a_car.Vehicle;
+import org.tim16.booker.model.utility.Destination;
+import org.tim16.booker.service.DestinationService;
 import org.tim16.booker.service.RentACarService;
 import org.tim16.booker.service.VehicleService;
 
@@ -15,11 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/rent_a_cars")
+@RequestMapping(value = "/api/rent-a-cars")
 public class RentACarController {
 
     @Autowired
     private RentACarService rentACarService;
+    @Autowired
+    private DestinationService destinationService;
 
     @Autowired
     private VehicleService vehicleService;
@@ -33,6 +37,19 @@ public class RentACarController {
     public ResponseEntity<RentACar> add(@RequestBody RentACarDTO dto) {
         RentACar rentACar = new RentACar();
         rentACar.setName(dto.getName());
+        rentACar.setDescription(dto.getDescription());
+        rentACar.setLatitude(dto.getLatitude());
+        rentACar.setLongitude(dto.getLongitude());
+
+        Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
+
+        if (destination == null) {
+            destination = new Destination();
+            destination.setCity(dto.getAddress().getCity());
+            destination.setState(dto.getAddress().getState());
+            destinationService.create(destination);
+        }
+        rentACar.setAddress(destination);
 
         try {
             rentACar = rentACarService.create(rentACar);
@@ -61,6 +78,20 @@ public class RentACarController {
             RentACar rentACar = rentACarService.findOne(dto.getId());
 
             rentACar.setName(dto.getName());
+            rentACar.setDescription(dto.getDescription());
+            rentACar.setLatitude(dto.getLatitude());
+            rentACar.setLongitude(dto.getLongitude());
+
+            Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
+
+            if (destination == null) {
+                destination = new Destination();
+                destination.setCity(dto.getAddress().getCity());
+                destination.setState(dto.getAddress().getState());
+                destinationService.create(destination);
+            }
+            rentACar.setAddress(destination);
+
             return new ResponseEntity<>(rentACarService.update(rentACar), HttpStatus.OK);
         }
         catch (EntityNotFoundException e) {
@@ -68,7 +99,7 @@ public class RentACarController {
         }
     }
 
-    @RequestMapping(value = "{id}/vehicles", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/vehicles", method = RequestMethod.GET)
     public ResponseEntity<List<Vehicle>> getVehicles(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
 

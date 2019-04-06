@@ -1,6 +1,7 @@
 package org.tim16.booker.model.hotel;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.admins.HotelAdmin;
 import org.tim16.booker.model.utility.Destination;
@@ -13,6 +14,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "hotels")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Hotel {
 
     @Id
