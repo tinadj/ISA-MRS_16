@@ -1,5 +1,7 @@
 package org.tim16.booker.model.rent_a_car;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
@@ -24,14 +26,17 @@ public class Vehicle {
 
     private Integer productionYear;
 
-    @Column(nullable = false)
     private Integer seatsNum;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private VehicleType type;
 
     private String description;
+
+    @JsonBackReference("rent_a_car-vehicles")
+    @ManyToOne
+    @JoinColumn(name = "rentACar", referencedColumnName = "id", nullable = false)
+    private RentACar rentACar;
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<Rate>();
@@ -108,5 +113,13 @@ public class Vehicle {
 
     public void setRating(Set<Rate> rating) {
         this.rating = rating;
+    }
+
+    public RentACar getRentACar() {
+        return rentACar;
+    }
+
+    public void setRentACar(RentACar rentACar) {
+        this.rentACar = rentACar;
     }
 }

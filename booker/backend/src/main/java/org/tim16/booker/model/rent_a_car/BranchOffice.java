@@ -1,13 +1,10 @@
 package org.tim16.booker.model.rent_a_car;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.utility.Destination;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "branch_offices")
@@ -27,12 +24,8 @@ public class BranchOffice {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "address", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "address", referencedColumnName = "id")
     private Destination address;
-
-    @JsonBackReference("branch_office-vehicle")
-    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Vehicle> vehicles = new HashSet<Vehicle>();
 
     public BranchOffice() {}
 
@@ -68,11 +61,4 @@ public class BranchOffice {
         this.address = address;
     }
 
-    public Set<Vehicle> getVehicles() {
-        return vehicles;
-    }
-
-    public void setVehicles(Set<Vehicle> vehicles) {
-        this.vehicles = vehicles;
-    }
 }

@@ -1,16 +1,19 @@
 package org.tim16.booker.model.airline;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.tim16.booker.model.admins.AirlineAdmin;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "airlines")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Airline {
 
     @Id
@@ -22,8 +25,12 @@ public class Airline {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "address", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "address", referencedColumnName = "id")
     private Destination address;
+
+    private BigDecimal latitude;
+
+    private BigDecimal longitude;
 
     private String description;
 
@@ -141,5 +148,21 @@ public class Airline {
 
     public void setAdmins(Set<AirlineAdmin> admins) {
         this.admins = admins;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
     }
 }

@@ -1,17 +1,21 @@
 package org.tim16.booker.model.rent_a_car;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.admins.RentACarAdmin;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
+
 
 @Entity
 @Table(name = "rent_a_cars")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class RentACar {
 
     @Id
@@ -19,12 +23,16 @@ public class RentACar {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", unique = true)
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "address", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "address", referencedColumnName = "id")
     private Destination address;
+
+    private BigDecimal latitude;
+
+    private BigDecimal longitude;
 
     @Column(name = "descripiton")
     private String description;
@@ -32,6 +40,10 @@ public class RentACar {
     @JsonBackReference("rent_a_car-branch_office")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="rentACar")
     private Set<BranchOffice> branchOffices = new HashSet<BranchOffice>();
+
+    @JsonManagedReference("rent_a_car-vehicles")
+    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
+    private Set<Vehicle> vehicles = new HashSet<Vehicle>();
 
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
@@ -120,5 +132,30 @@ public class RentACar {
 
     public void setAdmins(Set<RentACarAdmin> admins) {
         this.admins = admins;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
+    }
+
+
+    public Set<Vehicle> getVehicles() {
+        return vehicles;
+    }
+
+    public void setVehicles(Set<Vehicle> vehicles) {
+        this.vehicles = vehicles;
     }
 }
