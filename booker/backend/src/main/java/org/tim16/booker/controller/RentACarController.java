@@ -6,9 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.RentACarDTO;
 import org.tim16.booker.model.rent_a_car.RentACar;
+import org.tim16.booker.model.rent_a_car.Vehicle;
 import org.tim16.booker.service.RentACarService;
+import org.tim16.booker.service.VehicleService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,11 +19,14 @@ import java.util.List;
 public class RentACarController {
 
     @Autowired
-    private RentACarService service;
+    private RentACarService rentACarService;
+
+    @Autowired
+    private VehicleService vehicleService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<RentACar>> getAll() {
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(rentACarService.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
@@ -29,7 +35,7 @@ public class RentACarController {
         rentACar.setName(dto.getName());
 
         try {
-            rentACar = service.create(rentACar);
+            rentACar = rentACarService.create(rentACar);
             return new ResponseEntity<>(rentACar, HttpStatus.CREATED);
         } catch(Exception e)
         {   // catches duplicate name
@@ -39,7 +45,7 @@ public class RentACarController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<RentACar> getRentACar(@PathVariable Integer id) {
-        RentACar rentACar = service.findOne(id);
+        RentACar rentACar = rentACarService.findOne(id);
 
         if (rentACar == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -52,14 +58,30 @@ public class RentACarController {
     public ResponseEntity<RentACar> update(@RequestBody RentACarDTO dto) {
 
         try {
-            RentACar rentACar = service.findOne(dto.getId());
+            RentACar rentACar = rentACarService.findOne(dto.getId());
 
             rentACar.setName(dto.getName());
-            return new ResponseEntity<>(service.update(rentACar), HttpStatus.OK);
+            return new ResponseEntity<>(rentACarService.update(rentACar), HttpStatus.OK);
         }
         catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(value = "{id}/vehicles", method = RequestMethod.GET)
+    public ResponseEntity<List<Vehicle>> getVehicles(@PathVariable Integer id) {
+        RentACar rentACar = rentACarService.findOne(id);
+
+        if (rentACar == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<Vehicle> vehicles = new ArrayList<>();
+        for (Vehicle v: rentACar.getVehicles()) {
+            vehicles.add(v);
+        }
+
+        return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 
 

@@ -2,6 +2,7 @@ package org.tim16.booker.model.rent_a_car;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.admins.RentACarAdmin;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
@@ -40,7 +41,7 @@ public class RentACar {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="rentACar")
     private Set<BranchOffice> branchOffices = new HashSet<BranchOffice>();
 
-    @JsonBackReference("rent_a_car-vehicles")
+    @JsonManagedReference("rent_a_car-vehicles")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Vehicle> vehicles = new HashSet<Vehicle>();
 
