@@ -108,7 +108,7 @@ export default new Router({
     },
     {
       // Rent a car admin
-      path: '/rent-a-car-admin/:id',
+      path: '/rent-a-car-admin/:id/',
       component: RentACarAdmin,
       children: [
         {
@@ -132,7 +132,7 @@ export default new Router({
           component: AddVehicle
         },
         {
-          path: 'edit-vehicle/:v_id/',
+          path: 'edit-vehicle/:v_id',
           component: EditVehicle
         },
         {
