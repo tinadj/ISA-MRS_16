@@ -24,6 +24,8 @@ import AirlineAdmin from '@/components/admins/AirlineAdmin'
 import HotelAdmin from '@/components/admins/HotelAdmin'
 import RentACarAdmin from '@/components/admins/RentACarAdmin'
 
+import addRooms from '@/components/rooms/addRooms'
+
 
 Vue.use(Router)
 
@@ -83,6 +85,10 @@ export default new Router({
         {
           path: 'edit/:id',
           component: editHotel
+        },
+        {
+          path: 'add-rooms/:id',
+          component: addRooms
         }
       ]
     },
@@ -119,6 +125,7 @@ export default new Router({
           component: AddVehicle
         }
       ]
-    }
+    },
+    
   ]
 })

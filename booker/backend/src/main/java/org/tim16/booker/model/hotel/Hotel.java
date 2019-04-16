@@ -51,6 +51,14 @@ public class Hotel {
 
     public Hotel() {}
 
+    /* Zadovoljava obostranu vezu izmedju sobe i hotela (ovde se vezuje soba za hotel) */
+    public void add(Room p) {
+        if (p.getHotel() != null)
+            p.getHotel().getRooms().remove(p);
+        p.setHotel(this);
+        getRooms().add(p);
+    }
+
     public Integer getId() {
         return id;
     }

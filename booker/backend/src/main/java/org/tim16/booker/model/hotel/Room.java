@@ -21,11 +21,8 @@ public class Room {
     private Hotel hotel;
 
     private Integer floor;
-
     private Integer roomNum;
-
     private Integer beds;
-
     private Boolean balcony;
 
     private Integer discount;
