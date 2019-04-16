@@ -37,7 +37,7 @@ public class RentACar {
     @Column(name = "descripiton")
     private String description;
 
-    @JsonBackReference("rent_a_car-branch_office")
+    @JsonManagedReference("rent_a_car-branch_office")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="rentACar")
     private Set<BranchOffice> branchOffices = new HashSet<BranchOffice>();
 
@@ -80,6 +80,28 @@ public class RentACar {
             if (v.getId() == id)
             {
                 this.getVehicles().remove(v);
+                return;
+            }
+        }
+    }
+
+    public void addBranchOffice(BranchOffice bv)
+    {
+        if (bv.getRentACar() != null)
+        {
+            bv.getRentACar().getBranchOffices().remove(bv);
+        }
+        bv.setRentACar(this);
+        this.getBranchOffices().add(bv);
+    }
+
+    public void removeBranchOffice(Integer id)
+    {
+        for (BranchOffice bv : getBranchOffices())
+        {
+            if (bv.getId() == id)
+            {
+                this.getBranchOffices().remove(bv);
                 return;
             }
         }
