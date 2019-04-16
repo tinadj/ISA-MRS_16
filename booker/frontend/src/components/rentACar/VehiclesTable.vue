@@ -12,6 +12,8 @@
           <th>Number of seats </th>
           <th>Type</th>
           <th>Description</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -20,14 +22,22 @@
           <td>{{vehicle.name}}</td>
           <td>{{vehicle.brand}}</td>
           <td>{{vehicle.model}}</td>
-          <td>{{vehicle.poductionYear}}</td>
-          <td>{{vehicle.seatNum}}</td>
+          <td>{{vehicle.productionYear}}</td>
+          <td>{{vehicle.seatsNum}}</td>
           <td>{{vehicle.type}}</td>
           <td>{{vehicle.description}}</td>
+          <td><b-link :to="{ path: 'edit-vehicle/' + vehicle.id }">Edit</b-link></td>
+          <td><b-link v-on:click="showModal(vehicle.id)">Remove</b-link></td>
         </tr>
       </tbody>
     </table>
-
+    <b-modal ref="confirmation" hide-footer>
+      <div class="d-block text-center">
+        <h3>Are you sure you want to remove this vehicle?</h3>
+      </div>
+      <b-button class="mt-3" variant="outline-primary" block v-on:click="removeVehicle">Yes</b-button>
+      <b-button class="mt-2" block v-on:click="hideModal">Cancel</b-button>
+    </b-modal>
   </div>
 </template>
 
@@ -36,14 +46,33 @@ import {AXIOS} from '../../http-common'
 export default {
   data () {
     return {
-      vehicles: []
+      vehicles: [],
+      remove_id: -1 // id of vehicle for removing  
+    }
+  },
+  methods: {
+    showModal: function(id) {
+      this.$refs['confirmation'].show()
+      this.remove_id = id;
+    },
+    removeVehicle: function() {
+      AXIOS.delete('vehicles/remove/' + this.remove_id)
+      .then(response => this.$router.go())
+      .catch(err => console.log(err))
+
+      this.$refs['confirmation'].hide()
+      this.remove_id = -1;
+    },
+    hideModal: function() {
+      this.remove_id = -1;
+      this.$refs['confirmation'].hide()
     }
   },
   mounted () {
-    let api = 'rent-a-cars/' + + this.$route.params.id + '/vehicles'
-    AXIOS.get(api)
-    .then(response => { this.vehicles = response.data})
-    .catch(err => console.log(err))
+    let api = 'rent-a-cars/' +  this.$route.params.id + '/vehicles'
+      AXIOS.get(api)
+      .then(response => { this.vehicles = response.data})
+      .catch(err => console.log(err))
   }
 }
 </script>

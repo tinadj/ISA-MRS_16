@@ -38,7 +38,7 @@ export default {
   },
   mounted() {
     let api = '/rent-a-cars/' + this.$route.params.id;
-    console.log(api)
+
     AXIOS.get(api)
     .then(response => { 
       this.id = response.data.id

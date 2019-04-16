@@ -62,6 +62,30 @@ public class RentACar {
 
     public RentACar() {}
 
+    public void addVehicle(Vehicle v)
+    {
+        if (v.getRentACar() != null)
+        {
+            v.getRentACar().getVehicles().remove(v);
+        }
+        v.setRentACar(this);
+        this.getVehicles().add(v);
+    }
+
+    public void removeVehicle(Integer id)
+    {
+
+        for (Vehicle v: getVehicles())
+        {
+            if (v.getId() == id)
+            {
+                this.getVehicles().remove(v);
+                return;
+            }
+        }
+    }
+
+
     public Integer getId() {
         return id;
     }
