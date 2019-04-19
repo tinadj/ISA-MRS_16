@@ -1,16 +1,28 @@
 <template>
-    <div>
+  <b-card-group>
+    <b-card header-tag="header" border-variant="light" style="max-width: 40rem;" class="mb-2 mx-auto">
+      <h6 slot="header" class="mb-0"><b>Add new branch office</b></h6>
         <form @submit="add">
-          <b-form-input v-model="name" placeholder="Name"></b-form-input>
-          <b-form-input v-model="city" placeholder="City"></b-form-input>
-          <b-form-input v-model="state" placeholder="State"></b-form-input>
+          <b-form-group>
+            <b-form-input v-model="name" placeholder="Name"></b-form-input>
+          </b-form-group>
 
-          <b-button variant="outline-primary" type="submit">Add</b-button>
-          <b-button @click="onCancel">Cancel</b-button>
-        </form>
+          <b-form-group>
+            <b-form-input v-model="city" placeholder="City"></b-form-input>
+          </b-form-group>
+          
+          <b-form-group>
+            <b-form-input v-model="state" placeholder="State"></b-form-input>
+          </b-form-group>
+
+          <b-button variant="outline-primary" type="submit" class="mr-1">Add</b-button>
+          <b-button :to="{ path: 'branch-offices'}">Cancel</b-button>
+
+        </form><br>
         <b-alert variant="success" v-model="success">Successfully added!</b-alert>
         <b-alert variant="danger" v-model="error" dismissible>Something went wrong!</b-alert>
-    </div>
+    </b-card>
+  </b-card-group>
 </template>
 
 <script>
@@ -50,9 +62,6 @@ export default {
         this.success = false;
         this.error = true
       })
-    },
-    onCancel (e) {
-      e.preventDefault()
     }
   },
   mounted() {

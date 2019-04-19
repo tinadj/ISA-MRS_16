@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.VehicleDTO;
 import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.rent_a_car.Vehicle;
+import org.tim16.booker.model.rent_a_car.VehicleType;
 import org.tim16.booker.service.RentACarService;
 import org.tim16.booker.service.VehicleService;
 
@@ -47,6 +48,8 @@ public class VehicleController {
         vehicle.setModel(dto.getModel());
         vehicle.setProductionYear(dto.getProductionYear());
         vehicle.setSeatsNum(dto.getSeatsNum());
+        vehicle.setPrice(dto.getPrice());
+        vehicle.setType(intToVehicleType(dto.getType()));
         rentACar.addVehicle(vehicle);
         vehicle.setRentACar(rentACar);
 
@@ -96,6 +99,7 @@ public class VehicleController {
             vehicle.setModel(dto.getModel());
             vehicle.setProductionYear(dto.getProductionYear());
             vehicle.setDescription(dto.getDescription());
+            vehicle.setType(intToVehicleType(dto.getType()));
             RentACar rentACar = rentACarService.findOne(dto.getRentACar().getId());
             vehicle.setRentACar(rentACar);
 
@@ -108,6 +112,21 @@ public class VehicleController {
         }
         catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private VehicleType intToVehicleType(Integer i)
+    {
+        switch (i)
+        {
+            case 0 : return VehicleType.ECONOMY;
+            case 1 : return VehicleType.COMPACT;
+            case 2 : return VehicleType.MID_SIZE;
+            case 3 : return VehicleType.FULL_SIZE;
+            case 4 : return VehicleType.LUXURY;
+            case 5 : return VehicleType.MINIVAN;
+            case 6 : return VehicleType.SUV;
+            default: return VehicleType.UNDEFINED;
         }
     }
 }

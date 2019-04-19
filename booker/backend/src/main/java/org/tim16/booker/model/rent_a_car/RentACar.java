@@ -45,10 +45,6 @@ public class RentACar {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Vehicle> vehicles = new HashSet<Vehicle>();
 
-
-    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<VehiclePrice> vehiclePriceList = new HashSet<VehiclePrice>();
-
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<Rate>();
 
@@ -146,14 +142,6 @@ public class RentACar {
 
     public void setBranchOffices(Set<BranchOffice> branchOffices) {
         this.branchOffices = branchOffices;
-    }
-
-    public Set<VehiclePrice> getVehiclePriceList() {
-        return vehiclePriceList;
-    }
-
-    public void setVehiclePriceList(Set<VehiclePrice> vehiclePriceList) {
-        this.vehiclePriceList = vehiclePriceList;
     }
 
     public Set<Rate> getRating() {

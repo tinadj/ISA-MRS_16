@@ -1,80 +1,109 @@
 <template>
-  <div>
-    <br/>
-    <table class="center">
-      <tbody>
+  <b-card-group deck>
+    <b-card  border-variant="light" header-tag="header">
+      <h6 slot="header" class="mb-0"><b>Rent a car Information</b></h6>
+      <table align="center">
+          <tr>
+              <th>Rent a car id</th></th>
+              <td>{{rentACar.id}}</td>
+          </tr>
+          <tr>
+              <th>Name</th>
+              <td>{{rentACar.name}}</td>
+          </tr>
+          <tr>
+              <th>City</th>
+              <td>{{rentACar.address.city}}</td>
+          </tr>
+          <tr>
+              <th>State</th>
+              <td>{{rentACar.address.state}}</td>
+          </tr>
+          <tr>
+              <th>Description</th>
+              <td>{{rentACar.description}}</td>
+          </tr>
+          <tr>
+              <th>Number of vehicles</th>
+              <td>{{this.vehicleNum}}</td>
+          </tr>
+        </table>
+
+    </b-card >
+
+    <b-card border-variant="light" >
+      <table align="center">
         <tr>
-            <th>ID</th>
-            <td>{{rentACar.id}}</td>
+          <td>
+            <yandex-map
+              :coords="[this.rentACar.latitude, this.rentACar.longitude]"
+              zoom="12"
+              style="width: 350px; height: 350px;"
+              :behaviors="[]"
+              :controls="['zoomControl']"
+               map-type="hybrid"
+            >
+                <ymap-marker
+                  marker-id="1"
+                  marker-type="placemark"
+                  :coords="[this.rentACar.latitude, this.rentACar.longitude]"
+                  :marker-fill="{color: '#000000', opacity: 0.4}"
+                  :marker-stroke="{color: '#ff0000', width: 5}"
+                ></ymap-marker>
+
+            </yandex-map>
+          </td>
         </tr>
-        <tr>
-            <th>Name</th>
-            <td>{{rentACar.name}}</td>
-        </tr>
-        <tr>
-            <th>City</th>
-            <td>{{rentACar.address.city}}</td>
-        </tr>
-        <tr>
-            <th>State</th>
-            <td>{{rentACar.address.state}}</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>{{rentACar.description}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+      </table>
+      
+    </b-card>
+  </b-card-group>
 </template>
 
 <script>
 import {AXIOS} from '../../http-common'
+import { yandexMap, ymapMarker } from 'vue-yandex-maps'
+
 export default {
   name: 'RentACarInfo',
+  components: { yandexMap, ymapMarker },
   data () {
     return {
-      rentACar: ''
+      rentACar: '',
+      vehicleNum : ''
     }
   },
   mounted () {
     let api = 'rent-a-cars/' +  this.$route.params.id
       AXIOS.get(api)
-      .then(response => { this.rentACar = response.data})
+      .then(response => { 
+        this.rentACar = response.data
+        this.vehicleNum = response.data.vehicles.length
+        })
       .catch(err => console.log(err))
   }
 }
 </script>
 
 <style scoped>
-body {
-  font-family: Helvetica Neue, Arial, sans-serif;
-  font-size: 14px;
-  color: #444;
-}
-
 table {
-  border: 2px solid #666666;
-  border-radius: 3px;
-  background-color: #fff;
+    border: solid 1px #DDEEEE;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font: normal 13px Arial, sans-serif;
 }
-
-table.center {
-    margin-left:auto; 
-    margin-right:auto;
-  }
-
 th {
-  background-color: #666666;
-  color: rgba(255,255,255,0.66);
+    background-color: #f5f5f0;
+    border: solid 1px #DDEEEE;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #fff;
 }
-
 td {
-  background-color: #f9f9f9;
-}
-
-th, td {
-  min-width: 120px;
-  padding: 10px 20px;
+    border: solid 1px #DDEEEE;
+    color: #333;
+    padding: 10px;
+    text-shadow: 1px 1px 1px #fff;
+    width: 100%;
 }
 </style>

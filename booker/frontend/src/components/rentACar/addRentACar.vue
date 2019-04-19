@@ -4,8 +4,8 @@
           <b-form-input v-model="name" placeholder="Name"></b-form-input>
           <b-form-input v-model="city" placeholder="City"></b-form-input>
           <b-form-input v-model="state" placeholder="State"></b-form-input>
-          <b-form-input v-model="latitude" placeholder="Latitude" type="number"></b-form-input>
-          <b-form-input v-model="longitude" placeholder="Longitude" type="number"></b-form-input>
+          <b-form-input v-model="latitude" placeholder="Latitude" type="number" step="0.000001"></b-form-input>
+          <b-form-input v-model="longitude" placeholder="Longitude" type="number" step="0.000001"></b-form-input>
           <b-form-textarea v-model="description" placeholder="Description" rows="3"></b-form-textarea>
 
           <b-button variant="outline-primary" type="submit">Add</b-button>

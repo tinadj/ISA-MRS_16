@@ -1,16 +1,41 @@
 <template>
-  <div>
-    <form @submit="edit">
-      <b-form-input v-model="name" placeholder="Name"></b-form-input>
-      <b-form-input v-model="city" placeholder="City"></b-form-input>
-      <b-form-input v-model="state" placeholder="State"></b-form-input>
+  <b-card-group>
+    <b-card header-tag="header" border-variant="light" style="max-width: 40rem;" class="mb-2 mx-auto">
+      <h6 slot="header" class="mb-0"><b>Edit information about branch office</b></h6>
+      <form @submit="edit">
 
-      <b-button variant="outline-primary" type="submit">Save</b-button>
-      <b-button @click="onCancel">Cancel</b-button>
-    </form>
-    <b-alert variant="success" v-model="success">Successfully saved!</b-alert>
-    <b-alert variant="danger" v-model="error" dismissible>Something went wrong!</b-alert>
-  </div>
+        <b-form-group 
+            label="Name: " 
+            label-cols="4" 
+            label-cols-lg="2" 
+            label-for="input-1">
+            <b-form-input id="input-1" v-model="name" placeholder="Name"></b-form-input>
+        </b-form-group>
+
+        <b-form-group 
+            label="City: " 
+            label-cols="4" 
+            label-cols-lg="2" 
+            label-for="input-2">
+            <b-form-input id="input-2" v-model="city" placeholder="City"></b-form-input>
+        </b-form-group>
+
+        <b-form-group 
+            label="State: " 
+            label-cols="4" 
+            label-cols-lg="2" 
+            label-for="input-3">
+            <b-form-input id="input-3" v-model="state" placeholder="State"></b-form-input>
+        </b-form-group>
+
+        <b-button variant="outline-primary" type="submit" class="mr-1">Save</b-button>
+        <b-button @click="onCancel">Cancel</b-button>
+      </form><br>
+
+      <b-alert variant="success" v-model="success">Successfully saved!</b-alert>
+      <b-alert variant="danger" v-model="error" dismissible>Something went wrong!</b-alert>
+    </b-card>
+  </b-card-group>
 </template>
 
 <script>

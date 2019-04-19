@@ -33,6 +33,8 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     private VehicleType type;
 
+    private Float price;
+
     private String description;
 
     @JsonBackReference("rent_a_car-vehicles")
@@ -123,5 +125,13 @@ public class Vehicle {
 
     public void setRentACar(RentACar rentACar) {
         this.rentACar = rentACar;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 }
