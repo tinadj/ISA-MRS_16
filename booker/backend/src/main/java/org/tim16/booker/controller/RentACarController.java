@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.RentACarDTO;
+import org.tim16.booker.model.rent_a_car.BranchOffice;
 import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.rent_a_car.Vehicle;
 import org.tim16.booker.model.utility.Destination;
@@ -113,6 +114,23 @@ public class RentACarController {
         }
 
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}/branch-offices", method = RequestMethod.GET)
+    public ResponseEntity<List<BranchOffice>> getBranchOffices(@PathVariable Integer id) {
+        RentACar rentACar = rentACarService.findOne(id);
+
+        if (rentACar == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<BranchOffice> branchOffices = new ArrayList<>();
+        for (BranchOffice bo: rentACar.getBranchOffices()) {
+            branchOffices.add(bo);
+        }
+
+        return new ResponseEntity<>(branchOffices, HttpStatus.OK);
+
     }
 
 

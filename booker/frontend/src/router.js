@@ -16,9 +16,14 @@ import editHotel from '@/components/hotels/editHotel'
 import RentACarView from '@/components/rentACar/index'
 import addRentACar from '@/components/rentACar/addRentACar'
 import RentACarsTable from '@/components/rentACar/rentACarTable'
+import RentACarInfo from '@/components/rentACar/RentACarInfo'
 import editRentACar from '@/components/rentACar/editRentACar'
 import VehiclesTable from '@/components/rentACar/VehiclesTable'
 import AddVehicle from '@/components/rentACar/AddVehicle'
+import EditVehicle from '@/components/rentACar/EditVehicle'
+import BranchOfficesTable from '@/components/rentACar/BranchOfficesTable'
+import AddBranchOffice from '@/components/rentACar/AddBranchOffice'
+import EditBranchOffice from '@/components/rentACar/EditBranchOffice'
 
 import AirlineAdmin from '@/components/admins/AirlineAdmin'
 import HotelAdmin from '@/components/admins/HotelAdmin'
@@ -103,20 +108,44 @@ export default new Router({
     },
     {
       // Rent a car admin
-      path: '/rent-a-car-admin',
+      path: '/rent-a-car-admin/:id/',
       component: RentACarAdmin,
       children: [
         {
-          path: 'edit/:id',
+          path: '/',
+          component: RentACarInfo
+        },
+        {
+          path: 'info',
+          component: RentACarInfo
+        },
+        {
+          path: 'edit',
           component: editRentACar
         },
         {
-          path: 'vehicles/:id',
-          component: VehiclesTable
+          path: 'vehicles',
+          component: VehiclesTable,
         },
         {
-          path: 'add-vehicle/:id',
+          path: 'add-vehicle',
           component: AddVehicle
+        },
+        {
+          path: 'edit-vehicle/:v_id',
+          component: EditVehicle
+        },
+        {
+          path: 'branch-offices',
+          component: BranchOfficesTable
+        },
+        {
+          path: 'add-branch-office',
+          component: AddBranchOffice
+        },
+        {
+          path: 'edit-branch-office/:bo_id',
+          component: EditBranchOffice
         }
       ]
     }

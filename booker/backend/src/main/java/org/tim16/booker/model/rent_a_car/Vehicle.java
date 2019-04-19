@@ -1,6 +1,7 @@
 package org.tim16.booker.model.rent_a_car;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.utility.Rate;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "vehicles")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Vehicle {
 
     @Id
@@ -31,10 +33,12 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     private VehicleType type;
 
+    private Float price;
+
     private String description;
 
     @JsonBackReference("rent_a_car-vehicles")
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "rentACar", referencedColumnName = "id", nullable = false)
     private RentACar rentACar;
 
@@ -121,5 +125,13 @@ public class Vehicle {
 
     public void setRentACar(RentACar rentACar) {
         this.rentACar = rentACar;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 }

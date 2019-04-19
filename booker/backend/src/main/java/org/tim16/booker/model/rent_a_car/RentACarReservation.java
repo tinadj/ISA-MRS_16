@@ -50,4 +50,6 @@ public class RentACarReservation {
     public void setTotalPrice(Float totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+
 }

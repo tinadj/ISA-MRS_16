@@ -10,21 +10,24 @@ public class VehicleDTO {
     private String model;
     private Integer productionYear;
     private Integer seatsNum;
-    //private VehicleType type;
+    private int type;
     private String description;
+    private Float price;
     private RentACarDTO rentACar;
 
     public VehicleDTO() {}
 
-    public VehicleDTO(Integer id, String name, String brand, String model, Integer productionYear, Integer seatsNum, String description, RentACarDTO rentACar) {
+    public VehicleDTO(Integer id, String name, String brand, String model, Float price, int type, Integer productionYear, Integer seatsNum, String description, RentACarDTO rentACar) {
         this.id = id;
         this.name = name;
         this.brand = brand;
         this.model = model;
         this.productionYear = productionYear;
         this.seatsNum = seatsNum;
+        this.type = type;
         this.description = description;
         this.rentACar = rentACar;
+        this.price = price;
     }
 
     public Integer getId() {
@@ -89,5 +92,21 @@ public class VehicleDTO {
 
     public void setRentACar(RentACarDTO rentACar) {
         this.rentACar = rentACar;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

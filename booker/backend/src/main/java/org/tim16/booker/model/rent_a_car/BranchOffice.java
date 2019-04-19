@@ -1,13 +1,15 @@
 package org.tim16.booker.model.rent_a_car;
 
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.tim16.booker.model.utility.Destination;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "branch_offices")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class BranchOffice {
 
     @Id
@@ -15,7 +17,7 @@ public class BranchOffice {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
-    @JsonManagedReference("rent_a_car-branch_office")
+    @JsonBackReference("rent_a_car-branch_office")
     @ManyToOne
     @JoinColumn(name = "rentACar", referencedColumnName = "id", nullable = false)
     private RentACar rentACar;
