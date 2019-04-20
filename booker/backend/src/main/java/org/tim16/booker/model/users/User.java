@@ -28,7 +28,7 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    private String address;
+    private String city;
 
     private Integer phoneNum;
 
@@ -98,12 +98,12 @@ public class User {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public String getCity() {
+        return city;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setCity(String address) {
+        this.city = address;
     }
 
     public Integer getPhoneNum() {
