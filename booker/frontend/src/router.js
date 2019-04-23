@@ -7,6 +7,8 @@ import AirlineView from '@/components/airlines/index'
 import addAirline from '@/components/airlines/addAirline'
 import editAirline from '@/components/airlines/editAirline'
 import airlinesTable from '@/components/airlines/airlinesTable'
+import editProfile from '@/components/account/editProfile'
+import changePassword from '@/components/account/changePassword'
 
 import HotelView from '@/components/hotels/index'
 import addHotel from '@/components/hotels/addHotel'
@@ -62,6 +64,14 @@ export default new Router({
         {
           path: 'edit/:id',
           component: editAirline
+        },
+        {
+          path: 'profile',
+          component: editProfile
+        },
+        {
+          path: 'password',
+          component: changePassword
         }
       ]
     },

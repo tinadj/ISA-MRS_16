@@ -2,7 +2,7 @@
   <div>
     <br />
     <div>
-      <b-link :to="{ path: 'add'}" append>Add new hotel</b-link>
+      <b-link class="btn btn-primary float-right mb-2" :to="{ path: 'add'}" append>Add new hotel</b-link>
     </div>
     <table class="center">
       <thead>
@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="hotel in hotels">
+        <tr v-for="hotel in hotels" v-bind:key="hotel.id">
           <td>{{hotel.id}}</td>
           <td>{{hotel.name}}</td>
           <td>{{hotel.address.city}}</td>

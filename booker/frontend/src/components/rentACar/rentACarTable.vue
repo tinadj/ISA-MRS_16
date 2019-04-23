@@ -1,9 +1,9 @@
 <template>
   <div>
     <br />
-    <div>
-      <b-link :to="{ path: 'add'}" append>Add new rent a car</b-link>
-    </div>
+    <row>
+      <b-link class="btn btn-primary float-right mb-2" :to="{ path: 'add'}" append>Add new rent a car</b-link>
+    </row>
     <table class="center">
       <thead>
         <tr>
@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="rentACar in rentACars">
+        <tr v-for="rentACar in rentACars" v-bind:key="rentACar.id">
           <td>{{rentACar.id}}</td>
           <td>{{rentACar.name}}</td>
           <td>{{rentACar.address.city}}</td>

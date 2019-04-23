@@ -2,9 +2,9 @@
   <div>
     <br />
     <div>
-      <b-link :to="{ path: 'add'}" append>Add new airline</b-link>
+      <b-link class="btn btn-primary float-right mb-2" :to="{ path: 'add'}" append>Add new airline</b-link>
     </div>
-    <table class="center">
+    <table class="center table">
       <thead>
         <tr>
           <th>ID</th>
@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="airline in airlines">
+        <tr v-for="airline in airlines" v-bind:key="airline.id">
           <td>{{airline.id}}</td>
           <td>{{airline.name}}</td>
           <td>{{airline.address.city}}</td>
