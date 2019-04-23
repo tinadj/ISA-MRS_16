@@ -2,6 +2,7 @@ package org.tim16.booker.model.admins;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.rent_a_car.RentACar;
+import org.tim16.booker.model.utility.Authority;
 
 import javax.persistence.*;
 
@@ -34,6 +35,10 @@ public class RentACarAdmin {
     @ManyToOne
     @JoinColumn(name = "rentACar", referencedColumnName = "id", nullable = false)
     private RentACar rentACar;
+
+    @ManyToOne()
+    @JoinColumn(name="user_authority", referencedColumnName = "id")
+    private Authority authority;
 
     public RentACarAdmin() {}
 
@@ -107,5 +112,13 @@ public class RentACarAdmin {
 
     public void setRentACar(RentACar rentACar) {
         this.rentACar = rentACar;
+    }
+
+    public Authority getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(Authority authority) {
+        this.authority = authority;
     }
 }

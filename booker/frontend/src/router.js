@@ -31,6 +31,7 @@ import RentACarAdmin from '@/components/admins/RentACarAdmin'
 
 import Login from '@/components/users/Login'
 import Register from '@/components/users/Register'
+import RegisteredUserHomePage from '@/components/users/RegisteredUserHomePage'
 
 
 
@@ -50,6 +51,10 @@ export default new Router({
     {
       path: '/register',
       component: Register
+    },
+    {
+      path: '/home/:userID',
+      component: RegisteredUserHomePage
     },
     {
       // Airlines

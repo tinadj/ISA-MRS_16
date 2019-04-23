@@ -34,7 +34,6 @@ public class RentACar {
 
     private BigDecimal longitude;
 
-    @Column(name = "descripiton")
     private String description;
 
     @JsonManagedReference("rent_a_car-branch_office")

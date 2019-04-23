@@ -2,6 +2,7 @@ package org.tim16.booker.model.admins;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.hotel.Hotel;
+import org.tim16.booker.model.utility.Authority;
 
 import javax.persistence.*;
 
@@ -34,6 +35,10 @@ public class HotelAdmin {
     @ManyToOne
     @JoinColumn(name = "hotel", referencedColumnName = "id", nullable = false)
     private Hotel hotel;
+
+    @ManyToOne()
+    @JoinColumn(name="user_authority", referencedColumnName = "id")
+    private Authority authority;
 
     public HotelAdmin() {}
 
@@ -107,5 +112,13 @@ public class HotelAdmin {
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
+    }
+
+    public Authority getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(Authority authority) {
+        this.authority = authority;
     }
 }

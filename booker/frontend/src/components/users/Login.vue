@@ -4,7 +4,7 @@
             <b-form-group
                 label-for="input-username"
             >
-                <b-form-input id="input-username" placeholder="Username"></b-form-input>
+                <b-form-input id="input-username" v-model="username" placeholder="Username"></b-form-input>
             </b-form-group>  
 
             <b-form-group
@@ -14,12 +14,14 @@
             </b-form-group>
                     
             <b-button variant="outline-primary" @click="signIn">Sign in</b-button><br><br>
+            <b-link :to="{ path: 'register'}">Don't have account?</b-link><br><br>
             <b-alert variant="danger" v-model="error" dismissible>Wrong username or password!</b-alert>
         </b-card>
     </b-card-group>
 </template>
 
 <script>
+import { AXIOS } from '../../http-common';
 export default {
     name: 'Login',
     data() {
@@ -32,6 +34,20 @@ export default {
     methods: {
         signIn() {
             this.error = null
+
+            const user = {
+                'username': this.username,
+                'password': this.password
+            }
+
+            AXIOS.post('/auth/login', user)
+                .then(response => {
+                    console.log("Logged in")
+                })
+                .catch(err => {
+                    console.log(err)
+                    this.error = true
+                })
         }
     }
 }

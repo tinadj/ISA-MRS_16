@@ -4,7 +4,25 @@
             <table align="center">
                 <tr>
                     <td><b-form-input v-model="username" placeholder="Username"></b-form-input></td>
-                    <td><b-form-input v-model="firstName" placeholder="First name"></b-form-input></td>
+                    <td><b-form-input id="input-email" type="email"  v-model="email" :state="emailValid" placeholder="Email"></b-form-input></td>
+                </tr>
+                <tr>
+                    <td>
+                        <br>
+                        <b-form-group
+                            label-for="input-firstName"
+                        >
+                        <b-form-input id="input-firstName" v-model="firstName" placeholder="First name"></b-form-input>
+                        </b-form-group>
+                    </td>
+                    <td>
+                        <br>
+                        <b-form-group
+                            label-for="input-lastName"
+                        >
+                            <b-form-input id="input-lastName" v-model="lastName" placeholder="Last name"></b-form-input>
+                        </b-form-group>
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -18,19 +36,19 @@
                     </td>
                     <td>
                         <b-form-group
-                            label-for="input-lastName"
+                            label-for="input-repeatPass"
                         >
-                            <b-form-input id="input-lastName" v-model="lastName" placeholder="Last name"></b-form-input>
+                            <b-form-input id="input-repeatPass" type="password" v-model="repeatedPassword" :state="repeatedPassValid" placeholder="Password repeat"></b-form-input>
                         </b-form-group>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <b-form-group
-                            label-for="input-repeatPass"
+                            label-for="input-phone"
                         >
-                            <b-form-input id="input-repeatPass" type="password" v-model="repeatedPassword" :state="repeatedPassValid" placeholder="Password repeat"></b-form-input>
-                        </b-form-group>
+                            <b-form-input id="input-phone" type="number" v-model="phoneNum" placeholder="Phone number"></b-form-input>
+                        </b-form-group> 
                      </td>
                     <td>
                         <b-form-group
@@ -40,24 +58,9 @@
                         </b-form-group>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <b-form-group
-                            label-for="input-email"
-                        >
-                            <b-form-input id="input-email" type="email"  v-model="email" :state="emailValid" placeholder="Email"></b-form-input>
-                        </b-form-group>
-                    </td>
-                    <td>
-                        <b-form-group
-                            label-for="input-phone"
-                        >
-                            <b-form-input id="input-phone" type="number" v-model="phoneNum" placeholder="Phone number"></b-form-input>
-                        </b-form-group>
-                    </td>
-                </tr>
             </table>
-            <b-button variant="outline-primary" @click="register">Register</b-button><br><br>
+            <b-button variant="outline-primary" @click="register" class="mr-3">Register</b-button>
+            <b-button variant="outline-primary" :to="{ path: 'login'}">Sign in</b-button><br><br>
             <b-alert variant="success" v-model="success">Activation link is sent on your email address!</b-alert>
             <b-alert variant="danger" v-model="error" dismissible>{{this.errorMessage}}</b-alert>
         </b-card>
@@ -66,6 +69,8 @@
 </template>
 
 <script>
+import { AXIOS } from '../../http-common';
+
 export default {
     name: 'Register',
     data() {
@@ -95,8 +100,29 @@ export default {
             this.emailValid = null
 
             if (this.validate() == true) {
-                this.success = true
-                this.error = false
+                const user = {
+                    'username': this.username,
+                    'password': this.password,
+                    'name': this.firstName,
+                    'lastName': this.lastName,
+                    'email': this.email,
+                    'city': this.city,
+                    'phoneNum': this.phoneNum,
+                }
+
+                AXIOS.post('/auth/register', user)
+                .then(response => {
+                    this.success = true
+                    this.error = false
+                })
+                .catch(err => {
+                    this.errorMessage = "Something went wrong!"
+                    this.success = false
+                    this.error = true
+                })
+
+
+                
             } else {
                 this.success = false
                 this.error = true

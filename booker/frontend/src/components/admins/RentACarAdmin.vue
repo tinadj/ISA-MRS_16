@@ -28,8 +28,6 @@ import { faCarSide } from '@fortawesome/free-solid-svg-icons'
 export default {
   data () {
     return {
-      id: 1,
-      icon: faCarSide
     }
   },
   methods: {
