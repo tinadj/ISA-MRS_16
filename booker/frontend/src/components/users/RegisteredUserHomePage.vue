@@ -2,11 +2,11 @@
     <b-container>
     <b-row>
       <b-nav tabs>
-        <b-nav-item >Flights</b-nav-item>
-        <b-nav-item >Hotels</b-nav-item>
-        <b-nav-item >Vehicles</b-nav-item>
-        <b-nav-item >Friends</b-nav-item>
-        <b-nav-item >My reservations</b-nav-item>
+        <b-nav-item>Flights</b-nav-item>
+        <b-nav-item>Hotels</b-nav-item>
+        <b-nav-item>Vehicles</b-nav-item>
+        <b-nav-item>Friends</b-nav-item>
+        <b-nav-item>My reservations</b-nav-item>
         <b-nav-item>Profile</b-nav-item>
         <b-nav-item>Log out</b-nav-item>
       </b-nav>
@@ -33,11 +33,14 @@ export default {
         
     },
     mounted() {
-        console.log(this.$route.params.userID)
-        AXIOS.get('/user/' + this.$route.params.userID)
+        var getJwtToken = function() {
+            return localStorage.getItem('token');
+        };
+        AXIOS.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+
+        AXIOS.get('/user/' + this.$route.params.id)
         .then(response => { this.user = response.data})
         .catch(err => console.log(err))
-
     }
 }
 </script>

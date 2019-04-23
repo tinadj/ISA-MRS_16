@@ -3,6 +3,7 @@ package org.tim16.booker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.RentACarDTO;
 import org.tim16.booker.model.rent_a_car.BranchOffice;

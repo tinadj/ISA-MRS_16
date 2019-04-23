@@ -33,6 +33,8 @@ import Login from '@/components/users/Login'
 import Register from '@/components/users/Register'
 import RegisteredUserHomePage from '@/components/users/RegisteredUserHomePage'
 
+import IndexPage from '@/components/users/IndexPage'
+
 
 
 Vue.use(Router)
@@ -42,7 +44,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: HelloWorld
+      component: IndexPage
     },
     {
       path: '/login',
@@ -53,21 +55,55 @@ export default new Router({
       component: Register
     },
     {
-      path: '/home/:userID',
+      path: '/home/:id',
       component: RegisteredUserHomePage
     },
+    // Sys admin
     {
-      // Airlines
-      path: '/airlines',
-      component: AirlineView,
+      path: '/sys-admin/',
       children: [
         {
-          path: 'add',
-          component: addAirline
+          path: 'airlines',
+          component: AirlineView,
+          children: [
+            {
+              path: '/add',
+              component: addAirline
+            },
+            {
+              path: '/',
+              component: airlinesTable
+            }
+          ]
         },
         {
-          path: '/',
-          component: airlinesTable
+          path: 'hotels',
+          component: HotelView,
+          children: [
+            {
+              path: 'add',
+              component: addHotel
+            },
+            {
+              path: '/',
+              component: hotelsTable
+            }
+          ]
+        },
+        {
+          // Rent a cars
+          path: 'rent-a-cars',
+          component: RentACarView,
+          children: [
+            {
+              path: 'add',
+              component: addRentACar
+            },
+            {
+              path: '/',
+              component: RentACarsTable
+            }
+          ]
         }
       ]
     },
@@ -83,21 +119,6 @@ export default new Router({
       ]
     },
     {
-      // Hotels
-      path: '/hotels',
-      component: HotelView,
-      children: [
-        {
-          path: 'add',
-          component: addHotel
-        },
-        {
-          path: '/',
-          component: hotelsTable
-        }
-      ]
-    },
-    {
       // Hotel admin
       path: '/hotel-admin',
       component: HotelAdmin,
@@ -105,21 +126,6 @@ export default new Router({
         {
           path: 'edit/:id',
           component: editHotel
-        }
-      ]
-    },
-    {
-      // Rent a cars
-      path: '/rent-a-cars',
-      component: RentACarView,
-      children: [
-        {
-          path: 'add',
-          component: addRentACar
-        },
-        {
-          path: '/',
-          component: RentACarsTable
         }
       ]
     },

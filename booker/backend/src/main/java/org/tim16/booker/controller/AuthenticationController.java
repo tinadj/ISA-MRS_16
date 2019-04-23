@@ -1,11 +1,12 @@
 package org.tim16.booker.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -24,8 +26,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.tim16.booker.dto.UserDTO;
-import org.tim16.booker.model.users.User;
+import org.tim16.booker.model.admins.SysAdmin;
+import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.users.UserType;
+import org.tim16.booker.model.utility.Authority;
+import org.tim16.booker.model.utility.User;
+import org.tim16.booker.model.utility.UserRoles;
 import org.tim16.booker.model.utility.UserTokenState;
 import org.tim16.booker.security.TokenUtils;
 import org.tim16.booker.service.CustomUserDetailsService;
@@ -41,7 +47,7 @@ public class AuthenticationController {
     TokenUtils tokenUtils;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManagerUser;
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
@@ -50,30 +56,35 @@ public class AuthenticationController {
     private UserService userService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDTO dto) throws AuthenticationException {
+    public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody UserDTO dto) {
+        try {
+            final Authentication authentication = authenticationManagerUser
+                    .authenticate(new UsernamePasswordAuthenticationToken(
+                            dto.getUsername(),
+                            dto.getPassword()));
 
-        final Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(
-                        dto.getUsername(),
-                        dto.getPassword()));
 
-        // Ubaci username + password u kontext
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Ubaci username + password u kontext
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Kreiraj token
-        User user = (User) authentication.getPrincipal();
-        String jwt = tokenUtils.generateToken(user.getUsername());
-        int expiresIn = tokenUtils.getExpiredIn();
+            // Kreiraj token
+            User user = (User) authentication.getPrincipal();
+            String jwt = tokenUtils.generateToken(user.getUsername());
+            int expiresIn = tokenUtils.getExpiredIn();
 
-        UserTokenState token = new UserTokenState(jwt, expiresIn);
+            UserTokenState token = new UserTokenState(jwt, expiresIn);
 
-        // Vrati token kao odgovor na uspesno autentifikaciju
-        return ResponseEntity.ok(token);
+            // Vrati token kao odgovor na uspesno autentifikaciju
+            return new ResponseEntity<>(token, HttpStatus.OK);
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public HttpStatus Register(@RequestBody UserDTO dto,
-                               HttpServletResponse response) throws AuthenticationException, IOException {
+    public HttpStatus Register(@RequestBody UserDTO dto) throws AuthenticationException {
 
         User u = userService.findByUsername(dto.getUsername());
         if(u != null) {
@@ -81,8 +92,15 @@ public class AuthenticationController {
         }
         BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 
-        User user = new User(dto.getUsername(), bc.encode(dto.getPassword()), dto.getName(), dto.getLastname(),
+        RegisteredUser user = new RegisteredUser(dto.getUsername(), bc.encode(dto.getPassword()), dto.getName(), dto.getLastname(),
                 dto.getEmail(), dto.getCity(), dto.getPhoneNum(), 0, UserType.REGULAR);
+
+        List<Authority> authorityList = new ArrayList();
+        Authority authority = new Authority();
+        authority.setName(UserRoles.USER.toString());
+        authorityList.add(authority);
+
+        user.setAuthority(authorityList);
         user.setEnabled(true);
 
         userService.save(user);
@@ -120,5 +138,25 @@ public class AuthenticationController {
     static class PasswordChanger {
         public String oldPassword;
         public String newPassword;
+    }
+
+    @RequestMapping(value = "/register-sys-admin", method = RequestMethod.POST)
+    public HttpStatus registerSysAdmin()  {
+
+        if (!userDetailsService.sysAdminExists()) {
+            BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+            SysAdmin admin = new SysAdmin("sys", bc.encode("sys"));
+
+            List<Authority> authorityList = new ArrayList();
+            Authority authority = new Authority();
+            authority.setName(UserRoles.SYS_ADMIN.toString());
+            authorityList.add(authority);
+
+            admin.setAuthorities(authorityList);
+            admin.setEnabled(true);
+
+            userService.save(admin);
+        }
+        return HttpStatus.OK;
     }
 }

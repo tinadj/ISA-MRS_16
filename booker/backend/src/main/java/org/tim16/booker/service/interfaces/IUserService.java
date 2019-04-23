@@ -1,7 +1,7 @@
 package org.tim16.booker.service.interfaces;
 
 
-import org.tim16.booker.model.users.User;
+import org.tim16.booker.model.utility.User;
 
 import java.util.List;
 

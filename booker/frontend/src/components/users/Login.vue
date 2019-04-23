@@ -42,12 +42,41 @@ export default {
 
             AXIOS.post('/auth/login', user)
                 .then(response => {
-                    console.log("Logged in")
+                    if (response.status == 200){
+                          console.log(response.data.accessToken);
+                          localStorage.setItem('token', response.data.accessToken);
+                          this.getRole();
+                    }
                 })
                 .catch(err => {
-                    console.log(err)
                     this.error = true
                 })
+        },
+        getRole() {
+
+            var getJwtToken = function() {
+                return localStorage.getItem('token');
+                };
+
+                AXIOS.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+
+                AXIOS.get("/users/get-role-and-id")
+                .then(response => {
+                    console.log(response);
+                    if(response.data.role == "AIRLINE_ADMIN") {
+                        this.$router.push("/airiline-admin/" + response.data.userID)
+                    } else if (response.data.role == "HOTEL_ADMIN") {
+                        this.$router.push("/hotel-admin" + response.data.userID)
+                    } else if (response.data.role == "RAC_ADMIN") {
+                        this.$router.push("/rent-a-car-admin" + response.data.userID)
+                    } else if (response.data.role == "SYS_ADMIN") {
+                        this.$router.push("/sys-admin")
+                    } else if (response.data.role == "USER") {   
+                        this.$router.push("/home/" + response.data.userID)
+                    } else {
+                        this.$router.push("/login")
+                    } 
+                });
         }
     }
 }

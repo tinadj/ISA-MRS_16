@@ -1,44 +1,43 @@
 package org.tim16.booker.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.tim16.booker.model.users.User;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import org.tim16.booker.dto.RoleIdDTO;
+import org.tim16.booker.model.utility.Authority;
+import org.tim16.booker.model.utility.User;
 import org.tim16.booker.service.UserService;
 
-import java.security.Principal;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
 @RestController
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    // Za pristup ovoj metodi neophodno je da ulogovani korisnik ima ADMIN ulogu
-    // Ukoliko nema, server ce vratiti gresku 403 Forbidden
-    // Korisnik jeste autentifikovan, ali nije autorizovan da pristupi resursu
-    @RequestMapping(method = GET, value = "/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public User loadById(@PathVariable Integer userId) {
-        return this.userService.findById(userId);
-    }
+    @RequestMapping(value = "/get-role-and-id", method = RequestMethod.GET)
+    public ResponseEntity<RoleIdDTO> getRoleAndID() {
 
-    @RequestMapping(method = GET, value = "/user/all")
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<User> loadAll() {
-        return this.userService.findAll();
-    }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String username = authentication.getName();
+            User user = userService.findByUsername(username);
 
-    @RequestMapping("/whoami")
-    @PreAuthorize("hasRole('USER')")
-    public User user(Principal user) {
-        return this.userService.findByUsername(user.getName());
+            List<Authority> authorities = user.getAuthorities();
+            Integer userID = user.getId();
+
+            RoleIdDTO dto = new RoleIdDTO(authorities.get(0).getName(), userID);
+            return new ResponseEntity<>(dto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

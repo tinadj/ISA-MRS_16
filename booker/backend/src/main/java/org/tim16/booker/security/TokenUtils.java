@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.tim16.booker.model.users.User;
+import org.tim16.booker.model.utility.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;

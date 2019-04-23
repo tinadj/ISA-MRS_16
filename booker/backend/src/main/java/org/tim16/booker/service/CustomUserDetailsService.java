@@ -13,8 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import org.tim16.booker.model.users.User;
-import org.tim16.booker.repository.UserRepository;
+import org.tim16.booker.model.admins.SysAdmin;
+import org.tim16.booker.model.utility.User;
+import org.tim16.booker.repository.*;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -33,12 +34,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     // Funkcija koja na osnovu username-a iz baze vraca objekat User-a
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
-        } else {
+        if (user != null) {
             return user;
         }
+
+        throw new UsernameNotFoundException("User '" + username + "' not found");
     }
 
     // Funkcija pomocu koje korisnik menja svoju lozinku
@@ -67,5 +69,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         userRepository.save(user);
 
     }
+
+    public boolean sysAdminExists() {
+        if (userRepository.findByUsername("sys") == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }
 
