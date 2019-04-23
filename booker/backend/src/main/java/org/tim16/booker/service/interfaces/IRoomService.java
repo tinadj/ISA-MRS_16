@@ -8,7 +8,7 @@ import java.util.List;
 public interface IRoomService{
      Room findOne(Integer id);
      List<Room> findAll();
-     Room create(RoomDTO airline);
-     Room update(Room airline);
+     Room create(RoomDTO roomDTO);
+     Room update(Room room);
      void remove(Integer id);
 }

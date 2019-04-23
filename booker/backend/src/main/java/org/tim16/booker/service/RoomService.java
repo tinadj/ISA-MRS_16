@@ -1,6 +1,8 @@
 package org.tim16.booker.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.tim16.booker.dto.RoomDTO;
 import org.tim16.booker.model.hotel.Hotel;
@@ -31,6 +33,7 @@ public class RoomService implements IRoomService {
 
     @Override
     public Room create(RoomDTO roomDTO) {
+
         Hotel hotel = hotelService.findOne(roomDTO.getHotelId());
 
         Room room = new Room();
@@ -45,7 +48,8 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Room update(Room room) {
+    public Room update(Room room)
+    {
         return roomRepository.save(room);
     }
 

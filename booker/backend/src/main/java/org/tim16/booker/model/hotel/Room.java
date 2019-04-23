@@ -1,6 +1,8 @@
 package org.tim16.booker.model.hotel;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "rooms")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Room {
 
     @Id
@@ -16,7 +19,8 @@ public class Room {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
-    @ManyToOne
+    @JsonBackReference("hotel-rooms")
+    @ManyToOne()
     @JoinColumn(name = "hotel", referencedColumnName = "id", nullable = false)
     private Hotel hotel;
 

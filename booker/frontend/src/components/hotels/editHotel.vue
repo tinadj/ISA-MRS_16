@@ -77,6 +77,7 @@ export default {
     },
     onCancel (e) {
       e.preventDefault()
+      this.$router.push('/hotel-admin/' + this.$route.params.id + '/')
     }
   }
 }

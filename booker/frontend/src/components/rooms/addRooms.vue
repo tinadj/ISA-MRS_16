@@ -45,7 +45,7 @@ export default {
         'hotelId':this.$route.params.id
       }
 
-      AXIOS.post('api/room/add', room)
+      AXIOS.post('/room/add', room)
       .then(response => {
         this.success = true;
         this.error = false;
@@ -61,6 +61,12 @@ export default {
   },
   mounted() 
   {
+    let api = '/hotels/' + this.$route.params.id;
+
+    AXIOS.get(api)
+    .then(response => {
+      this.hotel = response.data
+    })
   }
 }
 </script>

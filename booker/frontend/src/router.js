@@ -12,6 +12,7 @@ import HotelView from '@/components/hotels/index'
 import addHotel from '@/components/hotels/addHotel'
 import hotelsTable from '@/components/hotels/hotelsTable'
 import editHotel from '@/components/hotels/editHotel'
+import HotelInfo from '@/components/hotels/HotelInfo'
 
 import RentACarView from '@/components/rentACar/index'
 import addRentACar from '@/components/rentACar/addRentACar'
@@ -25,6 +26,8 @@ import HotelAdmin from '@/components/admins/HotelAdmin'
 import RentACarAdmin from '@/components/admins/RentACarAdmin'
 
 import addRooms from '@/components/rooms/addRooms'
+import RoomsTable from '@/components/rooms/RoomsTable'
+import editRoom from '@/components/rooms/editRoom'
 
 
 Vue.use(Router)
@@ -79,16 +82,28 @@ export default new Router({
     },
     {
       // Hotel admin
-      path: '/hotel-admin',
+      path: '/hotel-admin/:id/',
       component: HotelAdmin,
       children: [
         {
-          path: 'edit/:id',
+          path: 'edit',
           component: editHotel
         },
         {
-          path: 'add-rooms/:id',
+          path: 'info',
+          component: HotelInfo
+        },
+        {
+          path: 'add-rooms',
           component: addRooms
+        },
+        {
+          path: 'rooms',
+          component: RoomsTable
+        },
+        {
+          path: 'edit-room/:r_id',
+          component: editRoom
         }
       ]
     },
