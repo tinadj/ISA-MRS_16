@@ -1,5 +1,6 @@
 package org.tim16.booker.model.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 
     @Id

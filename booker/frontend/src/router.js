@@ -9,6 +9,8 @@ import editAirline from '@/components/airlines/editAirline'
 import airlinesTable from '@/components/airlines/airlinesTable'
 import editProfile from '@/components/account/editProfile'
 import changePassword from '@/components/account/changePassword'
+import AirlineInfo from '@/components/airlines/airlineInfo'
+
 
 import HotelView from '@/components/hotels/index'
 import addHotel from '@/components/hotels/addHotel'
@@ -58,11 +60,19 @@ export default new Router({
     },
     {
       // Airline admin
-      path: '/airline-admin',
+      path: '/airline-admin/:id/',
       component: AirlineAdmin,
       children: [
+		{
+          path: '/',
+          component: AirlineInfo
+        },
         {
-          path: 'edit/:id',
+          path: 'info',
+          component: AirlineInfo
+        },
+        {
+          path: 'edit',
           component: editAirline
         },
         {

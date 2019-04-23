@@ -7,7 +7,7 @@
         <b-nav-item :to="{ path: '/rent-a-cars'}">Rent a cars</b-nav-item>
       </b-nav>
     </b-row>
-
+	
     <b-row>
       <b-col>
           <br />
