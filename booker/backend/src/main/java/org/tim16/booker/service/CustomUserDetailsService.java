@@ -38,9 +38,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username);
         if (user != null) {
             return user;
+        } else {
+            throw new UsernameNotFoundException("User '" + username + "' not found");
         }
-
-        throw new UsernameNotFoundException("User '" + username + "' not found");
     }
 
     // Funkcija pomocu koje korisnik menja svoju lozinku
@@ -70,12 +70,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     }
 
-    public boolean sysAdminExists() {
-        if (userRepository.findByUsername("sys") == null) {
-            return false;
-        } else {
-            return true;
-        }
+    public void create(User user) {
+        userRepository.save(user);
+    }
+
+    public void update(User user) {
+        userRepository.save(user);
     }
 
 }

@@ -28,6 +28,10 @@ public class UserService implements IUserService {
         return u;
     }
 
+    public User findByToken(String token) {
+        return userRepository.findByToken(token);
+    }
+
     public List<User> findAll() {
         List<User> result = userRepository.findAll();
         return result;
@@ -36,5 +40,7 @@ public class UserService implements IUserService {
     public void save (User user) {
         userRepository.save(user);
     }
+
+
 
 }

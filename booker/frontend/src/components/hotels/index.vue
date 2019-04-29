@@ -1,10 +1,14 @@
 <template>
   <b-container>
     <b-row>
-      <b-nav class="w-100">
+      <b-nav class="nav nav-tabs margins w-100">
         <b-nav-item :to="{ path: '/airlines' }">Airlines</b-nav-item>
-        <b-nav-item :to="{ path: '/hotels' }" active>Hotels</b-nav-item>
-        <b-nav-item :to="{ path: '/rent-a-cars'}">Rent a cars</b-nav-item>
+        <b-nav-item :to="{ path: '/hotels'}">Hotels</b-nav-item>
+        <b-nav-item :to="{ path: '/rent-a-cars'}">Rent a Car Services</b-nav-item>
+        <b-nav-item :to="{ path: '/admins'}">Admins</b-nav-item>
+        <b-nav-item :to="{ path: '/register-admin'}">Register admin</b-nav-item>
+        <b-nav-item>Define discount</b-nav-item>
+        <b-nav-item>Log out</b-nav-item>
       </b-nav>
     </b-row>
 
@@ -22,13 +26,17 @@
 export default {
   data () {
     return {
-      hotels: []
     }
   },
   methods: {
 
   },
   mounted () {
+
   }
 }
 </script>
+
+<style>
+
+</style>

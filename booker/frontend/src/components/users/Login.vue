@@ -15,7 +15,7 @@
                     
             <b-button variant="outline-primary" @click="signIn">Sign in</b-button><br><br>
             <b-link :to="{ path: 'register'}">Don't have account?</b-link><br><br>
-            <b-alert variant="danger" v-model="error" dismissible>Wrong username or password!</b-alert>
+            <b-alert variant="danger" v-model="error" dismissible>{{this.errorMessage}}</b-alert>
         </b-card>
     </b-card-group>
 </template>
@@ -28,7 +28,8 @@ export default {
         return {
             username: '',
             password: '',
-            error: null
+            error: null,
+            errorMessage: ''
         }
     },
     methods: {
@@ -43,12 +44,15 @@ export default {
             AXIOS.post('/auth/login', user)
                 .then(response => {
                     if (response.status == 200){
-                          console.log(response.data.accessToken);
-                          localStorage.setItem('token', response.data.accessToken);
-                          this.getRole();
+                        localStorage.setItem('token', response.data.accessToken);
+                        this.getRole();
+                    } else if (response.status == 403) {
+                        this.errorMessage = "Check your email!";
+                        this.error = true
                     }
                 })
                 .catch(err => {
+                    this.errorMessage = "Wrong username or password!";
                     this.error = true
                 })
         },
@@ -62,7 +66,6 @@ export default {
 
                 AXIOS.get("/users/get-role-and-id")
                 .then(response => {
-                    console.log(response);
                     if(response.data.role == "AIRLINE_ADMIN") {
                         this.$router.push("/airiline-admin/" + response.data.userID)
                     } else if (response.data.role == "HOTEL_ADMIN") {
@@ -70,7 +73,7 @@ export default {
                     } else if (response.data.role == "RAC_ADMIN") {
                         this.$router.push("/rent-a-car-admin" + response.data.userID)
                     } else if (response.data.role == "SYS_ADMIN") {
-                        this.$router.push("/sys-admin")
+                        this.$router.push("/airlines")
                     } else if (response.data.role == "USER") {   
                         this.$router.push("/home/" + response.data.userID)
                     } else {

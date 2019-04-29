@@ -1,29 +1,20 @@
 <template>
   <b-card-group>
     <b-card border-variant="light" class="mb-2 mx-auto">
-      <b-button variant="outline-primary" :to="{ path: 'add'}" append>Add new Rent a Car Service</b-button>
-      <br><br>
         <table class="center">
           <thead>
             <tr>
               <th>ID</th>
               <th>Name</th>
-              <th>City</th>
-              <th>State</th>
-              <th>Number of vehicles</th>
-              <th>Number of branch offices</th>
-              <th>Description</th>
+              <th>Last Name</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Admin of</th>
+              <th>Activated</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="rentACar in rentACars">
-              <td>{{rentACar.id}}</td>
-              <td>{{rentACar.name}}</td>
-              <td>{{rentACar.address.city}}</td>
-              <td>{{rentACar.address.state}}</td>
-              <td>{{rentACar.vehicles.length}}</td>
-              <td>{{rentACar.branchOffices.length}}</td>
-              <td>{{rentACar.description}}</td>
+            <tr v-for="admin in admins">
             </tr>
           </tbody>
         </table>
@@ -37,14 +28,11 @@ import {AXIOS} from '../../http-common'
 export default {
   data () {
     return {
-      
-      rentACars: []
+      admins: []
     }
   },
   mounted () {
-    AXIOS.get('/rent-a-cars/all')
-    .then(response => { this.rentACars = response.data})
-    .catch(err => console.log(err))
+    
   }
 }
 </script>

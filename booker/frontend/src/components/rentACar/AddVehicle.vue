@@ -73,7 +73,7 @@ export default {
         {value: 5, text: "Minivan"},
         {value: 6, text: "SUV"},
       ],
-      typeValid: null // indikator da li izabran tip vozila (nije ostalo na null)
+      typeValid: null // indikator da li je izabran tip vozila (nije ostalo na null)
     }
     
   },

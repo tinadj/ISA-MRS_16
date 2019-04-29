@@ -1,19 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import HelloWorld from '@/components/HelloWorld'
-
-import AirlineView from '@/components/airlines/index'
 import addAirline from '@/components/airlines/addAirline'
 import editAirline from '@/components/airlines/editAirline'
 import airlinesTable from '@/components/airlines/airlinesTable'
 
+import AirlineView from '@/components/airlines/index'
 import HotelView from '@/components/hotels/index'
+import RentACarView from '@/components/rentACar/index'
+
 import addHotel from '@/components/hotels/addHotel'
 import hotelsTable from '@/components/hotels/hotelsTable'
 import editHotel from '@/components/hotels/editHotel'
 
-import RentACarView from '@/components/rentACar/index'
+import AdminsTable from '@/components/admins/AdminsTable'
+import RegisterAdmin from '@/components/admins/RegisterAdmin'
+
 import addRentACar from '@/components/rentACar/addRentACar'
 import RentACarsTable from '@/components/rentACar/rentACarTable'
 import RentACarInfo from '@/components/rentACar/RentACarInfo'
@@ -60,50 +62,65 @@ export default new Router({
     },
     // Sys admin
     {
-      path: '/sys-admin/',
+      path: '/airlines',
+      component: AirlineView,
       children: [
         {
-          path: 'airlines',
-          component: AirlineView,
-          children: [
-            {
-              path: '/add',
-              component: addAirline
-            },
-            {
-              path: '/',
-              component: airlinesTable
-            }
-          ]
+          path: '/',
+          component: airlinesTable
         },
         {
-          path: 'hotels',
-          component: HotelView,
-          children: [
-            {
-              path: 'add',
-              component: addHotel
-            },
-            {
-              path: '/',
-              component: hotelsTable
-            }
-          ]
+          path: 'add',
+          component: addAirline
+        }
+      ]
+    },
+    {
+      path: '/hotels',
+      component: HotelView,
+      children: [
+        {
+          path: '/',
+          component: hotelsTable
         },
         {
-          // Rent a cars
-          path: 'rent-a-cars',
-          component: RentACarView,
-          children: [
-            {
-              path: 'add',
-              component: addRentACar
-            },
-            {
-              path: '/',
-              component: RentACarsTable
-            }
-          ]
+        path: 'add',
+        component: addHotel
+        },
+      
+      ]
+    },
+    {
+      path: '/rent-a-cars',
+      component: RentACarView,
+      children: [
+        {
+          path: '/',
+          component: RentACarsTable
+        },
+        {
+          path: 'add',
+          component: addRentACar
+        }
+      ]
+    },
+    {
+      path: '/admins',
+      component: RentACarView,
+      children: [
+        {
+          path: '/',
+          component: AdminsTable
+        }
+      ]
+    },
+    {
+      path: '/register-admin',
+      component: RentACarView,
+      children: [
+        {
+          path: '/',
+          component: RegisterAdmin
         }
       ]
     },

@@ -7,11 +7,21 @@ import org.tim16.booker.model.utility.Authority;
 import org.tim16.booker.model.utility.User;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Table(name = "rent_a_car_admins")
 public class RentACarAdmin extends User {
+
+    private String name;
+
+    private String lastname;
+
+    private String email;
+
+    private String city;
+
+    private Integer phoneNum;
 
     @JsonManagedReference("rent_a_car-admin")
     @ManyToOne
@@ -28,4 +38,43 @@ public class RentACarAdmin extends User {
         this.rentACar = rentACar;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Integer getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(Integer phoneNum) {
+        this.phoneNum = phoneNum;
+    }
 }

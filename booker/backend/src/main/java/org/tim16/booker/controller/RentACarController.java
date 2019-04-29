@@ -31,11 +31,13 @@ public class RentACarController {
     private VehicleService vehicleService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<RentACar>> getAll() {
         return new ResponseEntity<>(rentACarService.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<RentACar> add(@RequestBody RentACarDTO dto) {
         RentACar rentACar = new RentACar();
         rentACar.setName(dto.getName());

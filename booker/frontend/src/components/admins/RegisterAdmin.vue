@@ -26,24 +26,6 @@
                 </tr>
                 <tr>
                     <td>
-                        <br>
-                        <b-form-group
-                            label-for="input-pass"
-                            description="Min 6 characters, 1 uppercase letter, 1 digit"
-                        >
-                            <b-form-input id="input-pass" type="password" v-model="password" :state="passwordValid" placeholder="Password"></b-form-input>
-                        </b-form-group>  
-                    </td>
-                    <td>
-                        <b-form-group
-                            label-for="input-repeatPass"
-                        >
-                            <b-form-input id="input-repeatPass" type="password" v-model="repeatedPassword" :state="repeatedPassValid" placeholder="Password repeat"></b-form-input>
-                        </b-form-group>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         <b-form-group
                             label-for="input-phone"
                         >
@@ -58,10 +40,22 @@
                         </b-form-group>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <b-form-group>
+                            <b-form-select v-model="role" :options="roleOptions" :state="roleValid"></b-form-select>
+                        </b-form-group>
+                    </td>
+                    <td>
+                        <b-form-group>
+                            <b-form-select v-model="id" :options="options"></b-form-select>
+                        </b-form-group>
+                    </td>
+                </tr>
             </table>
             <b-button variant="outline-primary" @click="register" class="mr-3">Register</b-button>
-            <b-button variant="outline-primary" :to="{ path: 'login'}">Sign in</b-button><br><br>
-            <b-alert variant="success" v-model="success">Activation link is sent on your email address!</b-alert>
+            <b-button :to="{ path: '/admins'}">Cancel</b-button><br><br>
+            <b-alert variant="success" v-model="success">Activation link is sent on email address!</b-alert>
             <b-alert variant="danger" v-model="error" dismissible>{{this.errorMessage}}</b-alert>
         </b-card>
     </b-card-group>
@@ -76,59 +70,43 @@ export default {
     data() {
         return {
             username: '',
-            password: '',
-            repeatedPassword: '',
             firstName: '',
             lastName: '',
             email: '',
             city: '',
             phoneNum: '',
-            passwordValid: null,
-            repeatedPassValid: null,
             emailValid: null,
             errorMessage: '',
             success: false,
-            error: false
+            error: false,
+            role: null,
+            roleOptions: [
+                {value: null, text: "Choose admin's role"},
+                {value: 0, text: "Sys Admin"},
+                {value: 1, text: "Airline Admin"},
+                {value: 2, text: "Hotel Admin"},
+                {value: 3, text: "Rent a Car Admin"}
+            ],
+            roleValid: null,
         }
     },
     methods: {
         register() {
             this.success = false
             this.error = false
-            this.passwordValid = null
-            this.repeatedPassValid = null
             this.emailValid = null
+            this.roleValid = null
 
             if (this.validate() == true) {
                 const user = {
                     'username': this.username,
-                    'password': this.password,
+                    'password': '123',
                     'name': this.firstName,
                     'lastName': this.lastName,
                     'email': this.email,
                     'city': this.city,
                     'phoneNum': this.phoneNum,
                 }
-
-                AXIOS.post('/auth/register', user)
-                .then(response => {
-                    if (response.data == "BAD_REQUEST") {
-                        this.errorMessage = "Username is taken!"
-                        this.success = false
-                        this.error = true
-                    } else {
-                        this.success = true
-                        this.error = false
-                    }
-                })
-                .catch(err => {
-                    this.errorMessage = "Something went wrong!"
-                    this.success = false
-                    this.error = true
-                })
-
-
-                
             } else {
                 this.success = false
                 this.error = true
@@ -142,29 +120,14 @@ export default {
                 this.errorMessage = "Some fields are empty!"
                 return false 
                 }
-            if (this.password.length < 6) {
-                this.errorMessage = "Password must contain at least 6 characters!"
-                this.passwordValid = false
-                return false
-            } 
-            if (this.password.search(/[A-Z]/) < 0) {
-                this.errorMessage = "Password must conatain at least 1 capital letter!"
-                this.passwordValid = false
-                return false
-            }
-            if (this.password.search(/[0-9]/) < 0) {
-                this.errorMessage = "Password must conatain at least 1 digit!"
-                this.passwordValid = false
-                return false
-            }
-            if (this.password != this.repeatedPassword) {
-                this.errorMessage = "Password doesn't match!"
-                this.repeatedPassValid = false
-                return false
-            }
             if (this.validateEmail() == false) {
                 this.errorMessage = "Email address isn't valid!"
                 this.emailValid = false
+                return false
+            }
+            if (this.role == null) {
+                this.errorMessage = "Choose admin's role!"
+                this.roleValid = false
                 return false
             }
             return true

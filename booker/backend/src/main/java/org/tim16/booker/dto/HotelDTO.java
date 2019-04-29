@@ -9,16 +9,20 @@ public class HotelDTO {
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String description;
+    private Integer floors;
+    private Integer maxRoomsNum;
 
     public HotelDTO() {}
 
-    public HotelDTO(Integer id, String name, BigDecimal latitude, BigDecimal longitude, DestinationDTO dto, String description) {
+    public HotelDTO(Integer id, String name, DestinationDTO address, BigDecimal latitude, BigDecimal longitude, String description, Integer floors, Integer maxRoomsNum) {
         this.id = id;
         this.name = name;
-        this.address = dto;
+        this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
+        this.floors = floors;
+        this.maxRoomsNum = maxRoomsNum;
     }
 
     public Integer getId() {
@@ -67,5 +71,21 @@ public class HotelDTO {
 
     public void setAddress(DestinationDTO address) {
         this.address = address;
+    }
+
+    public Integer getFloors() {
+        return floors;
+    }
+
+    public void setFloors(Integer floors) {
+        this.floors = floors;
+    }
+
+    public Integer getMaxRoomsNum() {
+        return maxRoomsNum;
+    }
+
+    public void setMaxRoomsNum(Integer maxRoomsNum) {
+        this.maxRoomsNum = maxRoomsNum;
     }
 }

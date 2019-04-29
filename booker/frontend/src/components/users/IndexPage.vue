@@ -13,8 +13,7 @@ import { AXIOS } from '../../http-common';
 export default {
     name: 'IndexPage',
     mounted() {
-        AXIOS.post("/auth/register-sys-admin")
-        .then(response => console.log(response))
+        AXIOS.post("/auth/default-sys-admin")
         .catch(err => console.log(err))
     }
 }
