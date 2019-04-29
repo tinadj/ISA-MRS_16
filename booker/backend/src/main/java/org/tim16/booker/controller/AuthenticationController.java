@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import org.tim16.booker.dto.AdminInfoDTO;
 import org.tim16.booker.dto.UserDTO;
 import org.tim16.booker.model.admins.SysAdmin;
 import org.tim16.booker.model.users.RegisteredUser;
@@ -196,4 +197,12 @@ public class AuthenticationController {
         }
         return HttpStatus.OK;
     }
+
+    /*
+    * Registrovanje admina aviokompanije, hotela ili rent a car servisa.
+     */
+    //@RequestMapping(value = "/register-admin", method = RequestMethod.POST)
+    //public ResponseEntity<?> registerAdmin(@RequestBody AdminInfoDTO dto) {
+
+    //}
 }
