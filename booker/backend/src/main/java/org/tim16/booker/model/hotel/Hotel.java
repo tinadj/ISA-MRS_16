@@ -55,6 +55,14 @@ public class Hotel {
 
     public Hotel() {}
 
+    public void addAdmin(HotelAdmin admin) {
+        if (admin.getHotel() != null)
+            admin.getHotel().getAdmins().remove(admin);
+
+        admin.setHotel(this);
+        this.getAdmins().add(admin);
+    }
+
     public Integer getId() {
         return id;
     }

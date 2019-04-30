@@ -23,16 +23,20 @@ import org.springframework.web.bind.annotation.*;
 
 import org.tim16.booker.dto.AdminInfoDTO;
 import org.tim16.booker.dto.UserDTO;
+import org.tim16.booker.model.admins.AirlineAdmin;
+import org.tim16.booker.model.admins.HotelAdmin;
+import org.tim16.booker.model.admins.RentACarAdmin;
 import org.tim16.booker.model.admins.SysAdmin;
+import org.tim16.booker.model.airline.Airline;
+import org.tim16.booker.model.hotel.Hotel;
+import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.utility.Authority;
 import org.tim16.booker.model.utility.User;
-import org.tim16.booker.model.utility.UserRoles;
+import org.tim16.booker.model.utility.UserAuthorities;
 import org.tim16.booker.model.utility.UserTokenState;
 import org.tim16.booker.security.TokenUtils;
-import org.tim16.booker.service.CustomUserDetailsService;
-import org.tim16.booker.service.MailService;
-import org.tim16.booker.service.UserService;
+import org.tim16.booker.service.*;
 
 
 //Kontroler zaduzen za autentifikaciju korisnika
@@ -54,6 +58,15 @@ public class AuthenticationController {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private AirlineService airlineService;
+
+    @Autowired
+    private HotelService hotelService;
+
+    @Autowired
+    private RentACarService rentACarService;
 
     /*
     * Funkcija koja predstavlja prijavu korisnika.
@@ -102,7 +115,7 @@ public class AuthenticationController {
 
         User u = userService.findByUsername(dto.getUsername());
         if(u != null) {
-            return HttpStatus.BAD_REQUEST;
+            return HttpStatus.CONFLICT;
         }
         BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 
@@ -111,7 +124,7 @@ public class AuthenticationController {
 
         List<Authority> authorityList = new ArrayList();
         Authority authority = new Authority();
-        authority.setName(UserRoles.USER.toString());
+        authority.setName(UserAuthorities.USER.toString());
         authorityList.add(authority);
 
         user.setAuthority(authorityList);
@@ -137,7 +150,7 @@ public class AuthenticationController {
         user.setEnabled(true);
         userDetailsService.update(user);
 
-        return HttpStatus.BAD_REQUEST;
+        return HttpStatus.OK;
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.POST)
@@ -160,7 +173,6 @@ public class AuthenticationController {
 
 
     @RequestMapping(value = "/change-password", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
         userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
 
@@ -179,7 +191,7 @@ public class AuthenticationController {
     * Poziva se prilikom ucitavanje pocetne stranice aplikacije.
      */
     @RequestMapping(value = "/default-sys-admin", method = RequestMethod.POST)
-    public HttpStatus registerSysAdmin()  {
+    public HttpStatus registerDefaultSysAdmin()  {
 
         if (userService.findByUsername("sys") == null) {
             BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
@@ -187,7 +199,7 @@ public class AuthenticationController {
 
             List<Authority> authorityList = new ArrayList();
             Authority authority = new Authority();
-            authority.setName(UserRoles.SYS_ADMIN.toString());
+            authority.setName(UserAuthorities.SYS_ADMIN.toString());
             authorityList.add(authority);
 
             admin.setAuthorities(authorityList);
@@ -201,8 +213,143 @@ public class AuthenticationController {
     /*
     * Registrovanje admina aviokompanije, hotela ili rent a car servisa.
      */
-    //@RequestMapping(value = "/register-admin", method = RequestMethod.POST)
-    //public ResponseEntity<?> registerAdmin(@RequestBody AdminInfoDTO dto) {
+    @RequestMapping(value = "/register-admin", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    public HttpStatus registerAdmin(@RequestBody AdminInfoDTO dto) {
 
-    //}
+        User u = userService.findByUsername(dto.getUsername());
+        if(u != null) {
+            return HttpStatus.CONFLICT;
+        }
+
+        if (dto.getAdminOf().equalsIgnoreCase("airline")) {
+            return registerAirineAdmin(dto);
+        } else if (dto.getAdminOf().equalsIgnoreCase("hotel")) {
+            return registerHotelAdmin(dto);
+        } else if (dto.getAdminOf().equalsIgnoreCase("rent-a-car")) {
+            return registerRentACarAdmin(dto);
+        } else {
+            return HttpStatus.BAD_REQUEST;
+        }
+    }
+
+    /*
+    * Registrovanje admina aviokompanije.
+     */
+    private HttpStatus registerAirineAdmin(AdminInfoDTO dto) {
+        BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+
+        AirlineAdmin admin = new AirlineAdmin(dto.getUsername(), bc.encode(dto.getPassword()), dto.getName(), dto.getLastName(),
+                dto.getEmail(), dto.getCity(), dto.getPhoneNum());
+
+        List<Authority> authorityList = new ArrayList();
+        Authority authority = new Authority();
+        authority.setName(UserAuthorities.AIRLINE_ADMIN.toString());
+        authorityList.add(authority);
+
+        admin.setAuthority(authorityList);
+
+        Airline airline = airlineService.findOne(dto.getItemID());
+        if (airline == null)
+            return HttpStatus.BAD_REQUEST;
+
+        admin.setAirline(airline);
+        airline.addAdmin(admin);
+
+        userDetailsService.create(admin);
+        airlineService.update(airline);
+        //mailService.sendActivationLink(admin);
+
+        return HttpStatus.OK;
+    }
+
+    /*
+     * Registrovanje admina hotela.
+     */
+    private HttpStatus registerHotelAdmin(AdminInfoDTO dto) {
+        BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+
+        HotelAdmin admin = new HotelAdmin(dto.getUsername(), bc.encode(dto.getPassword()), dto.getName(), dto.getLastName(),
+                dto.getEmail(), dto.getCity(), dto.getPhoneNum());
+
+        List<Authority> authorityList = new ArrayList();
+        Authority authority = new Authority();
+        authority.setName(UserAuthorities.HOTEL_ADMIN.toString());
+        authorityList.add(authority);
+
+        admin.setAuthority(authorityList);
+
+        Hotel hotel = hotelService.findOne(dto.getItemID());
+        if (hotel == null)
+            return HttpStatus.BAD_REQUEST;
+
+        admin.setHotel(hotel);
+        hotel.addAdmin(admin);
+
+        userDetailsService.create(admin);
+        hotelService.update(hotel);
+        //mailService.sendActivationLink(admin);
+
+        return HttpStatus.OK;
+    }
+
+    /*
+     * Registrovanje admina rent a car servisa.
+     */
+    private HttpStatus registerRentACarAdmin(AdminInfoDTO dto) {
+        BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+
+        RentACarAdmin admin = new RentACarAdmin(dto.getUsername(), bc.encode(dto.getPassword()), dto.getName(), dto.getLastName(),
+                dto.getEmail(), dto.getCity(), dto.getPhoneNum());
+
+        List<Authority> authorityList = new ArrayList();
+        Authority authority = new Authority();
+        authority.setName(UserAuthorities.RAC_ADMIN.toString());
+        authorityList.add(authority);
+
+        admin.setAuthority(authorityList);
+
+        RentACar rentACar = rentACarService.findOne(dto.getItemID());
+        if (rentACar == null)
+            return HttpStatus.BAD_REQUEST;
+
+        admin.setRentACar(rentACar);
+        rentACar.addAdmin(admin);
+
+        userDetailsService.create(admin);
+        rentACarService.update(rentACar);
+        //mailService.sendActivationLink(admin);
+
+        return HttpStatus.OK;
+    }
+
+    /*
+     * Registrovanje sys admina.
+     */
+    @RequestMapping(value = "/register-sys-admin", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    public HttpStatus registerSysAdmin(@RequestBody AdminInfoDTO dto) {
+
+        User u = userService.findByUsername(dto.getUsername());
+        if(u != null) {
+            return HttpStatus.CONFLICT;
+        }
+
+        BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+
+        SysAdmin admin = new SysAdmin(dto.getUsername(), bc.encode(dto.getPassword()), dto.getName(), dto.getLastName(),
+                dto.getEmail(), dto.getCity(), dto.getPhoneNum());
+
+        List<Authority> authorityList = new ArrayList();
+        Authority authority = new Authority();
+        authority.setName(UserAuthorities.SYS_ADMIN.toString());
+        authorityList.add(authority);
+
+        admin.setAuthority(authorityList);
+
+        userDetailsService.create(admin);
+        //mailService.sendActivationLink(admin);
+
+        return HttpStatus.OK;
+    }
 }

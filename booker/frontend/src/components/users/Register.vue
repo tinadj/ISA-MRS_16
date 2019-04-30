@@ -112,7 +112,7 @@ export default {
 
                 AXIOS.post('/auth/register', user)
                 .then(response => {
-                    if (response.data == "BAD_REQUEST") {
+                    if (response.data == "CONFLICT") {
                         this.errorMessage = "Username is taken!"
                         this.success = false
                         this.error = true

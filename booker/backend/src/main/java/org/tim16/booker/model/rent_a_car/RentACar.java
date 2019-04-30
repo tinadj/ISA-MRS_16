@@ -102,6 +102,14 @@ public class RentACar {
         }
     }
 
+    public void addAdmin(RentACarAdmin admin) {
+        if (admin.getRentACar() != null)
+            admin.getRentACar().getAdmins().remove(admin);
+
+        admin.setRentACar(this);
+        this.getAdmins().add(admin);
+    }
+
 
     public Integer getId() {
         return id;

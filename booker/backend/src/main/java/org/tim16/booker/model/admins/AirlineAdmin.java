@@ -33,6 +33,24 @@ public class AirlineAdmin extends User {
 
     public AirlineAdmin() {}
 
+    public AirlineAdmin(String name, String lastname, String email, String city, Integer phoneNum, Airline airline) {
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.phoneNum = phoneNum;
+        this.airline = airline;
+    }
+
+    public AirlineAdmin(String username, String password, String name, String lastname, String email, String city, Integer phoneNum) {
+        super(username, password);
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.phoneNum = phoneNum;
+    }
+
     public String getName() {
         return name;
     }

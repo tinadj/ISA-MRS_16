@@ -30,6 +30,24 @@ public class HotelAdmin extends User {
 
     public HotelAdmin() {}
 
+    public HotelAdmin(String name, String lastname, String email, String city, Integer phoneNum, Hotel hotel) {
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.phoneNum = phoneNum;
+        this.hotel = hotel;
+    }
+
+    public HotelAdmin(String username, String password, String name, String lastname, String email, String city, Integer phoneNum) {
+        super(username, password);
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.phoneNum = phoneNum;
+    }
+
     public String getName() {
         return name;
     }
