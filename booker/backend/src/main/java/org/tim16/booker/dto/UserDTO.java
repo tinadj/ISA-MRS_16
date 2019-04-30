@@ -8,10 +8,11 @@ public class UserDTO {
     private String email;
     private String city;
     private Integer phoneNum;
+    private String token;
 
     public UserDTO() {}
 
-    public UserDTO(String username, String password, String name, String lastname, String email, String city, Integer phoneNum) {
+    public UserDTO(String username, String password, String name, String lastname, String email, String city, Integer phoneNum, String token) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -19,6 +20,7 @@ public class UserDTO {
         this.email = email;
         this.city = city;
         this.phoneNum = phoneNum;
+        this.token = token;
     }
 
     public String getUsername() {
@@ -75,5 +77,13 @@ public class UserDTO {
 
     public void setPhoneNum(Integer phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

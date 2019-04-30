@@ -32,6 +32,7 @@ import HotelAdmin from '@/components/admins/HotelAdmin'
 import RentACarAdmin from '@/components/admins/RentACarAdmin'
 
 import Login from '@/components/users/Login'
+import ConfirmLogin from '@/components/users/ConfirmLogin'
 import Register from '@/components/users/Register'
 import RegisteredUserHomePage from '@/components/users/RegisteredUserHomePage'
 
@@ -51,6 +52,10 @@ export default new Router({
     {
       path: '/login',
       component: Login
+    },
+    {
+      path: '/login/:token',
+      component: ConfirmLogin
     },
     {
       path: '/register',

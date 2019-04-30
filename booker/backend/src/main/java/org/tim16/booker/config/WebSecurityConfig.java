@@ -70,7 +70,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // svim korisnicima dopusti da pristupe putanjama /api/**
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
+
+                .antMatchers("/api/auth/user-confirm/{token}").permitAll()
 
                 // svaki zahtev mora biti autorizovan
                 .anyRequest().authenticated().and()
@@ -87,7 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
         web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/login");
         web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/register");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/auth/confirm");
+        web.ignoring().antMatchers(HttpMethod.GET, "/api/auth/user-confirm/{token}");
         web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/default-sys-admin");
 
         web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js");

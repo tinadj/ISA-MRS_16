@@ -117,14 +117,11 @@ export default {
                     'phoneNum': this.phoneNum,
                     'itemID': this.id,
                 }
-
-                console.log(user)
                 
                 // Registracija sys admina
                 if (this.adminRole == 3) {
                     AXIOS.post("/auth/register-sys-admin", user)
                     .then( response => {
-                        console.log(response)
                         if (response.data == "CONFLICT") {
                             this.errorMessage = "Username is taken!"
                             this.success = false

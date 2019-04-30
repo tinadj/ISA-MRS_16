@@ -14,7 +14,7 @@
             </b-form-group>
                     
             <b-button variant="outline-primary" @click="signIn">Sign in</b-button><br><br>
-            <b-link :to="{ path: 'register'}">Don't have account?</b-link><br><br>
+            <b-alert variant="success" v-model="success">You account is activated!</b-alert>
             <b-alert variant="danger" v-model="error" dismissible>{{this.errorMessage}}</b-alert>
         </b-card>
     </b-card-group>
@@ -28,17 +28,19 @@ export default {
         return {
             username: '',
             password: '',
-            error: null,
-            errorMessage: ''
+            error: false,
+            errorMessage: '',
+            success: false
         }
     },
     methods: {
         signIn() {
-            this.error = null
+            this.success = false
+            this.error = false
 
             const user = {
                 'username': this.username,
-                'password': this.password
+                'password': this.password,
             }
 
             AXIOS.post('/auth/login', user)
@@ -84,6 +86,19 @@ export default {
                     } 
                 });
         }
+    },
+    mounted() {
+        AXIOS.get('/auth/user-confirm/' + this.$route.params.token)
+        .then(response => {
+            if (response.data == "BAD_REQUEST") {
+                this.errorMessage = "Check your email!";
+                this.error = true
+                this.success = false
+            } else {
+                this.success = true
+                this.error = false
+            }  
+        })
     }
 }
 </script>

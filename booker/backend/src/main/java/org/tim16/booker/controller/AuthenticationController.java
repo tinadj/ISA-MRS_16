@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -81,14 +83,13 @@ public class AuthenticationController {
                             dto.getUsername(),
                             dto.getPassword()));
 
-            // Ubaci username + password u kontext
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-
             User user = (User) authentication.getPrincipal();
 
             if (!user.isEnabled())
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+            // Ubaci username + password u kontext
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // Kreiraj token
             String jwt = tokenUtils.generateToken(user.getUsername());
@@ -98,8 +99,10 @@ public class AuthenticationController {
             // Vrati token kao odgovor na uspesno autentifikaciju
             return new ResponseEntity<>(token, HttpStatus.OK);
 
-        } catch (Exception ex) {
+        } catch (BadCredentialsException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (DisabledException ex) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
     }
@@ -130,7 +133,7 @@ public class AuthenticationController {
         user.setAuthority(authorityList);
 
         userDetailsService.create(user);
-        //mailService.sendActiationLink(user);
+        mailService.sendActivationLink(user);
 
         return HttpStatus.OK;
     }
@@ -139,8 +142,8 @@ public class AuthenticationController {
     * Funkcija koja se realziuje nakon sto se klikne na aktivacioni mail.
     * Ukoliko postoji korisnik sa odredjenim tokenom, njegovo polje enable se postavi na true.
      */
-    @RequestMapping(value = "/confirm", method = RequestMethod.GET)
-    public HttpStatus confirmRegistration(@RequestParam String token) {
+    @RequestMapping(value = "/user-confirm/{token}", method = RequestMethod.GET)
+    public HttpStatus confirmRegistration(@PathVariable String token) {
         User user = userService.findByToken(token);
 
         if (user == null) {

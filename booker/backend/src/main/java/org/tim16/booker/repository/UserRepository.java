@@ -10,6 +10,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findByUsername(String username);
 
-    @Query(value = "select * from users u where u.user_id =(select t.user from verification_tokens t where t.token = ?1)", nativeQuery = true)
+    @Query(value = "select * from users u where u.id =(select t.user from verification_tokens t where t.token = ?1)", nativeQuery = true)
     User findByToken(String token);
 }

@@ -27,10 +27,10 @@ public class MailService {
     private VerificationTokenService service;
 
     @Async
-    public void sendActiationLink(RegisteredUser user) {
+    public void sendActivationLink(RegisteredUser user) {
         String token = UUID.randomUUID().toString();
-        VerificationToken verificationToken = new VerificationToken();
 
+        VerificationToken verificationToken = new VerificationToken();
         verificationToken.setToken(token);
         verificationToken.setUser(user);
         service.create(verificationToken);
@@ -43,8 +43,8 @@ public class MailService {
 
         try {
             content = String.format(
-                    "To finish your registration, click on link below:\nhttp://localhost:8081/auth/confirm?token=%s",
-                    user.getEmail(), URLEncoder.encode(token, "UTF-8"));
+                    "Hello " + user.getName() + "!\nTo finish your registration, click on link below:\nhttp://localhost:8080/login/%s",
+                    URLEncoder.encode(token, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             return;
         }
