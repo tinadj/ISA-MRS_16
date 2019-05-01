@@ -21,6 +21,8 @@ public class SysAdmin extends User {
 
     private Integer phoneNum;
 
+    private Boolean passChanged;
+
     public SysAdmin() {}
 
     public SysAdmin(String username, String password) {
@@ -42,6 +44,7 @@ public class SysAdmin extends User {
         this.email = email;
         this.city = city;
         this.phoneNum = phoneNum;
+        this.passChanged = false;
     }
 
     public String getName() {
@@ -82,6 +85,14 @@ public class SysAdmin extends User {
 
     public void setPhoneNum(Integer phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public Boolean getPassChanged() {
+        return passChanged;
+    }
+
+    public void setPassChanged(Boolean passChanged) {
+        this.passChanged = passChanged;
     }
 }
 

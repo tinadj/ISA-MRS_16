@@ -3,6 +3,7 @@ package org.tim16.booker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.VehicleDTO;
 import org.tim16.booker.model.rent_a_car.RentACar;
@@ -30,6 +31,7 @@ public class VehicleController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<Vehicle> add(@RequestBody VehicleDTO dto) {
         // a new vehicle must have rent a car defined
         if (dto.getRentACar() == null) {
@@ -59,6 +61,7 @@ public class VehicleController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<Vehicle> getVehicle(@PathVariable Integer id)
     {
         Vehicle vehicle = vehicleService.findOne(id);
@@ -71,6 +74,7 @@ public class VehicleController {
     }
 
     @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<Vehicle>> removeVehicle(@PathVariable Integer id)
     {
         Vehicle vehicle = vehicleService.findOne(id);
@@ -88,6 +92,7 @@ public class VehicleController {
     }
 
     @RequestMapping(value = "/update", method =  RequestMethod.PUT, consumes = "application/json")
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<Vehicle> updateVehicle(@RequestBody VehicleDTO dto)
     {
         try

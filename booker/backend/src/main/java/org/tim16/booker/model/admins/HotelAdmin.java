@@ -28,6 +28,8 @@ public class HotelAdmin extends User {
     @JoinColumn(name = "hotel", referencedColumnName = "id")
     private Hotel hotel;
 
+    private Boolean passChanged;
+
     public HotelAdmin() {}
 
     public HotelAdmin(String name, String lastname, String email, String city, Integer phoneNum, Hotel hotel) {
@@ -46,6 +48,7 @@ public class HotelAdmin extends User {
         this.email = email;
         this.city = city;
         this.phoneNum = phoneNum;
+        this.passChanged = false;
     }
 
     public String getName() {
@@ -94,5 +97,13 @@ public class HotelAdmin extends User {
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
+    }
+
+    public Boolean getPassChanged() {
+        return passChanged;
+    }
+
+    public void setPassChanged(Boolean passChanged) {
+        this.passChanged = passChanged;
     }
 }

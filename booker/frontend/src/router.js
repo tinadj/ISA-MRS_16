@@ -30,6 +30,7 @@ import EditBranchOffice from '@/components/rentACar/EditBranchOffice'
 import AirlineAdmin from '@/components/admins/AirlineAdmin'
 import HotelAdmin from '@/components/admins/HotelAdmin'
 import RentACarAdmin from '@/components/admins/RentACarAdmin'
+import ChangePassword from '@/components/admins/ChangePassword'
 
 import Login from '@/components/users/Login'
 import ConfirmLogin from '@/components/users/ConfirmLogin'
@@ -64,6 +65,10 @@ export default new Router({
     {
       path: '/home/:id',
       component: RegisteredUserHomePage
+    },
+    {
+      path: '/change-pass/:id',
+      component: ChangePassword
     },
     // Sys admin
     {
@@ -153,7 +158,7 @@ export default new Router({
     },
     {
       // Rent a car admin
-      path: '/rent-a-car-admin/:id/',
+      path: '/:id/rent-a-car-admin/',
       component: RentACarAdmin,
       children: [
         {

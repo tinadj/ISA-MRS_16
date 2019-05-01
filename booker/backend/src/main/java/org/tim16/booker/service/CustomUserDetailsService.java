@@ -13,7 +13,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.tim16.booker.model.admins.AirlineAdmin;
+import org.tim16.booker.model.admins.HotelAdmin;
+import org.tim16.booker.model.admins.RentACarAdmin;
 import org.tim16.booker.model.admins.SysAdmin;
+import org.tim16.booker.model.hotel.Hotel;
 import org.tim16.booker.model.utility.User;
 import org.tim16.booker.repository.*;
 
@@ -66,7 +70,28 @@ public class CustomUserDetailsService implements UserDetailsService {
         // pre nego sto u bazu upisemo novu lozinku, potrebno ju je hesirati
         // ne zelimo da u bazi cuvamo lozinke u plain text formatu
         user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+
+        if (user instanceof AirlineAdmin) {
+            AirlineAdmin admin = (AirlineAdmin)user;
+            admin.setPassChanged(true);
+            userRepository.save(admin);
+        } else if (user instanceof HotelAdmin) {
+            HotelAdmin admin = (HotelAdmin)user;
+            admin.setPassChanged(true);
+            userRepository.save(admin);
+        } else if (user instanceof RentACarAdmin) {
+            RentACarAdmin admin = (RentACarAdmin)user;
+            admin.setPassChanged(true);
+            userRepository.save(admin);
+        } else if (user instanceof SysAdmin) {
+            SysAdmin admin = (SysAdmin)user;
+            admin.setPassChanged(true);
+            userRepository.save(admin);
+        } else {
+            userRepository.save(user);
+        }
+
+
 
     }
 

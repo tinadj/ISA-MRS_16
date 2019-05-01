@@ -31,6 +31,8 @@ public class AirlineAdmin extends User {
     @JoinColumn(name = "airline", referencedColumnName = "id")
     private Airline airline;
 
+    private Boolean passChanged;
+
     public AirlineAdmin() {}
 
     public AirlineAdmin(String name, String lastname, String email, String city, Integer phoneNum, Airline airline) {
@@ -49,6 +51,7 @@ public class AirlineAdmin extends User {
         this.email = email;
         this.city = city;
         this.phoneNum = phoneNum;
+        this.passChanged = false;
     }
 
     public String getName() {
@@ -99,6 +102,11 @@ public class AirlineAdmin extends User {
         this.airline = airline;
     }
 
+    public Boolean getPassChanged() {
+        return passChanged;
+    }
 
-
+    public void setPassChanged(Boolean passChanged) {
+        this.passChanged = passChanged;
+    }
 }

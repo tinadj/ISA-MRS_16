@@ -70,12 +70,16 @@ export default {
                 AXIOS.get("/users/get-role-and-id")
                 .then(response => {
                     if(response.data.role == "AIRLINE_ADMIN") {
-                        this.$router.push("/airiline-admin/" + response.data.userID)
+                        this.isChangedPass(response.data.userID)
+                        this.$router.push("/airiline-admin/" + response.data.adminOf)
                     } else if (response.data.role == "HOTEL_ADMIN") {
-                        this.$router.push("/hotel-admin" + response.data.userID)
+                        this.isChangedPass(response.data.userID)
+                        this.$router.push("/hotel-admin/" + response.data.adminOf)
                     } else if (response.data.role == "RAC_ADMIN") {
-                        this.$router.push("/rent-a-car-admin" + response.data.userID)
+                        this.isChangedPass(response.data.userID)
+                        this.$router.push("/" + response.data.adminOf + "/rent-a-car-admin/")
                     } else if (response.data.role == "SYS_ADMIN") {
+                        this.isChangedPass(response.data.userID)
                         this.$router.push("/airlines")
                     } else if (response.data.role == "USER") {   
                         this.$router.push("/home/" + response.data.userID)
@@ -83,6 +87,15 @@ export default {
                         this.$router.push("/login")
                     } 
                 });
+        },
+        isChangedPass(id) {
+            AXIOS.get("/users/" + id)
+            .then(response => {
+                if (response.data.passChanged == false) {
+                    this.$router.push("/change-pass/" + response.data.id)
+                }
+            })
+            .catch(err => console.log(err))
         }
     }
 }

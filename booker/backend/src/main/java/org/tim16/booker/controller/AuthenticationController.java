@@ -207,6 +207,7 @@ public class AuthenticationController {
 
             admin.setAuthorities(authorityList);
             admin.setEnabled(true);
+            admin.setPassChanged(true);
 
             userService.save(admin);
         }
@@ -261,7 +262,7 @@ public class AuthenticationController {
 
         userDetailsService.create(admin);
         airlineService.update(airline);
-        //mailService.sendActivationLink(admin);
+        mailService.sendActivationLink(admin);
 
         return HttpStatus.OK;
     }
@@ -291,7 +292,7 @@ public class AuthenticationController {
 
         userDetailsService.create(admin);
         hotelService.update(hotel);
-        //mailService.sendActivationLink(admin);
+        mailService.sendActivationLink(admin);
 
         return HttpStatus.OK;
     }
@@ -321,7 +322,7 @@ public class AuthenticationController {
 
         userDetailsService.create(admin);
         rentACarService.update(rentACar);
-        //mailService.sendActivationLink(admin);
+        mailService.sendActivationLink(admin);
 
         return HttpStatus.OK;
     }
@@ -351,7 +352,7 @@ public class AuthenticationController {
         admin.setAuthority(authorityList);
 
         userDetailsService.create(admin);
-        //mailService.sendActivationLink(admin);
+        mailService.sendActivationLink(admin);
 
         return HttpStatus.OK;
     }

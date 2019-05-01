@@ -28,6 +28,8 @@ public class RentACarAdmin extends User {
     @JoinColumn(name = "rentACar", referencedColumnName = "id")
     private RentACar rentACar;
 
+    private  Boolean passChanged;
+
     public RentACarAdmin() {}
 
     public RentACarAdmin(String name, String lastname, String email, String city, Integer phoneNum, RentACar rentACar) {
@@ -46,6 +48,7 @@ public class RentACarAdmin extends User {
         this.email = email;
         this.city = city;
         this.phoneNum = phoneNum;
+        this.passChanged = false;
     }
 
     public RentACar getRentACar() {
@@ -94,5 +97,13 @@ public class RentACarAdmin extends User {
 
     public void setPhoneNum(Integer phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public Boolean getPassChanged() {
+        return passChanged;
+    }
+
+    public void setPassChanged(Boolean passChanged) {
+        this.passChanged = passChanged;
     }
 }

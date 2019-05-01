@@ -78,11 +78,11 @@ export default {
         this.success = false;
         this.error = true
       })
-      this.$router.push('/rent-a-car-admin/' + this.$route.params.id + "/branch-offices")
+      this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/branch-offices")
     },
       onCancel (e) {
         e.preventDefault()
-        this.$router.push('/rent-a-car-admin/' + this.$route.params.id + "/branch-offices")
+        this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/branch-offices")
     }
   },
   mounted() {

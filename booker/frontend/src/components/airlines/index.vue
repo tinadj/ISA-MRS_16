@@ -22,13 +22,7 @@
 </template>
 
 <script>
-import { faPlane } from '@fortawesome/free-solid-svg-icons'
-import { faBed } from '@fortawesome/free-solid-svg-icons'
-import { faCar } from '@fortawesome/free-solid-svg-icons'
-import { faUsersCog } from '@fortawesome/free-solid-svg-icons'
-import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
-import { faTag } from '@fortawesome/free-solid-svg-icons'
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import { faPlane, faBed, faCar, faUsersCog, faUserPlus, faTag, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   
