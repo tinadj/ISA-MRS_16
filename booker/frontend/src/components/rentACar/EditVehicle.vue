@@ -140,7 +140,7 @@ export default {
             this.success = false;
             this.error = true
           })
-          this.$router.push("/rent-a-car-admin/" + this.$route.params.id + "/vehicles")
+          this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/vehicles")
       } else {
         this.typeValid = false
       }
@@ -148,7 +148,7 @@ export default {
     },
       onCancel (e) {
         e.preventDefault()
-        this.$router.push("/rent-a-car-admin/" + this.$route.params.id + "/vehicles")
+        this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/vehicles")
     },
       // konvertuje enum u int vrednost
       getSelectedType(i) {

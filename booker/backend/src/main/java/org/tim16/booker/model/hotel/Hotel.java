@@ -35,6 +35,10 @@ public class Hotel {
 
     private String description;
 
+    private Integer floors;
+
+    private  Integer maxRoomsNum;
+
     @JsonManagedReference("hotel-room")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="hotel")
     private Set<Room> rooms = new HashSet<Room>();
@@ -50,6 +54,14 @@ public class Hotel {
     private Set<HotelAdmin> admins = new HashSet<HotelAdmin>();
 
     public Hotel() {}
+
+    public void addAdmin(HotelAdmin admin) {
+        if (admin.getHotel() != null)
+            admin.getHotel().getAdmins().remove(admin);
+
+        admin.setHotel(this);
+        this.getAdmins().add(admin);
+    }
 
     public Integer getId() {
         return id;
@@ -129,5 +141,21 @@ public class Hotel {
 
     public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
+    }
+
+    public Integer getFloors() {
+        return floors;
+    }
+
+    public void setFloors(Integer floors) {
+        this.floors = floors;
+    }
+
+    public Integer getMaxRoomsNum() {
+        return maxRoomsNum;
+    }
+
+    public void setMaxRoomsNum(Integer maxRoomsNum) {
+        this.maxRoomsNum = maxRoomsNum;
     }
 }

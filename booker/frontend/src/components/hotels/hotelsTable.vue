@@ -1,30 +1,36 @@
 <template>
-  <div>
-    <br />
-    <div>
-      <b-link :to="{ path: 'add'}" append>Add new hotel</b-link>
-    </div>
-    <table class="center">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>City</th>
-          <th>State</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="hotel in hotels">
-          <td>{{hotel.id}}</td>
-          <td>{{hotel.name}}</td>
-          <td>{{hotel.address.city}}</td>
-          <td>{{hotel.address.state}}</td>
-          <td>{{hotel.description}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <b-card-group>
+    <b-card border-variant="light" class="mb-2 mx-auto">
+      <b-button variant="outline-primary" :to="{ path: 'add'}" append>Add new Hotel</b-button>
+      <br><br>
+      <table class="center">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Number of floors</th>
+            <th>Max number of rooms</th>
+            <th>Active rooms</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="hotel in hotels">
+            <td>{{hotel.id}}</td>
+            <td>{{hotel.name}}</td>
+            <td>{{hotel.address.city}}</td>
+            <td>{{hotel.address.state}}</td>
+            <td>{{hotel.floors}}</td>
+            <td>{{hotel.maxRoomsNum}}</td>
+            <td>{{hotel.rooms.length}}</td>
+            <td>{{hotel.description}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </b-card>
+  </b-card-group>
 </template>
 
 <script>
@@ -45,34 +51,26 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-family: Helvetica Neue, Arial, sans-serif;
-  font-size: 14px;
-  color: #444;
-}
-
 table {
-  border: 2px solid #666666;
-  border-radius: 3px;
-  background-color: #fff;
+    border: solid 1px #DDEEEE;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font: normal 13px Arial, sans-serif;
+    width: 100%;
 }
-
-table.center {
-    margin-left:auto; 
-    margin-right:auto;
-  }
-
 th {
-  background-color: #666666;
-  color: rgba(255,255,255,0.66);
+    background-color: #DDEFEF;
+    border: solid 1px #DDEEEE;
+    color: #6666ff;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #fff;
 }
-
 td {
-  background-color: #f9f9f9;
-}
-
-th, td {
-  min-width: 120px;
-  padding: 10px 20px;
+    border: solid 1px #DDEEEE;
+    color: #333;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #fff;
 }
 </style>

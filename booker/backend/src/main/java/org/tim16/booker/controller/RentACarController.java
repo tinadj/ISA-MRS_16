@@ -3,6 +3,7 @@ package org.tim16.booker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.RentACarDTO;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
@@ -30,11 +31,13 @@ public class RentACarController {
     private VehicleService vehicleService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<RentACar>> getAll() {
         return new ResponseEntity<>(rentACarService.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<RentACar> add(@RequestBody RentACarDTO dto) {
         RentACar rentACar = new RentACar();
         rentACar.setName(dto.getName());
@@ -62,6 +65,7 @@ public class RentACarController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<RentACar> getRentACar(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
 
@@ -73,6 +77,7 @@ public class RentACarController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<RentACar> update(@RequestBody RentACarDTO dto) {
 
         try {
@@ -101,6 +106,7 @@ public class RentACarController {
     }
 
     @RequestMapping(value = "/{id}/vehicles", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<Vehicle>> getVehicles(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
 
@@ -117,6 +123,7 @@ public class RentACarController {
     }
 
     @RequestMapping(value = "/{id}/branch-offices", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<BranchOffice>> getBranchOffices(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
 

@@ -34,7 +34,6 @@ public class RentACar {
 
     private BigDecimal longitude;
 
-    @Column(name = "descripiton")
     private String description;
 
     @JsonManagedReference("rent_a_car-branch_office")
@@ -101,6 +100,14 @@ public class RentACar {
                 return;
             }
         }
+    }
+
+    public void addAdmin(RentACarAdmin admin) {
+        if (admin.getRentACar() != null)
+            admin.getRentACar().getAdmins().remove(admin);
+
+        admin.setRentACar(this);
+        this.getAdmins().add(admin);
     }
 
 

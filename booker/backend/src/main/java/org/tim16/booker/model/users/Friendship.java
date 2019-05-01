@@ -13,11 +13,11 @@ public class Friendship {
 
     @ManyToOne
     @JoinColumn(name = "user1", referencedColumnName = "id", nullable = false)
-    private User user1;
+    private RegisteredUser user1;
 
     @ManyToOne
     @JoinColumn(name = "user2", referencedColumnName = "id", nullable = false)
-    private User user2;
+    private RegisteredUser user2;
 
     @Enumerated
     @Column( nullable = false)
@@ -33,19 +33,19 @@ public class Friendship {
         this.id = id;
     }
 
-    public User getUser1() {
+    public RegisteredUser getUser1() {
         return user1;
     }
 
-    public void setUser1(User user1) {
+    public void setUser1(RegisteredUser user1) {
         this.user1 = user1;
     }
 
-    public User getUser2() {
+    public RegisteredUser getUser2() {
         return user2;
     }
 
-    public void setUser2(User user2) {
+    public void setUser2(RegisteredUser user2) {
         this.user2 = user2;
     }
 

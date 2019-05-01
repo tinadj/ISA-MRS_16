@@ -1,6 +1,5 @@
 package org.tim16.booker.model.utility;
 
-import org.tim16.booker.model.users.User;
 
 import javax.persistence.*;
 

@@ -62,6 +62,14 @@ public class Airline {
 
     public Airline() {}
 
+    public void addAdmin(AirlineAdmin admin) {
+        if (admin.getAirline() != null)
+            admin.getAirline().getAdmins().remove(admin);
+
+        admin.setAirline(this);
+        this.getAdmins().add(admin);
+    }
+
     public Integer getId() {
         return id;
     }

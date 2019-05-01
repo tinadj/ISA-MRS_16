@@ -3,6 +3,7 @@ package org.tim16.booker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.BranchOfficeDTO;
 import org.tim16.booker.dto.VehicleDTO;
@@ -35,6 +36,7 @@ public class BranchOfficeController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<BranchOffice> add(@RequestBody BranchOfficeDTO dto) {
         // a new branch office must have rent a car defined
         if (dto.getRentACar() == null) {
@@ -66,6 +68,7 @@ public class BranchOfficeController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<BranchOffice> getBranchOffice(@PathVariable Integer id)
     {
         BranchOffice branchOffice = branchOfficeService.findOne(id);
@@ -78,6 +81,7 @@ public class BranchOfficeController {
     }
 
     @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<BranchOffice>> removeBranchOffice(@PathVariable Integer id)
     {
         BranchOffice vehicle = branchOfficeService.findOne(id);
@@ -95,6 +99,7 @@ public class BranchOfficeController {
     }
 
     @RequestMapping(value = "/update", method =  RequestMethod.PUT, consumes = "application/json")
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<BranchOffice> updateBranchOffice(@RequestBody BranchOfficeDTO dto)
     {
         try

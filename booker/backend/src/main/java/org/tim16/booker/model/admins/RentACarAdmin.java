@@ -1,24 +1,17 @@
 package org.tim16.booker.model.admins;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.tim16.booker.model.rent_a_car.RentACar;
+import org.tim16.booker.model.utility.Authority;
+import org.tim16.booker.model.utility.User;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
-@Table(name = "rent_a_car_admins")
-public class RentACarAdmin {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Integer id;
-
-    @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
-    private String password;
+public class RentACarAdmin extends User {
 
     private String name;
 
@@ -26,39 +19,44 @@ public class RentACarAdmin {
 
     private String email;
 
-    private String address;
+    private String city;
 
     private Integer phoneNum;
 
     @JsonManagedReference("rent_a_car-admin")
     @ManyToOne
-    @JoinColumn(name = "rentACar", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "rentACar", referencedColumnName = "id")
     private RentACar rentACar;
+
+    private  Boolean passChanged;
 
     public RentACarAdmin() {}
 
-    public Integer getId() {
-        return id;
+    public RentACarAdmin(String name, String lastname, String email, String city, Integer phoneNum, RentACar rentACar) {
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.phoneNum = phoneNum;
+        this.rentACar = rentACar;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public RentACarAdmin(String username, String password, String name, String lastname, String email, String city, Integer phoneNum) {
+        super(username, password);
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.phoneNum = phoneNum;
+        this.passChanged = false;
     }
 
-    public String getUsername() {
-        return username;
+    public RentACar getRentACar() {
+        return rentACar;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRentACar(RentACar rentACar) {
+        this.rentACar = rentACar;
     }
 
     public String getName() {
@@ -85,12 +83,12 @@ public class RentACarAdmin {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public String getCity() {
+        return city;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public Integer getPhoneNum() {
@@ -101,11 +99,11 @@ public class RentACarAdmin {
         this.phoneNum = phoneNum;
     }
 
-    public RentACar getRentACar() {
-        return rentACar;
+    public Boolean getPassChanged() {
+        return passChanged;
     }
 
-    public void setRentACar(RentACar rentACar) {
-        this.rentACar = rentACar;
+    public void setPassChanged(Boolean passChanged) {
+        this.passChanged = passChanged;
     }
 }
