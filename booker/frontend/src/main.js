@@ -12,7 +12,7 @@ Vue.use(BootstrapVue)
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
+require('../src/styles/global.css')
 library.add(faUserSecret)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

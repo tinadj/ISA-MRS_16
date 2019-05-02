@@ -11,7 +11,7 @@
         <b-nav-item><font-awesome-icon :icon="signOutIcon" /> Sign out</b-nav-item>
       </b-nav>
     </b-row>
-
+	
     <b-row>
       <b-col>
           <br />

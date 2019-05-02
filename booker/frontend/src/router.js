@@ -4,6 +4,9 @@ import Router from 'vue-router'
 import addAirline from '@/components/airlines/addAirline'
 import editAirline from '@/components/airlines/editAirline'
 import airlinesTable from '@/components/airlines/airlinesTable'
+import editProfile from '@/components/account/editProfile'
+import changePassword from '@/components/account/changePassword'
+import AirlineInfo from '@/components/airlines/airlineInfo'
 
 import AirlineView from '@/components/airlines/index'
 import HotelView from '@/components/hotels/index'
@@ -118,6 +121,10 @@ export default new Router({
       path: '/admins',
       component: RentACarView,
       children: [
+		{
+          path: '/',
+          component: AirlineInfo
+        },
         {
           path: '/',
           component: AdminsTable

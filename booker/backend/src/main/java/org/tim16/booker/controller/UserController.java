@@ -71,4 +71,21 @@ public class UserController {
         }
 
     }
+
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public ResponseEntity<User> update(@RequestBody ProfileDTO dto) {
+
+        try {
+            User user = service.findOne(dto.getId());
+            user.setName(dto.getName());
+            user.setLastname(dto.getLastname());
+            user.setEmail(dto.getEmail());
+            user.setAddress(dto.getAddress());
+            user.setPhoneNum(dto.getPhoneNum());
+            return new ResponseEntity<>(service.update(user), HttpStatus.OK);
+        }
+        catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
