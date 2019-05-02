@@ -73,7 +73,7 @@ export default {
                 .then(response => {
                     if(response.data.role == "AIRLINE_ADMIN") {
                         this.isChangedPass(response.data.userID)
-                        this.$router.push("/airiline-admin/" + response.data.adminOf)
+                        this.$router.push("/" + response.data.adminOf + "/airline-admin/")
                     } else if (response.data.role == "HOTEL_ADMIN") {
                         this.isChangedPass(response.data.userID)
                         this.$router.push("/hotel-admin/" + response.data.adminOf)

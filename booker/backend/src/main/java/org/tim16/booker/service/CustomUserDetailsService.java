@@ -17,7 +17,6 @@ import org.tim16.booker.model.admins.AirlineAdmin;
 import org.tim16.booker.model.admins.HotelAdmin;
 import org.tim16.booker.model.admins.RentACarAdmin;
 import org.tim16.booker.model.admins.SysAdmin;
-import org.tim16.booker.model.hotel.Hotel;
 import org.tim16.booker.model.utility.User;
 import org.tim16.booker.repository.*;
 
@@ -99,8 +98,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void update(User user) {
-        userRepository.save(user);
+    public User update(User user) {
+        return userRepository.save(user);
     }
 
 }

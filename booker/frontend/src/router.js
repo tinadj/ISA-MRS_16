@@ -143,12 +143,28 @@ export default new Router({
     },
     {
       // Airline admin
-      path: '/airline-admin',
+      path: '/:id/airline-admin/',
       component: AirlineAdmin,
       children: [
+		{
+          path: '/',
+          component: AirlineInfo
+        },
         {
-          path: 'edit/:id',
+          path: 'info',
+          component: AirlineInfo
+        },
+        {
+          path: 'edit',
           component: editAirline
+        },
+        {
+          path: 'profile',
+          component: editProfile
+        },
+        {
+          path: 'password',
+          component: changePassword
         }
       ]
     },

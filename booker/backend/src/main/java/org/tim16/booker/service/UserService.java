@@ -8,7 +8,6 @@ import org.tim16.booker.model.utility.User;
 import org.tim16.booker.repository.UserRepository;
 import org.tim16.booker.service.interfaces.IUserService;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @Service
@@ -19,13 +18,7 @@ public class UserService implements IUserService {
 
     @Override
     public User findByUsername(String username) throws UsernameNotFoundException {
-        User u = userRepository.findByUsername(username);
-        return u;
-    }
-
-    public User findById(Integer id) {
-        User u = userRepository.getOne(id);
-        return u;
+        return userRepository.findByUsername(username);
     }
 
     public User findByToken(String token) {

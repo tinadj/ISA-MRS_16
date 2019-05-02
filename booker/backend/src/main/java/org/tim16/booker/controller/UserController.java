@@ -9,17 +9,25 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import org.tim16.booker.dto.RoleIdDTO;
+import org.tim16.booker.dto.UserDTO;
 import org.tim16.booker.model.admins.AirlineAdmin;
 import org.tim16.booker.model.admins.HotelAdmin;
 import org.tim16.booker.model.admins.RentACarAdmin;
+import org.tim16.booker.model.admins.SysAdmin;
+import org.tim16.booker.model.hotel.Hotel;
+import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.utility.Authority;
 import org.tim16.booker.model.utility.User;
 import org.tim16.booker.model.utility.UserAuthorities;
+import org.tim16.booker.service.CustomUserDetailsService;
 import org.tim16.booker.service.UserService;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -28,6 +36,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
     @RequestMapping(value = "/get-role-and-id", method = RequestMethod.GET)
     public ResponseEntity<RoleIdDTO> getRoleAndID() {
@@ -73,19 +84,53 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public ResponseEntity<User> update(@RequestBody ProfileDTO dto) {
+    public ResponseEntity<User> update(@RequestBody UserDTO dto) {
 
-        try {
-            User user = service.findOne(dto.getId());
+        User u = userService.findByUsername(dto.getUsername());
+        if(u == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (u instanceof AirlineAdmin) {
+            AirlineAdmin airlineAdmin = (AirlineAdmin)u;
+            airlineAdmin.setName(dto.getName());
+            airlineAdmin.setLastname(dto.getLastname());
+            airlineAdmin.setEmail(dto.getEmail());
+            airlineAdmin.setCity(dto.getCity());
+            airlineAdmin.setPhoneNum(dto.getPhoneNum());
+            return new ResponseEntity<>(userDetailsService.update(airlineAdmin), HttpStatus.OK);
+        } else if (u instanceof RentACarAdmin) {
+            RentACarAdmin rentACarAdmin = (RentACarAdmin)u;
+            rentACarAdmin.setName(dto.getName());
+            rentACarAdmin.setLastname(dto.getLastname());
+            rentACarAdmin.setEmail(dto.getEmail());
+            rentACarAdmin.setCity(dto.getCity());
+            rentACarAdmin.setPhoneNum(dto.getPhoneNum());
+            return new ResponseEntity<>(userDetailsService.update(rentACarAdmin), HttpStatus.OK);
+        } else  if (u instanceof HotelAdmin) {
+            HotelAdmin hotelAdmin = (HotelAdmin)u;
+            hotelAdmin.setName(dto.getName());
+            hotelAdmin.setLastname(dto.getLastname());
+            hotelAdmin.setEmail(dto.getEmail());
+            hotelAdmin.setCity(dto.getCity());
+            hotelAdmin.setPhoneNum(dto.getPhoneNum());
+            return new ResponseEntity<>(userDetailsService.update(hotelAdmin), HttpStatus.OK);
+        } else if (u instanceof SysAdmin) {
+            SysAdmin sysAdmin = (SysAdmin)u;
+            sysAdmin.setName(dto.getName());
+            sysAdmin.setLastname(dto.getLastname());
+            sysAdmin.setEmail(dto.getEmail());
+            sysAdmin.setCity(dto.getCity());
+            sysAdmin.setPhoneNum(dto.getPhoneNum());
+            return new ResponseEntity<>(userDetailsService.update(sysAdmin), HttpStatus.OK);
+        } else {
+            RegisteredUser user = (RegisteredUser)u;
             user.setName(dto.getName());
             user.setLastname(dto.getLastname());
             user.setEmail(dto.getEmail());
-            user.setAddress(dto.getAddress());
+            user.setCity(dto.getCity());
             user.setPhoneNum(dto.getPhoneNum());
-            return new ResponseEntity<>(service.update(user), HttpStatus.OK);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(userDetailsService.update(user), HttpStatus.OK);
         }
     }
 }
