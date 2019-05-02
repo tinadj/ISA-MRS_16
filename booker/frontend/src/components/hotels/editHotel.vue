@@ -1,19 +1,66 @@
 <template>
-  <div>
-    <form @submit="edit">
-      <b-form-input v-model="name" placeholder="Name"></b-form-input>
-      <b-form-input v-model="city" placeholder="City"></b-form-input>
-      <b-form-input v-model="state" placeholder="State"></b-form-input>
-      <b-form-input v-model="latitude" placeholder="Latitude" type="number"></b-form-input>
-      <b-form-input v-model="longitude" placeholder="Longitude" type="number"></b-form-input>
-      <b-form-textarea v-model="description" placeholder="Description" rows="3"></b-form-textarea>
+  <b-card-group>
+    <b-card header-tag="header" border-variant="light" style="max-width: 40rem;" class="mb-2 mx-auto">
+      <h6 slot="header" class="mb-0"><b>Edit Hotel Information</b></h6>
+      <form @submit="edit">
 
-      <b-button variant="outline-primary" type="submit">Save</b-button>
-      <b-button @click="onCancel">Cancel</b-button>
-    </form>
-    <b-alert variant="success" v-model="success">Successfully saved!</b-alert>
-    <b-alert variant="danger" v-model="error" dismissible>Something went wrong!</b-alert>
-  </div>
+        <b-form-group 
+            label="Name: " 
+            label-cols="4" 
+            label-cols-lg="2" 
+            label-for="input-1">
+            <b-form-input id="input-1" v-model="name" placeholder="Name"></b-form-input>
+        </b-form-group>
+
+        <b-form-group 
+            label="City: " 
+            label-cols="4" 
+            label-cols-lg="2" 
+            label-for="input-2">
+            <b-form-input id="input-1" v-model="city" placeholder="City"></b-form-input>
+        </b-form-group>
+
+        <b-form-group 
+            label="State: " 
+            label-cols="4" 
+            label-cols-lg="2" 
+            label-for="input-3">
+            <b-form-input id="input-3" v-model="state" placeholder="State"></b-form-input>
+        </b-form-group>
+
+        <b-form-group 
+            label="Latitude: " 
+            label-cols="4" 
+            label-cols-lg="2" 
+            label-for="input-4">
+            <b-form-input id="input-4" v-model="latitude" placeholder="Latitude" type="number" step="0.000001"></b-form-input>
+        </b-form-group>
+
+        <b-form-group 
+            label="Longitude: " 
+            label-cols="4" 
+            label-cols-lg="2" 
+            label-for="input-5">
+            <b-form-input id="input-5" v-model="longitude" placeholder="Longitude" type="number" step="0.000001"></b-form-input>
+        </b-form-group>
+
+        <b-form-group 
+            label="Description: " 
+            label-cols="4" 
+            label-cols-lg="2" 
+            label-for="input-6">
+           <b-form-textarea id="input-6" v-model="description" placeholder="Description" rows="3"></b-form-textarea>
+        </b-form-group>
+
+        <b-button variant="outline-primary" type="submit" class="mr-1">Save</b-button>
+        <b-button :to="{ path: 'info'} ">Cancel</b-button>
+
+      </form><br>
+      <b-alert variant="success" v-model="success">Successfully saved!</b-alert>
+      <b-alert variant="danger" v-model="error" dismissible>Something went wrong!</b-alert>
+    </b-card>
+  </b-card-group>
+  
 </template>
 
 <script>
@@ -46,14 +93,13 @@ export default {
       this.longitude = response.data.longitude
       this.description = response.data.description
     })
-
   }
   ,
   methods: {
     edit (e) {
       e.preventDefault()
 
-      const hotel = {
+      const hotel  = {
         'id': this.$route.params.id,
         'name': this.name,
         'address': {
@@ -64,7 +110,6 @@ export default {
         'longitude': this.longitude,
         'description': this.description
       }
-
       AXIOS.put('/hotels/update', hotel)
       .then(response => {
         this.success = true;

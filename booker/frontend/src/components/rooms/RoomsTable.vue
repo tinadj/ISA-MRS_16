@@ -37,8 +37,10 @@
   </div>
 </template>
 
+
 <script>
 import {AXIOS} from '../../http-common'
+
 export default {
   data () {
     return {
@@ -74,34 +76,26 @@ export default {
 </script>
 
 <style scoped>
-body {
-  font-family: Helvetica Neue, Arial, sans-serif;
-  font-size: 14px;
-  color: #444;
-}
-
 table {
-  border: 2px solid #666666;
-  border-radius: 3px;
-  background-color: #fff;
+    border: solid 1px #DDEEEE;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font: normal 13px Arial, sans-serif;
+    width: 100%;
 }
-
-table.center {
-    margin-left:auto; 
-    margin-right:auto;
-  }
-
 th {
-  background-color: #666666;
-  color: rgba(255,255,255,0.66);
+    background-color: #DDEFEF;
+    border: solid 1px #DDEEEE;
+    color: #6666ff;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #fff;
 }
-
 td {
-  background-color: #f9f9f9;
-}
-
-th, td {
-  min-width: 120px;
-  padding: 10px 20px;
+    border: solid 1px #DDEEEE;
+    color: #333;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #fff;
 }
 </style>
