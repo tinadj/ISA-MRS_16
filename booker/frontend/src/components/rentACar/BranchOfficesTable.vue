@@ -72,7 +72,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 table {
     border: solid 1px #DDEEEE;
     border-collapse: collapse;

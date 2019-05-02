@@ -33,7 +33,7 @@ import EditBranchOffice from '@/components/rentACar/EditBranchOffice'
 import AirlineAdmin from '@/components/admins/AirlineAdmin'
 import HotelAdmin from '@/components/admins/HotelAdmin'
 import RentACarAdmin from '@/components/admins/RentACarAdmin'
-import ChangePassword from '@/components/admins/ChangePassword'
+import ChangePasswordFirstLogin from '@/components/admins/ChangePasswordFirstLogin'
 
 import Login from '@/components/users/Login'
 import ConfirmLogin from '@/components/users/ConfirmLogin'
@@ -41,6 +41,7 @@ import Register from '@/components/users/Register'
 import RegisteredUserHomePage from '@/components/users/RegisteredUserHomePage'
 
 import IndexPage from '@/components/users/IndexPage'
+import ProfilePage from '@/components/account/ProfilePage'
 
 
 
@@ -71,7 +72,7 @@ export default new Router({
     },
     {
       path: '/change-pass/:id',
-      component: ChangePassword
+      component: ChangePasswordFirstLogin
     },
     // Sys admin
     {
@@ -219,6 +220,10 @@ export default new Router({
         {
           path: 'edit-branch-office/:bo_id',
           component: EditBranchOffice
+        },
+        {
+          path: 'profile-page',
+          component: ProfilePage
         }
       ]
     }

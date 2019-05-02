@@ -25,7 +25,6 @@
 		<form @submit="edit" class="col-md-8">
 		  <b-form-input v-model="firstName" placeholder="First Name"></b-form-input>
 		  <b-form-input v-model="lastName" placeholder="Last Name"></b-form-input>
-		  <b-form-input type="email" v-model="email" placeholder="E-mail address"></b-form-input>
 		  <b-form-input v-model="address" placeholder="City"></b-form-input>
 		  <b-form-input v-model="phone" placeholder="Phone Number" type="number"></b-form-input>
 
@@ -51,7 +50,6 @@ export default {
       username: '',
       firstName: '',
       lastName: '',
-      email: '',
       city: '',
       phone: '',
       success: false,
@@ -66,7 +64,6 @@ export default {
       this.username = response.data.username
       this.firstName = response.data.name
       this.lastName = response.data.lastname
-      this.email = response.data.email
       this.address = response.data.address
       this.phone = response.data.phoneNum
     })
@@ -80,7 +77,6 @@ export default {
         'username': this.username,
         'name': this.firstName,
         'lastname': this.lastName,
-        'email': this.email,
         'city': this.address,
         'phoneNum': this.phone
       }

@@ -95,7 +95,6 @@ public class UserController {
             AirlineAdmin airlineAdmin = (AirlineAdmin)u;
             airlineAdmin.setName(dto.getName());
             airlineAdmin.setLastname(dto.getLastname());
-            airlineAdmin.setEmail(dto.getEmail());
             airlineAdmin.setCity(dto.getCity());
             airlineAdmin.setPhoneNum(dto.getPhoneNum());
             return new ResponseEntity<>(userDetailsService.update(airlineAdmin), HttpStatus.OK);
@@ -103,7 +102,6 @@ public class UserController {
             RentACarAdmin rentACarAdmin = (RentACarAdmin)u;
             rentACarAdmin.setName(dto.getName());
             rentACarAdmin.setLastname(dto.getLastname());
-            rentACarAdmin.setEmail(dto.getEmail());
             rentACarAdmin.setCity(dto.getCity());
             rentACarAdmin.setPhoneNum(dto.getPhoneNum());
             return new ResponseEntity<>(userDetailsService.update(rentACarAdmin), HttpStatus.OK);
@@ -111,7 +109,6 @@ public class UserController {
             HotelAdmin hotelAdmin = (HotelAdmin)u;
             hotelAdmin.setName(dto.getName());
             hotelAdmin.setLastname(dto.getLastname());
-            hotelAdmin.setEmail(dto.getEmail());
             hotelAdmin.setCity(dto.getCity());
             hotelAdmin.setPhoneNum(dto.getPhoneNum());
             return new ResponseEntity<>(userDetailsService.update(hotelAdmin), HttpStatus.OK);
@@ -119,7 +116,6 @@ public class UserController {
             SysAdmin sysAdmin = (SysAdmin)u;
             sysAdmin.setName(dto.getName());
             sysAdmin.setLastname(dto.getLastname());
-            sysAdmin.setEmail(dto.getEmail());
             sysAdmin.setCity(dto.getCity());
             sysAdmin.setPhoneNum(dto.getPhoneNum());
             return new ResponseEntity<>(userDetailsService.update(sysAdmin), HttpStatus.OK);
@@ -127,7 +123,6 @@ public class UserController {
             RegisteredUser user = (RegisteredUser)u;
             user.setName(dto.getName());
             user.setLastname(dto.getLastname());
-            user.setEmail(dto.getEmail());
             user.setCity(dto.getCity());
             user.setPhoneNum(dto.getPhoneNum());
             return new ResponseEntity<>(userDetailsService.update(user), HttpStatus.OK);
