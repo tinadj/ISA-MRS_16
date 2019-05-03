@@ -160,7 +160,11 @@ export default new Router({
           component: editAirline
         },
         {
-          path: 'profile',
+          path: 'profile-page',
+          component: ProfilePage
+        },
+        {
+          path: 'edit-profile',
           component: editProfile
         },
         {
@@ -224,6 +228,10 @@ export default new Router({
         {
           path: 'profile-page',
           component: ProfilePage
+        },
+        {
+          path: 'edit-profile',
+          component: editProfile
         }
       ]
     }

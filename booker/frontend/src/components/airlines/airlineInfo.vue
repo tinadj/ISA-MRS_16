@@ -1,13 +1,5 @@
 <template>
   <div>
-	  <b-row>
-		<b-nav class="nav nav-tabs margins w-100">
-			<b-nav-item :to="{ path: 'info'}" active>Information</b-nav-item>
-			<b-nav-item :to="{ path: 'edit'}">Edit information</b-nav-item>
-			<b-nav-item :to="{ path: 'profile'}">Profile</b-nav-item>
-		</b-nav>
-      </b-row>
-	  <br />
 	  <b-card-group deck>
 		<b-card  border-variant="light" header-tag="header">
 		  <h6 slot="header" class="mb-0"><b>Airline Information</b></h6>

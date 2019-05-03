@@ -12,8 +12,7 @@
 							</span>
 
               <br><br>
-							<b-button variant="outline-primary">Change Profile Picture</b-button><br><br>
-							<b-button variant="outline-primary">Edit profile</b-button>
+							<b-button :to="{ path: 'edit-profile' }" variant="outline-primary">Edit profile</b-button>
 						</div><!-- /.col -->
 
 						<div class="col-xs-12 col-sm-9">
@@ -57,9 +56,9 @@
 						</div><!-- /.col -->
 					</div><!-- /.row -->				
 
-			</div>
-		</div>
-	</div>
+          </div>
+        </div>
+      </div>
     </b-card >
   </b-card-group>
   
