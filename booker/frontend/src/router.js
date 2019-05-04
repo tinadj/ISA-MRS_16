@@ -36,6 +36,7 @@ import RentACarAdmin from '@/components/admins/RentACarAdmin'
 import ChangePasswordFirstLogin from '@/components/admins/ChangePasswordFirstLogin'
 
 import Login from '@/components/users/Login'
+import Logout from '@/components/users/Logout'
 import ConfirmLogin from '@/components/users/ConfirmLogin'
 import Register from '@/components/users/Register'
 import RegisteredUserHomePage from '@/components/users/RegisteredUserHomePage'
@@ -67,8 +68,36 @@ export default new Router({
       component: Register
     },
     {
-      path: '/home/:id',
-      component: RegisteredUserHomePage
+      // Registered user
+      path: '/:id/home/',
+      component: RegisteredUserHomePage,
+      children: [
+        {
+          path: 'airlines'
+        },
+        {
+          path: 'hotels'
+        },
+        {
+          path: 'rent-a-cars'
+        },
+        {
+          path: 'profile-page',
+          component: ProfilePage
+        },
+        {
+          path: 'edit-profile',
+          component: editProfile
+        },
+        {
+          path: 'change-pass',
+          component: changePassword
+        },
+        {
+          path: 'sign-out',
+          component: Logout
+        }
+      ]
     },
     {
       path: '/change-pass/:id',
@@ -168,8 +197,12 @@ export default new Router({
           component: editProfile
         },
         {
-          path: 'password',
+          path: 'change-pass',
           component: changePassword
+        },
+        {
+          path: 'sign-out',
+          component: Logout
         }
       ]
     },
@@ -232,6 +265,14 @@ export default new Router({
         {
           path: 'edit-profile',
           component: editProfile
+        },
+        {
+          path: 'change-pass',
+          component: changePassword
+        },
+        {
+          path: 'sign-out',
+          component: Logout
         }
       ]
     }

@@ -62,8 +62,15 @@
 										<span><b-form-input v-model="phone" placeholder="Phone Number" type="number"></b-form-input></span>
 									</div>
 								</div>
+
+                <div class="profile-info-row">
+									<div class="profile-info-name"></div>
+
+									<div class="profile-info-value">
+										<span><b-button variant="primary" :to="{ path: 'change-pass'}">Change password</b-button></span>
+									</div>
+								</div>
                 <br>
-                
                 
                 <div class="profile-info-row">
                   <div class="profile-info-name"></div>
@@ -228,17 +235,16 @@ export default {
     /*
     Make the request to the POST /single-file URL
     */
-    AXIOS.post( '/file-preview',
-    formData,
+    AXIOS.put( '/users/update-profile-pic', formData,
     {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     }).
-    then(function(){
+    then(response => {
       this.success = true;
     })
-    .catch(function(){
+    .catch(err => {
       this.errorMessage = "Changing profile picture failed."
       this.error = true   
     })

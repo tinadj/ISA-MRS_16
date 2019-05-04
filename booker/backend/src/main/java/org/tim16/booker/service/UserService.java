@@ -30,8 +30,8 @@ public class UserService implements IUserService {
         return result;
     }
 
-    public void save (User user) {
-        userRepository.save(user);
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
 

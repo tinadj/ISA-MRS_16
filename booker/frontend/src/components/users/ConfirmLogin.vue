@@ -84,7 +84,7 @@ export default {
                         this.isChangedPass(response.data.userID)
                         this.$router.push("/airlines")
                     } else if (response.data.role == "USER") {   
-                        this.$router.push("/home/" + response.data.userID)
+                        this.$router.push("/" + response.data.userID + "/home/")
                     } else {
                         this.$router.push("/login")
                     } 

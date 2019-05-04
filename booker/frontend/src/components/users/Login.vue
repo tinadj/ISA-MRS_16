@@ -21,7 +21,8 @@
 </template>
 
 <script>
-import { AXIOS } from '../../http-common';
+import { AXIOS } from '../../http-common'
+
 export default {
     name: 'Login',
     data() {
@@ -60,12 +61,8 @@ export default {
                 })
         },
         getRole() {
-
-            var getJwtToken = function() {
-                return localStorage.getItem('token');
-                };
-
-                AXIOS.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+                
+                AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
 
                 AXIOS.get("/users/get-role-and-id")
                 .then(response => {
@@ -82,7 +79,7 @@ export default {
                         this.isChangedPass(response.data.userID)
                         this.$router.push("/airlines")
                     } else if (response.data.role == "USER") {   
-                        this.$router.push("/home/" + response.data.userID)
+                        this.$router.push("/" + response.data.userID + "/home/")
                     } else {
                         this.$router.push("/login")
                     } 

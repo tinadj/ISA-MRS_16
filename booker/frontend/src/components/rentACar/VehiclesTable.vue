@@ -77,6 +77,8 @@ export default {
     }
   },
   mounted () {
+    AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
+    
     let api = 'rent-a-cars/' +  this.$route.params.id + '/vehicles'
       AXIOS.get(api)
       .then(response => { this.vehicles = response.data})

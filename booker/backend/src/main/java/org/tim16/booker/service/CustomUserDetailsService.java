@@ -13,12 +13,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.tim16.booker.model.admins.AirlineAdmin;
 import org.tim16.booker.model.admins.HotelAdmin;
 import org.tim16.booker.model.admins.RentACarAdmin;
 import org.tim16.booker.model.admins.SysAdmin;
 import org.tim16.booker.model.utility.User;
 import org.tim16.booker.repository.*;
+
+import java.io.IOException;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -89,9 +93,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         } else {
             userRepository.save(user);
         }
-
-
-
     }
 
     public void create(User user) {
@@ -101,6 +102,5 @@ public class CustomUserDetailsService implements UserDetailsService {
     public User update(User user) {
         return userRepository.save(user);
     }
-
 }
 
