@@ -22,8 +22,8 @@ public class Hotel {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
-    @Column(name = "name", unique = true, nullable = false)
-    String name;
+    @Column(name = "name", unique = true)
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "address", referencedColumnName = "id")
@@ -33,8 +33,11 @@ public class Hotel {
 
     private BigDecimal longitude;
 
+    @Column(name = "description")
     private String description;
 
+    @JsonManagedReference("hotel-rooms")
+    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy = "hotel")
     private Integer floors;
 
     private  Integer maxRoomsNum;
@@ -54,6 +57,27 @@ public class Hotel {
     private Set<HotelAdmin> admins = new HashSet<HotelAdmin>();
 
     public Hotel() {}
+  
+    /* Zadovoljava obostranu vezu izmedju sobe i hotela (ovde se vezuje soba za hotel) */
+    public void add(Room p) {
+        if (p.getHotel() != null)
+        {
+            p.getHotel().getRooms().remove(p);
+        }
+
+        p.setHotel(this);
+        this.getRooms().add(p);
+    }
+
+    public void removeRoom(Integer id) {
+        for (Room r: getRooms())
+        {
+            if(r.getId() == id)
+            {
+                this.getRooms().remove(r);
+                return;
+            }
+        }
 
     public void addAdmin(HotelAdmin admin) {
         if (admin.getHotel() != null)

@@ -7,11 +7,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.HotelDTO;
 import org.tim16.booker.model.hotel.Hotel;
+import org.tim16.booker.model.hotel.Room;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.DestinationService;
 import org.tim16.booker.service.HotelService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -68,6 +70,23 @@ public class HotelController {
 
         return new ResponseEntity<>(hotel, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/{id}/rooms", method = RequestMethod.GET)
+    public ResponseEntity<List<Room>> getRooms(@PathVariable Integer id) {
+        Hotel hotel = service.findOne(id);
+
+        if (hotel == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<Room> rooms = new ArrayList<>();
+        for (Room r: hotel.getRooms()) {
+            rooms.add(r);
+        }
+
+        return new ResponseEntity<>(rooms, HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<Hotel> update(@RequestBody HotelDTO dto) {
