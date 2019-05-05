@@ -1,42 +1,29 @@
 package org.tim16.booker.model.users;
 
 import org.tim16.booker.model.utility.Rate;
+import org.tim16.booker.model.utility.User;
 
 import javax.persistence.*;
 import java.util.HashSet;
+
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Integer id;
-
-    @Column(unique = true, nullable = false)
-    private String username;
-
-    @Column(nullable = false)
-    private String password;
+public class RegisteredUser extends User {
 
     private String name;
 
     private String lastname;
 
-    @Column(nullable = false)
     private String email;
 
-    private String address;
+    private String city;
 
     private Integer phoneNum;
 
-    @Column(nullable = false)
     private Integer bonusPts;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private UserType type;
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
@@ -48,30 +35,21 @@ public class User {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rates = new HashSet<Rate>();
 
-    public User() {}
+    public RegisteredUser() {}
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public RegisteredUser(String username, String password, String name, String lastname, String email, String city, Integer phoneNum) {
+        super(username, password);
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.phoneNum = phoneNum;
+        this.bonusPts = 0;
+        this.type = UserType.REGULAR;
+        this.friends = new HashSet<>();
+        this.reservations = new HashSet<>();
+        this.rates = new HashSet<>();
+        super.setEnabled(false);
     }
 
     public String getName() {
@@ -98,12 +76,12 @@ public class User {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public String getCity() {
+        return city;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public Integer getPhoneNum() {
@@ -153,4 +131,9 @@ public class User {
     public void setRates(Set<Rate> rates) {
         this.rates = rates;
     }
+
+
+
+
+
 }

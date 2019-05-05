@@ -3,6 +3,7 @@ package org.tim16.booker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.AirlineDTO;
 import org.tim16.booker.model.airline.Airline;
@@ -23,11 +24,13 @@ public class AirlinesController {
     private DestinationService destinationService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<Airline>> getAll() {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<Airline> add(@RequestBody AirlineDTO dto) {
         Airline airline = new Airline();
         airline.setName(dto.getName());

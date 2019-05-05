@@ -38,6 +38,12 @@ public class Hotel {
 
     @JsonManagedReference("hotel-rooms")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy = "hotel")
+    private Integer floors;
+
+    private  Integer maxRoomsNum;
+
+    @JsonManagedReference("hotel-room")
+    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="hotel")
     private Set<Room> rooms = new HashSet<Room>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
@@ -51,7 +57,7 @@ public class Hotel {
     private Set<HotelAdmin> admins = new HashSet<HotelAdmin>();
 
     public Hotel() {}
-
+  
     /* Zadovoljava obostranu vezu izmedju sobe i hotela (ovde se vezuje soba za hotel) */
     public void add(Room p) {
         if (p.getHotel() != null)
@@ -72,6 +78,13 @@ public class Hotel {
                 return;
             }
         }
+
+    public void addAdmin(HotelAdmin admin) {
+        if (admin.getHotel() != null)
+            admin.getHotel().getAdmins().remove(admin);
+
+        admin.setHotel(this);
+        this.getAdmins().add(admin);
     }
 
     public Integer getId() {
@@ -152,5 +165,21 @@ public class Hotel {
 
     public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
+    }
+
+    public Integer getFloors() {
+        return floors;
+    }
+
+    public void setFloors(Integer floors) {
+        this.floors = floors;
+    }
+
+    public Integer getMaxRoomsNum() {
+        return maxRoomsNum;
+    }
+
+    public void setMaxRoomsNum(Integer maxRoomsNum) {
+        this.maxRoomsNum = maxRoomsNum;
     }
 }

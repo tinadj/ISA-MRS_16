@@ -1,7 +1,5 @@
 package org.tim16.booker.model.airline;
 
-import org.tim16.booker.model.users.User;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;

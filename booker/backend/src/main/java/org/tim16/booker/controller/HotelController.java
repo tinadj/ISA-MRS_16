@@ -3,6 +3,7 @@ package org.tim16.booker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.HotelDTO;
 import org.tim16.booker.model.hotel.Hotel;
@@ -25,17 +26,21 @@ public class HotelController {
     private DestinationService destinationService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<Hotel>> getAll() {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<Hotel> add(@RequestBody HotelDTO dto) {
         Hotel hotel = new Hotel();
         hotel.setName(dto.getName());
         hotel.setDescription(dto.getDescription());
         hotel.setLatitude(dto.getLatitude());
         hotel.setLongitude(dto.getLongitude());
+        hotel.setFloors(dto.getFloors());
+        hotel.setMaxRoomsNum(dto.getMaxRoomsNum());
 
         Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
 

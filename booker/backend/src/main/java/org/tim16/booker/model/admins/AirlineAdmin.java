@@ -1,24 +1,20 @@
 package org.tim16.booker.model.admins;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.tim16.booker.model.airline.Airline;
+import org.tim16.booker.model.utility.Authority;
+import org.tim16.booker.model.utility.User;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
-@Table(name = "airline_admins")
-public class AirlineAdmin {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Integer id;
-
-    @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
-    private String password;
+public class AirlineAdmin extends User {
 
     private String name;
 
@@ -26,39 +22,36 @@ public class AirlineAdmin {
 
     private String email;
 
-    private String address;
+    private String city;
 
     private Integer phoneNum;
 
     @JsonManagedReference("airline-admin")
     @ManyToOne
-    @JoinColumn(name = "airline", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "airline", referencedColumnName = "id")
     private Airline airline;
+
+    private Boolean passChanged;
 
     public AirlineAdmin() {}
 
-    public Integer getId() {
-        return id;
+    public AirlineAdmin(String name, String lastname, String email, String city, Integer phoneNum, Airline airline) {
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.phoneNum = phoneNum;
+        this.airline = airline;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public AirlineAdmin(String username, String password, String name, String lastname, String email, String city, Integer phoneNum) {
+        super(username, password);
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.phoneNum = phoneNum;
+        this.passChanged = false;
     }
 
     public String getName() {
@@ -85,12 +78,12 @@ public class AirlineAdmin {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public String getCity() {
+        return city;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setCity(String address) {
+        this.city = address;
     }
 
     public Integer getPhoneNum() {
@@ -107,5 +100,13 @@ public class AirlineAdmin {
 
     public void setAirline(Airline airline) {
         this.airline = airline;
+    }
+
+    public Boolean getPassChanged() {
+        return passChanged;
+    }
+
+    public void setPassChanged(Boolean passChanged) {
+        this.passChanged = passChanged;
     }
 }

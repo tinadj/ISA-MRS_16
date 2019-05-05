@@ -1,24 +1,17 @@
 package org.tim16.booker.model.admins;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.tim16.booker.model.hotel.Hotel;
+import org.tim16.booker.model.utility.Authority;
+import org.tim16.booker.model.utility.User;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
-@Table(name = "hotel_admins")
-public class HotelAdmin {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Integer id;
-
-    @Column(nullable = false)
-    private String username;
-
-    @Column(nullable = false)
-    private String password;
+public class HotelAdmin extends User {
 
     private String name;
 
@@ -26,39 +19,36 @@ public class HotelAdmin {
 
     private String email;
 
-    private String address;
+    private String city;
 
     private Integer phoneNum;
 
     @JsonManagedReference("hotel-admin")
     @ManyToOne
-    @JoinColumn(name = "hotel", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "hotel", referencedColumnName = "id")
     private Hotel hotel;
+
+    private Boolean passChanged;
 
     public HotelAdmin() {}
 
-    public Integer getId() {
-        return id;
+    public HotelAdmin(String name, String lastname, String email, String city, Integer phoneNum, Hotel hotel) {
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.phoneNum = phoneNum;
+        this.hotel = hotel;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public HotelAdmin(String username, String password, String name, String lastname, String email, String city, Integer phoneNum) {
+        super(username, password);
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.city = city;
+        this.phoneNum = phoneNum;
+        this.passChanged = false;
     }
 
     public String getName() {
@@ -85,12 +75,12 @@ public class HotelAdmin {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public String getCity() {
+        return city;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public Integer getPhoneNum() {
@@ -107,5 +97,13 @@ public class HotelAdmin {
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
+    }
+
+    public Boolean getPassChanged() {
+        return passChanged;
+    }
+
+    public void setPassChanged(Boolean passChanged) {
+        this.passChanged = passChanged;
     }
 }
