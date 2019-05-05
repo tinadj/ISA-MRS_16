@@ -36,8 +36,6 @@ public class Hotel {
     @Column(name = "description")
     private String description;
 
-    @JsonManagedReference("hotel-rooms")
-    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy = "hotel")
     private Integer floors;
 
     private  Integer maxRoomsNum;
@@ -70,14 +68,13 @@ public class Hotel {
     }
 
     public void removeRoom(Integer id) {
-        for (Room r: getRooms())
-        {
-            if(r.getId() == id)
-            {
+        for (Room r : getRooms()) {
+            if (r.getId() == id) {
                 this.getRooms().remove(r);
                 return;
             }
         }
+    }
 
     public void addAdmin(HotelAdmin admin) {
         if (admin.getHotel() != null)
