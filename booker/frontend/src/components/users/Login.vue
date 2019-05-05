@@ -71,7 +71,7 @@ export default {
                         this.$router.push("/" + response.data.adminOf + "/airline-admin/")
                     } else if (response.data.role == "HOTEL_ADMIN") {
                         this.isChangedPass(response.data.userID)
-                        this.$router.push("/hotel-admin/" + response.data.adminOf)
+                        this.$router.push("/" + response.data.adminOf+ "/hotel-admin/")
                     } else if (response.data.role == "RAC_ADMIN") {
                         this.isChangedPass(response.data.userID)
                         this.$router.push("/" + response.data.adminOf + "/rent-a-car-admin/")

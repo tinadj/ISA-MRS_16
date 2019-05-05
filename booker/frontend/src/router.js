@@ -213,7 +213,7 @@ export default new Router({
     },
     {
       // Hotel admin
-      path: '/hotel-admin/:id/',
+      path: '/:id/hotel-admin/',
       component: HotelAdmin,
       children: [
         {
@@ -235,6 +235,22 @@ export default new Router({
         {
           path: 'edit-room/:r_id',
           component: editRoom
+        },
+        {
+          path: 'profile-page',
+          component: ProfilePage
+        },
+        {
+          path: 'edit-profile',
+          component: editProfile
+        },
+        {
+          path: 'change-pass',
+          component: changePassword
+        },
+        {
+          path: 'sign-out',
+          component: Logout
         }
       ]
     },
