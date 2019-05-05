@@ -104,7 +104,7 @@ export default {
                     'username': this.username,
                     'password': this.password,
                     'name': this.firstName,
-                    'lastName': this.lastName,
+                    'lastname': this.lastName,
                     'email': this.email,
                     'city': this.city,
                     'phoneNum': this.phoneNum,

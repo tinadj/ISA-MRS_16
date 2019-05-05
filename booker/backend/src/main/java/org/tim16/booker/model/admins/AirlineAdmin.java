@@ -16,16 +16,6 @@ import java.util.List;
 @Entity
 public class AirlineAdmin extends User {
 
-    private String name;
-
-    private String lastname;
-
-    private String email;
-
-    private String city;
-
-    private Integer phoneNum;
-
     @JsonManagedReference("airline-admin")
     @ManyToOne
     @JoinColumn(name = "airline", referencedColumnName = "id")
@@ -35,63 +25,8 @@ public class AirlineAdmin extends User {
 
     public AirlineAdmin() {}
 
-    public AirlineAdmin(String name, String lastname, String email, String city, Integer phoneNum, Airline airline) {
-        this.name = name;
-        this.lastname = lastname;
-        this.email = email;
-        this.city = city;
-        this.phoneNum = phoneNum;
-        this.airline = airline;
-    }
-
     public AirlineAdmin(String username, String password, String name, String lastname, String email, String city, Integer phoneNum) {
-        super(username, password);
-        this.name = name;
-        this.lastname = lastname;
-        this.email = email;
-        this.city = city;
-        this.phoneNum = phoneNum;
-        this.passChanged = false;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String address) {
-        this.city = address;
-    }
-
-    public Integer getPhoneNum() {
-        return phoneNum;
-    }
-
-    public void setPhoneNum(Integer phoneNum) {
-        this.phoneNum = phoneNum;
+        super(username, password, name, lastname, email, city, phoneNum);
     }
 
     public Airline getAirline() {

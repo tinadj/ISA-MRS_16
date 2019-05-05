@@ -133,14 +133,13 @@ export default {
         }
           AXIOS.put('/vehicles/update', vehicle)
           .then(response => {
-            this.success = true;
-            this.error = false;
+            this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/vehicles")
           })
           .catch(err => {
             this.success = false;
             this.error = true
           })
-          this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/vehicles")
+          
       } else {
         this.typeValid = false
       }

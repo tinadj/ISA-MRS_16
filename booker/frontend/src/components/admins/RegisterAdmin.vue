@@ -4,7 +4,7 @@
             <table align="center">
                 <tr>
                     <td colspan="2" >
-                        <div class="row justify-content-center">
+                        <div class="justify-content-center">
                             <b-form-radio-group
                             v-model="adminRole"
                             v-on:input="updateSelect"
@@ -15,13 +15,26 @@
                         </div>
                     </td>
                 </tr>
+                <tr><td colspan="2"><br></td></tr>
                 <tr>
-                    <td><b-form-input v-model="username" placeholder="Username"></b-form-input></td>
-                    <td><b-form-input id="input-email" type="email"  v-model="email" :state="emailValid" placeholder="Email"></b-form-input></td>
+                    <td>
+                        <b-form-group
+                            label-for="input-username"
+                        >
+                        <b-form-input id="input-username" v-model="username" placeholder="Username"></b-form-input>
+                        </b-form-group>
+                        
+                    </td>
+                    <td>
+                        <b-form-group
+                            label-for="input-email"
+                        >
+                        <b-form-input id="input-email" type="email"  v-model="email" :state="emailValid" placeholder="Email"></b-form-input>
+                        </b-form-group>
+                    </td>
                 </tr>
                 <tr>
                     <td>
-                        <br>
                         <b-form-group
                             label-for="input-firstName"
                         >
@@ -29,7 +42,6 @@
                         </b-form-group>
                     </td>
                     <td>
-                        <br>
                         <b-form-group
                             label-for="input-lastName"
                         >

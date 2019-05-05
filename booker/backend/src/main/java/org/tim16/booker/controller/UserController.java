@@ -12,6 +12,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.tim16.booker.dto.RoleIdDTO;
 import org.tim16.booker.dto.UserDTO;
 import org.tim16.booker.model.admins.AirlineAdmin;
@@ -27,6 +28,7 @@ import org.tim16.booker.service.CustomUserDetailsService;
 import org.tim16.booker.service.UserService;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,52 +87,30 @@ public class UserController {
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<User> update(@RequestBody UserDTO dto) {
+        User user = userService.findByUsername(dto.getUsername());
 
-        User u = userService.findByUsername(dto.getUsername());
-        if(u == null) {
+        if(user == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
 
-        if (u instanceof AirlineAdmin) {
-            AirlineAdmin airlineAdmin = (AirlineAdmin)u;
-            airlineAdmin.setName(dto.getName());
-            airlineAdmin.setLastname(dto.getLastname());
-            airlineAdmin.setEmail(dto.getEmail());
-            airlineAdmin.setCity(dto.getCity());
-            airlineAdmin.setPhoneNum(dto.getPhoneNum());
-            return new ResponseEntity<>(userDetailsService.update(airlineAdmin), HttpStatus.OK);
-        } else if (u instanceof RentACarAdmin) {
-            RentACarAdmin rentACarAdmin = (RentACarAdmin)u;
-            rentACarAdmin.setName(dto.getName());
-            rentACarAdmin.setLastname(dto.getLastname());
-            rentACarAdmin.setEmail(dto.getEmail());
-            rentACarAdmin.setCity(dto.getCity());
-            rentACarAdmin.setPhoneNum(dto.getPhoneNum());
-            return new ResponseEntity<>(userDetailsService.update(rentACarAdmin), HttpStatus.OK);
-        } else  if (u instanceof HotelAdmin) {
-            HotelAdmin hotelAdmin = (HotelAdmin)u;
-            hotelAdmin.setName(dto.getName());
-            hotelAdmin.setLastname(dto.getLastname());
-            hotelAdmin.setEmail(dto.getEmail());
-            hotelAdmin.setCity(dto.getCity());
-            hotelAdmin.setPhoneNum(dto.getPhoneNum());
-            return new ResponseEntity<>(userDetailsService.update(hotelAdmin), HttpStatus.OK);
-        } else if (u instanceof SysAdmin) {
-            SysAdmin sysAdmin = (SysAdmin)u;
-            sysAdmin.setName(dto.getName());
-            sysAdmin.setLastname(dto.getLastname());
-            sysAdmin.setEmail(dto.getEmail());
-            sysAdmin.setCity(dto.getCity());
-            sysAdmin.setPhoneNum(dto.getPhoneNum());
-            return new ResponseEntity<>(userDetailsService.update(sysAdmin), HttpStatus.OK);
+        user.setName(dto.getName());
+        user.setLastname(dto.getLastname());
+        user.setCity(dto.getCity());
+        user.setPhoneNum(dto.getPhoneNum());
+        return new ResponseEntity<>(userDetailsService.update(user), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/update-profile-pic", method = RequestMethod.PUT, consumes ="multipart/form-data")
+    public ResponseEntity<User> updateProfilePic(MultipartFile file) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String username = authentication.getName();
+            User user = userService.findByUsername(username);
+
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            RegisteredUser user = (RegisteredUser)u;
-            user.setName(dto.getName());
-            user.setLastname(dto.getLastname());
-            user.setEmail(dto.getEmail());
-            user.setCity(dto.getCity());
-            user.setPhoneNum(dto.getPhoneNum());
-            return new ResponseEntity<>(userDetailsService.update(user), HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+
 }

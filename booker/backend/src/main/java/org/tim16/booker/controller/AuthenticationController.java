@@ -356,4 +356,5 @@ public class AuthenticationController {
 
         return HttpStatus.OK;
     }
+
 }
