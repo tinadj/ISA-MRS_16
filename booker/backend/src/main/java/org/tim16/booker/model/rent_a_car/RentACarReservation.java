@@ -1,8 +1,8 @@
 package org.tim16.booker.model.rent_a_car;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.tim16.booker.model.users.Reservation;
+
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -10,11 +10,22 @@ import java.util.Date;
 public class RentACarReservation {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    //private Vehicle vehicle;
-    //private Date pickUpDate;
+
+    @OneToOne
+    private Reservation reservation;
+
+    @ManyToOne
+    private Vehicle vehicle;
+
+    @Temporal(TemporalType.DATE)
+    private Date pickUpDate;
+
     private Integer days;
+
     private Integer passangerNum;
+
     private Float totalPrice;
 
     public RentACarReservation() {}
@@ -25,6 +36,22 @@ public class RentACarReservation {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public Date getPickUpDate() {
+        return pickUpDate;
+    }
+
+    public void setPickUpDate(Date pickUpDate) {
+        this.pickUpDate = pickUpDate;
     }
 
     public Integer getDays() {
@@ -51,5 +78,11 @@ public class RentACarReservation {
         this.totalPrice = totalPrice;
     }
 
+    public Reservation getReservation() {
+        return reservation;
+    }
 
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
 }
