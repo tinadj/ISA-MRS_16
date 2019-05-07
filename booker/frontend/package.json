@@ -17,8 +17,10 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.16",
     "core-js": "^2.6.5",
+    "v-calendar": "^1.0.0-beta.8",
     "vue": "^2.6.10",
     "vue-router": "^3.0.1",
+    "vue-star-rating": "^1.6.1",
     "vue-yandex-maps": "^0.8.4"
   },
   "devDependencies": {

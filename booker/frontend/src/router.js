@@ -30,6 +30,7 @@ import EditVehicle from '@/components/rentACar/EditVehicle'
 import BranchOfficesTable from '@/components/rentACar/BranchOfficesTable'
 import AddBranchOffice from '@/components/rentACar/AddBranchOffice'
 import EditBranchOffice from '@/components/rentACar/EditBranchOffice'
+import searchRAC from '@/components/rentACar/searchRAC'
 
 import AirlineAdmin from '@/components/admins/AirlineAdmin'
 import HotelAdmin from '@/components/admins/HotelAdmin'
@@ -84,7 +85,8 @@ export default new Router({
           path: 'hotels'
         },
         {
-          path: 'rent-a-cars'
+          path: 'rent-a-cars',
+          component: searchRAC
         },
         {
           path: 'profile-page',
