@@ -13,12 +13,16 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.17",
     "@fortawesome/free-solid-svg-icons": "^5.8.1",
     "@fortawesome/vue-fontawesome": "^0.1.6",
+    "@northwalker/vue-hotel-datepicker": "^2.0.1",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.16",
     "core-js": "^2.6.5",
+    "v-calendar": "^1.0.0-beta.8",
     "vue": "^2.6.10",
+    "vue-dynamic-star-rating": "^1.0.7",
     "vue-router": "^3.0.1",
+    "vue-star-rating": "^1.6.1",
     "vue-yandex-maps": "^0.8.4"
   },
   "devDependencies": {

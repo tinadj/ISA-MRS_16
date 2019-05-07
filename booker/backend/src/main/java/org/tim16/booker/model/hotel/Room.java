@@ -35,8 +35,9 @@ public class Room {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="room")
     private Set<RoomPrice> roomPrice = new HashSet<RoomPrice>();
 
-    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<ExtraServicePrice> extraServicePrices = new HashSet<ExtraServicePrice>();
+    @ElementCollection(targetClass = ExtraService.class)
+    @Enumerated(EnumType.STRING)
+    private Set<ExtraService> extraServices = new HashSet<ExtraService>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<Rate>();
@@ -83,12 +84,12 @@ public class Room {
         this.roomPrice = roomPrice;
     }
 
-    public Set<ExtraServicePrice> getExtraServicePrices() {
-        return extraServicePrices;
+    public Set<ExtraService> getExtraService() {
+        return extraServices;
     }
 
-    public void setExtraServicePrices(Set<ExtraServicePrice> extraServicePrices) {
-        this.extraServicePrices = extraServicePrices;
+    public void setExtraService(Set<ExtraService> extraServices) {
+        this.extraServices = extraServices;
     }
 
     public Set<Rate> getRating() {

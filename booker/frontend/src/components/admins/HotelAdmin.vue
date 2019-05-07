@@ -6,6 +6,7 @@
         <b-nav-item :to="{ path: 'edit' }"><font-awesome-icon :icon="editIcon"/> Edit information</b-nav-item>
         <b-nav-item :to="{ path: 'rooms'}" ><font-awesome-icon :icon="bedIcon" />Rooms</b-nav-item>
         <b-nav-item :to="{ path: 'add-rooms'}"><font-awesome-icon :icon="addIcon"/>Add Rooms</b-nav-item>
+        <b-nav-item :to="{ path: 'edit-extraservices'}"><font-awesome-icon :icon="extraservIcon"/>Extraservice Prices</b-nav-item>
         <b-nav-item :to="{ path: 'profile-page'}"><font-awesome-icon :icon="profileIcon"/> Profile</b-nav-item>
         <b-nav-item :to="{ path: 'sign-out'}"><font-awesome-icon :icon="singOutIcon"/> Sign out</b-nav-item>
       </b-nav>
@@ -21,7 +22,7 @@
 </template>
 
 <script>
-import { faInfoCircle,  faEdit, faPlusCircle, faBed, faUserCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle,  faEdit, faPlusCircle, faBed, faUserCircle, faSignOutAlt, faTv } from '@fortawesome/free-solid-svg-icons';
 
 
 export default {
@@ -31,6 +32,7 @@ export default {
       editIcon: faEdit,
       addIcon: faPlusCircle,
       bedIcon: faBed,
+      extraservIcon: faTv,
       profileIcon: faUserCircle,
       singOutIcon: faSignOutAlt
     }

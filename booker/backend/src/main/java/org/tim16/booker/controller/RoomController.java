@@ -33,7 +33,55 @@ public class RoomController {
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addNewRoom(@RequestBody RoomDTO roomDTO){
 
-        roomService.create(roomDTO);
+        Hotel hotel = hotelService.findOne(roomDTO.getHotelId());
+
+        /* Provera da li je uneti sprat veci od broja spratova koje hotel ima */
+        int hotelfloors = hotel.getFloors();
+
+        if (hotelfloors < roomDTO.getFloor())
+        {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        /* Provera koliko ima prostora u hotelu da se doda nova soba (maxRoomNum) */
+        int existingrooms = 0;
+
+        for (int i = 0; i < hotel.getRooms().size(); i++)
+        {
+            existingrooms += 1;
+        }
+
+        if (existingrooms == hotel.getMaxRoomsNum())
+        {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        /* Provera da li je broj kreveta veci od 4 (hotel maksimalno moze imati cetvorokrevetnu sobu) */
+        if (roomDTO.getBeds() > 4)
+        {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        /* Provera da li ovaj broj sobe vec postoji */
+        int roomnum = roomDTO.getRoomNum();
+
+        for(Room r : hotel.getRooms())
+        {
+            if(roomnum == r.getRoomNum())
+            {
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        Room room = new Room();
+        room.setBalcony(roomDTO.getBalcony());
+        room.setBeds(roomDTO.getBeds());
+        room.setDiscount(roomDTO.getDiscount());
+        room.setFloor(roomDTO.getFloor());
+        room.setHotel(hotel);
+        room.setRoomNum(roomDTO.getRoomNum());
+
+        roomService.create(room);
         return new ResponseEntity(HttpStatus.OK);
     }
 

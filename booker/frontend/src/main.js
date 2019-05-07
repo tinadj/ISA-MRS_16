@@ -25,6 +25,11 @@ const options = { // podesavanje jezika
   version: '2.1'
 }
 
+// Datepicker
+import VCalendar from 'v-calendar';
+// Use v-calendar & v-date-picker components
+Vue.use(VCalendar)
+
 Vue.use(YmapPlugin, options)
 
 Vue.config.productionTip = false

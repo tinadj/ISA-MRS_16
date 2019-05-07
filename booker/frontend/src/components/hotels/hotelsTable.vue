@@ -43,6 +43,7 @@ export default {
     }
   },
   mounted () {
+    AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
     AXIOS.get('/hotels/all')
     .then(response => { this.hotels = response.data})
     .catch(err => console.log(err))

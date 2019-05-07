@@ -16,6 +16,7 @@ import addHotel from '@/components/hotels/addHotel'
 import hotelsTable from '@/components/hotels/hotelsTable'
 import editHotel from '@/components/hotels/editHotel'
 import HotelInfo from '@/components/hotels/HotelInfo'
+import searchHotels from  '@/components/hotels/searchHotels'
 
 import AdminsTable from '@/components/admins/AdminsTable'
 import RegisterAdmin from '@/components/admins/RegisterAdmin'
@@ -49,6 +50,7 @@ import ProfilePage from '@/components/account/ProfilePage'
 import addRooms from '@/components/rooms/addRooms'
 import RoomsTable from '@/components/rooms/RoomsTable'
 import editRoom from '@/components/rooms/editRoom'
+import editExtraServices from '@/components/rooms/editExtraServices'
 
 
 Vue.use(Router)
@@ -81,7 +83,8 @@ export default new Router({
           path: 'airlines'
         },
         {
-          path: 'hotels'
+          path: 'hotels',
+          component: searchHotels
         },
         {
           path: 'rent-a-cars'
@@ -177,6 +180,10 @@ export default new Router({
       ]
     },
     {
+      path: '/sign-out',
+      component: Logout
+    },
+    {
       // Airline admin
       path: '/:id/airline-admin/',
       component: AirlineAdmin,
@@ -235,6 +242,10 @@ export default new Router({
         {
           path: 'edit-room/:r_id',
           component: editRoom
+        },
+        {
+          path: 'edit-extraservices',
+          component: editExtraServices
         },
         {
           path: 'profile-page',

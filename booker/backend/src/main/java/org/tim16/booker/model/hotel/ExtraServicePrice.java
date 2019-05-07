@@ -17,6 +17,12 @@ public class ExtraServicePrice {
 
     public ExtraServicePrice() {}
 
+    public ExtraServicePrice(ExtraService type, Float price)
+    {
+        this.type = type;
+        this.price = price;
+    }
+
     public Integer getId() {
         return id;
     }

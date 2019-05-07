@@ -33,6 +33,9 @@ public class Hotel {
 
     private BigDecimal longitude;
 
+    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
+    private Set<ExtraServicePrice> extraServicePrices = new HashSet<ExtraServicePrice>();
+
     @Column(name = "description")
     private String description;
 
@@ -75,6 +78,7 @@ public class Hotel {
             }
         }
     }
+
 
     public void addAdmin(HotelAdmin admin) {
         if (admin.getHotel() != null)
@@ -178,5 +182,13 @@ public class Hotel {
 
     public void setMaxRoomsNum(Integer maxRoomsNum) {
         this.maxRoomsNum = maxRoomsNum;
+    }
+
+    public Set<ExtraServicePrice> getExtraServicePrices() {
+        return extraServicePrices;
+    }
+
+    public void setExtraServicePrices(Set<ExtraServicePrice> extraServicePrices) {
+        this.extraServicePrices = extraServicePrices;
     }
 }
