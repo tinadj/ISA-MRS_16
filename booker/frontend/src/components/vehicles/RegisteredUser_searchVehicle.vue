@@ -27,7 +27,8 @@
             <ejs-slider v-model="searchParams.priceRange" :tooltip="{ isVisible: true}" type="Range" :ticks="{ placement: 'After', largeStep: 10}"></ejs-slider>
         </b-form-group>
         
-        <b-button variant="outline-primary" v-on:click="search">Search</b-button>
+        <b-button variant="outline-primary" v-on:click="search" class="mr-3">Search</b-button>
+        <b-button @click="onCancel">Cancel</b-button>
 
     </b-card>
     <b-card border-variant="light" style="max-width: 40rem;">
@@ -99,6 +100,10 @@
                     }
                 }
                 return maxPrice
+            },
+            onCancel(e) {
+                e.preventDefault()
+                this.$router.push("rent-a-cars")
             }
                 
         },

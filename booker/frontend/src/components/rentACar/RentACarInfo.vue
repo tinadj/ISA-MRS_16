@@ -2,43 +2,17 @@
   <b-card-group deck>
     <b-card  border-variant="light" header-tag="header">
       <h6 slot="header" class="mb-0"><b>Rent a car Information</b></h6>
-      <table align="center">
-          <tr>
-              <th>Rent a car id</th></th>
-              <td>{{rentACar.id}}</td>
-          </tr>
-          <tr>
-              <th>Name</th>
-              <td>{{rentACar.name}}</td>
-          </tr>
-          <tr>
-              <th>City</th>
-              <td>{{rentACar.address.city}}</td>
-          </tr>
-          <tr>
-              <th>State</th>
-              <td>{{rentACar.address.state}}</td>
-          </tr>
-          <tr>
-              <th>Description</th>
-              <td>{{rentACar.description}}</td>
-          </tr>
-          <tr>
-              <th>Number of vehicles</th>
-              <td>{{this.vehicleNum}}</td>
-          </tr>
-        </table>
-
+      <AdminRACInfo v-bind:item="rentACar"></AdminRACInfo>
     </b-card >
 
-    <b-card border-variant="light" >
+    <b-card border-variant="light" style="max-width: 25rem;">
       <table align="center">
         <tr>
           <td>
             <yandex-map
               :coords="[this.rentACar.latitude, this.rentACar.longitude]"
               zoom="12"
-              style="width: 350px; height: 350px;"
+              style="width: 300px; height: 300px;"
               :behaviors="[]"
               :controls="['zoomControl']"
                map-type="hybrid"
@@ -63,14 +37,15 @@
 <script>
 import {AXIOS} from '../../http-common'
 import { yandexMap, ymapMarker } from 'vue-yandex-maps'
+import AdminRACInfo from './Admin_RACInfo'
 
 export default {
   name: 'RentACarInfo',
-  components: { yandexMap, ymapMarker },
+  components: { yandexMap, ymapMarker, AdminRACInfo },
   data () {
     return {
-      rentACar: '',
-      vehicleNum : ''
+      rentACar: ''
+      
     }
   },
   mounted () {
@@ -78,7 +53,6 @@ export default {
       AXIOS.get(api)
       .then(response => { 
         this.rentACar = response.data
-        this.vehicleNum = response.data.vehicles.length
         })
       .catch(err => console.log(err))
   }

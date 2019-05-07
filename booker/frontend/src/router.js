@@ -294,7 +294,7 @@ export default new Router({
           component: AddVehicle
         },
         {
-          path: 'edit-vehicle/:v_id',
+          path: 'edit-vehicle-:v_id',
           component: EditVehicle
         },
         {
@@ -306,7 +306,7 @@ export default new Router({
           component: AddBranchOffice
         },
         {
-          path: 'edit-branch-office/:bo_id',
+          path: 'edit-branch-office-:bo_id',
           component: EditBranchOffice
         },
         {
