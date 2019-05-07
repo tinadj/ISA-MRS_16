@@ -111,6 +111,10 @@ export default new Router({
         {
           path: 'sign-out',
           component: Logout
+        },
+        {
+          path: 'vehicles-:rac_id',
+          component: RegisteredUserSearchVehicle
         }
       ]
     },

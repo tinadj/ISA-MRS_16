@@ -32,22 +32,29 @@
 									</div>
 								</div>
 
+                                <!-- Link Show branch offices locations -->
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
 										<span>
-                                            <b-link v-on:click="details = !details"><font-awesome-icon :icon="infoIcon"/>  Show more details...</b-link>
-                                            <b-modal v-model="details" hide-footer>
-                                                <template slot="modal-title">{{item.name}}</template>
+                                            <b-link v-on:click="locations = !locations"><font-awesome-icon :icon="officeIcon"/>  Branch offices locations...</b-link>
+                                            <b-modal v-model="locations" hide-footer>
+                                                <template slot="modal-title">Listo of branch office locations</template>
                                                 <b-card-group deck>
                                                     <b-card border-variant="light" style="overflow-y:scroll;">
-                                                        <p class="text-left">                         
-                                                            <font-awesome-icon :icon="descriptionIcon"/> &nbsp
-                                                            {{item.description}}
+                                                        <p class="text-left">      
+                                                            <ul>
+                                                                <li v-for="office in item.branchOffices">
+                                                                    <b-link v-on:click="updateMap(office.latitude, office.longitude)">
+                                                                        <font-awesome-icon :icon="locationIcon"/>                    
+                                                                        {{office.address.city}}, {{office.address.state}}
+                                                                    </b-link>
+                                                                </li>
+                                                            </ul>                     
                                                         </p>      
                                                     </b-card>
                                                     <b-card border-variant="light">
                                                         <yandex-map
-                                                        :coords="[item.latitude, item.longitude]"
+                                                        :coords="[officeLatitude, officeLongitude]"
                                                         zoom="12"
                                                         style="width: 180px; height: 200px;"
                                                         :behaviors="[]"
@@ -57,7 +64,7 @@
                                                             <ymap-marker
                                                             marker-id="1"
                                                             marker-type="placemark"
-                                                            :coords="[item.latitude, item.longitude]"
+                                                            :coords="[officeLatitude, officeLongitude]"
                                                             :marker-fill="{color: '#000000', opacity: 0.4}"
                                                             :marker-stroke="{color: '#ff0000', width: 5}"
                                                             ></ymap-marker>
@@ -71,9 +78,30 @@
 									</div>
 								</div>
 
+                                <!-- Link Show more details -->
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
-										<span><b-button variant="outline-secondary">Search Vehicles</b-button></span>
+										<span>
+                                            <b-link v-on:click="details = !details"><font-awesome-icon :icon="infoIcon"/>  Show more details...</b-link>
+                                            <b-modal v-model="details" hide-footer>
+                                                <template slot="modal-title">{{item.name}}</template>
+                                                <b-card-group deck>
+                                                    <b-card border-variant="light">
+                                                        <p class="text-left">                         
+                                                            <font-awesome-icon :icon="descriptionIcon"/> 
+                                                            {{item.description}}
+                                                        </p>      
+                                                    </b-card>
+                                                </b-card-group>
+                                            </b-modal>
+                                        </span>
+									</div>
+								</div>
+
+
+                                <div class="profile-info-row">
+									<div class="profile-info-value">
+										<span><b-button :to="{ path: 'vehicles-' + item.id} " variant="outline-secondary">Search Vehicles</b-button></span>
 									</div>
 								</div>
 
@@ -88,7 +116,7 @@
 </template>
 
 <script>
-import { faMapMarkerAlt, faInfoCircle, faAlignLeft } from '@fortawesome/free-solid-svg-icons'
+import { faMapMarkerAlt, faInfoCircle, faAlignLeft, faBriefcase } from '@fortawesome/free-solid-svg-icons'
 
 export default {
     name: 'RegisteredUserRACInfo',
@@ -98,9 +126,19 @@ export default {
             locationIcon: faMapMarkerAlt,
             infoIcon: faInfoCircle,
             descriptionIcon: faAlignLeft,
+            officeIcon: faBriefcase,
             rating: 0,
-            details: false
+            details: false,
+            locations: false,
+            officeLatitude: this.item.latitude,
+            officeLongitude: this.item.longitude
         } 
+    },
+    methods: {
+        updateMap(latitude, longitude) {
+            this.officeLatitude = latitude
+            this.officeLongitude = longitude
+        }
     },
     mounted() {
         // Racunannje prosecne ocene Rent a Car servisa
@@ -118,6 +156,12 @@ export default {
 
 
 <style scoped>
+    ul {
+        list-style-type: none;
+        margin: 0; /* To remove default bottom margin */ 
+        padding: 0;
+    }
+
   body{margin-top:20px;}
 
   .align-center, .center {

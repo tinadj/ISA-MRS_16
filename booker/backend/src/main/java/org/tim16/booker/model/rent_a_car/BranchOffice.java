@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.tim16.booker.model.utility.Destination;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "branch_offices")
@@ -28,6 +29,10 @@ public class BranchOffice {
     @ManyToOne
     @JoinColumn(name = "address", referencedColumnName = "id")
     private Destination address;
+
+    private BigDecimal latitude;
+
+    private BigDecimal longitude;
 
     public BranchOffice() {}
 
@@ -63,4 +68,19 @@ public class BranchOffice {
         this.address = address;
     }
 
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
+    }
 }

@@ -15,6 +15,14 @@
             <b-form-input v-model="state" placeholder="State"></b-form-input>
           </b-form-group>
 
+          <b-form-group>
+            <b-form-input v-model="latitude" placeholder="Latitude" type="number" step="0.000001"></b-form-input>
+          </b-form-group>
+
+          <b-form-group>
+            <b-form-input v-model="longitude" placeholder="Longitude" type="number" step="0.000001"></b-form-input>
+          </b-form-group>
+
           <b-button variant="outline-primary" type="submit" class="mr-1">Add</b-button>
           <b-button :to="{ path: 'branch-offices'}">Cancel</b-button>
 
@@ -35,6 +43,8 @@ export default {
       name: '',
       city: '',
       state: '',
+      latitude: '',
+      longitude: '',
       rentACar: '',
       success: false,
       error: false
@@ -50,6 +60,8 @@ export default {
             'city': this.city,
             'state': this.state
         },
+        'latitude': this.latitude,
+        'longitude': this.longitude,
         'rentACar': this.rentACar,
       }
 

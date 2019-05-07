@@ -61,10 +61,7 @@
                 name: '',
                 city: '',
                 state: '',
-                dates: {
-                    start: '',
-                    end: ''
-                },
+                dates: '',
                 noResultMsg: false
             }
         },
@@ -72,13 +69,24 @@
             search() {
                 this.noResultMsg = false
 
-                const searchParams = {
+                if (this.dates == null) {
+                    const searchParams = {
+                    'name': this.name,
+                    'city': this.city,
+                    'state': this.state,
+                    'pickUpDate': null,
+                    'returnDate':  null
+                } 
+                } else {
+                    const searchParams = {
                     'name': this.name,
                     'city': this.city,
                     'state': this.state,
                     'pickUpDate': this.dates.start,
                     'returnDate':  this.dates.end
                 }
+                }
+                
 
                 AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
                 AXIOS.post('/rent-a-cars/search', searchParams)
