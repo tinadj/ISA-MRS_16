@@ -67,6 +67,8 @@
         },
         methods: {
             search() {
+                AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
+
                 this.noResultMsg = false
 
                 if (this.dates == null) {
@@ -76,7 +78,17 @@
                     'state': this.state,
                     'pickUpDate': null,
                     'returnDate':  null
-                } 
+                    } 
+                   
+                    AXIOS.post('/rent-a-cars/search', searchParams)
+                    .then(response => { 
+                        this.rentACars = response.data
+                        if (this.rentACars.length == 0) {
+                            this.noResultMsg = true
+                        }
+                    })
+                    .catch(err => console.log(err))
+
                 } else {
                     const searchParams = {
                     'name': this.name,
@@ -84,23 +96,17 @@
                     'state': this.state,
                     'pickUpDate': this.dates.start,
                     'returnDate':  this.dates.end
-                }
-                }
-                
-
-                AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
-                AXIOS.post('/rent-a-cars/search', searchParams)
-                .then(response => { 
-                    this.rentACars = response.data
-                    
-                    if (this.rentACars.length == 0) {
-                        this.noResultMsg = true
                     }
                     
-
-                })
-                .catch(err => console.log(err))
-
+                    AXIOS.post('/rent-a-cars/search', searchParams)
+                    .then(response => { 
+                        this.rentACars = response.data
+                        if (this.rentACars.length == 0) {
+                            this.noResultMsg = true
+                        }
+                    })
+                    .catch(err => console.log(err))
+                }
             }
         },
         mounted() {

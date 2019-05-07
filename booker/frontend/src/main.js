@@ -20,6 +20,13 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 // Mape
 import YmapPlugin from 'vue-yandex-maps'
 
+const options = { // podesavanje jezika
+  lang: 'en_US',
+  version: '2.1'
+}
+
+Vue.use(YmapPlugin, options)
+
 // Kalendar
 import VCalendar from 'v-calendar';
 Vue.use(VCalendar)
@@ -27,13 +34,6 @@ Vue.use(VCalendar)
 // Zvezdice
 import StarRating from 'vue-star-rating'
 Vue.component('star-rating', StarRating);
-
-const options = { // podesavanje jezika
-  lang: 'en_US',
-  version: '2.1'
-}
-
-Vue.use(YmapPlugin, options)
 
 Vue.config.productionTip = false
 
