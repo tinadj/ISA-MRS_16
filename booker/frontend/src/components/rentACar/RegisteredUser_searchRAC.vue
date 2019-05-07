@@ -47,9 +47,10 @@
 
 <script>
     import {AXIOS} from '../../http-common'
-    import RegisteredUserRACInfo from './infoComponents/RegisteredUser_RACInfo'
+    import RegisteredUserRACInfo from './RegisteredUser_RACInfo'
 
     export default {
+        name: "RegisteredUserSearchRAC",
         components: {
             RegisteredUserRACInfo
         },

@@ -5,17 +5,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.tim16.booker.dto.RACSearchParamsDTO;
 import org.tim16.booker.dto.RentACarDTO;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
 import org.tim16.booker.model.rent_a_car.RentACar;
+import org.tim16.booker.model.rent_a_car.RentACarReservation;
 import org.tim16.booker.model.rent_a_car.Vehicle;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.DestinationService;
+import org.tim16.booker.service.RacReservationService;
 import org.tim16.booker.service.RentACarService;
 import org.tim16.booker.service.VehicleService;
+import sun.util.resources.CalendarData;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -26,12 +32,13 @@ public class RentACarController {
     private RentACarService rentACarService;
     @Autowired
     private DestinationService destinationService;
-
     @Autowired
     private VehicleService vehicleService;
+    @Autowired
+    private RacReservationService reservationService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('USER')")
     public ResponseEntity<List<RentACar>> getAll() {
         return new ResponseEntity<>(rentACarService.findAll(), HttpStatus.OK);
     }
@@ -138,6 +145,56 @@ public class RentACarController {
 
         return new ResponseEntity<>(branchOffices, HttpStatus.OK);
 
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<List<RentACar>> searchRegisteredUser(@RequestBody RACSearchParamsDTO dto) {
+        List<RentACar> rentACars = rentACarService.findAll();
+        List<RentACar> result = rentACarService.findAll();
+
+        if (!dto.getName().isEmpty()) {
+            for (RentACar rentACar: rentACars) {
+                if (!rentACar.getName().toLowerCase().contains(dto.getName().toLowerCase())) {
+                    result.remove(rentACar);
+                }
+            }
+        }
+
+        if (!dto.getCity().isEmpty()) {
+            for (RentACar rentACar: rentACars) {
+                if (!rentACar.getAddress().getCity().toLowerCase().contains(dto.getCity().toLowerCase())) {
+                    result.remove(rentACar);
+                }
+            }
+        }
+
+        if (!dto.getState().isEmpty()) {
+            for (RentACar rentACar: rentACars) {
+                if (!rentACar.getAddress().getState().toLowerCase().contains(dto.getState().toLowerCase())) {
+                    result.remove(rentACar);
+                }
+            }
+        }
+
+        if (dto.getPickUpDate() != null && dto.getReturnDate() != null) {
+            for (RentACarReservation reservation: reservationService.findAll()) {
+                Date returnDate = calculateReturnDate(reservation);
+
+                if (reservation.getPickUpDate().before(dto.getReturnDate()) && returnDate.after(dto.getPickUpDate())) {
+                    result.remove(reservation.getVehicle().getRentACar());
+                }
+            }
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    private Date calculateReturnDate(RentACarReservation reservation) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(reservation.getPickUpDate());
+        c.add(Calendar.DATE, reservation.getDays());
+        return c.getTime();
     }
 
 

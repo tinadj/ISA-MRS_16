@@ -8,7 +8,7 @@
 						
                         <div class="col-xs-12 col-sm-3 center">
 							<span class="profile-picture">
-								<img class="img-thumbnail" alt="Picture"  src="../../../assets/no-image.jpg">
+								<img class="img-thumbnail" alt="Picture"  src="../../assets/no-image.jpg">
 							</span>
 
 						</div><!-- /.col -->
