@@ -97,10 +97,6 @@ export default new Router({
           component: RegisteredUserSearchRAC
         },
         {
-          path: ':rac_id',
-          component: RegisteredUserSearchVehicle
-        },
-        {
           path: 'profile-page',
           component: ProfilePage
         },
