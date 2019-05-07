@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { faInfoCircle, faCarSide, faEdit, faPlusCircle, faBriefcase, faUserCircle, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faCarSide, faEdit, faPlusCircle, faBriefcase, faUserCircle, faSignOutAlt, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default {
   data () {
@@ -34,7 +34,8 @@ export default {
       addIcon: faPlusCircle,
       officeIcon: faBriefcase,
       profileIcon: faUserCircle,
-      singOutIcon: faSignOutAlt
+      singOutIcon: faSignOutAlt,
+      reportIcon: faFileAlt
     }
   },
   methods: {

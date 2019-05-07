@@ -50,6 +50,8 @@ public class BranchOfficeController {
 
         BranchOffice branchOffice = new BranchOffice();
         branchOffice.setName(dto.getName());
+        branchOffice.setLatitude(dto.getLatitude());
+        branchOffice.setLongitude(dto.getLongitude());
 
         Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
 
@@ -107,6 +109,8 @@ public class BranchOfficeController {
             BranchOffice branchOffice = branchOfficeService.findOne(dto.getId());
 
             branchOffice.setName(dto.getName());
+            branchOffice.setLatitude(dto.getLatitude());
+            branchOffice.setLongitude(dto.getLongitude());
 
             RentACar rentACar = rentACarService.findOne(dto.getRentACar().getId());
             branchOffice.setRentACar(rentACar);

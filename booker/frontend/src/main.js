@@ -27,6 +27,14 @@ const options = { // podesavanje jezika
 
 Vue.use(YmapPlugin, options)
 
+// Kalendar
+import VCalendar from 'v-calendar';
+Vue.use(VCalendar)
+
+// Zvezdice
+import StarRating from 'vue-star-rating'
+Vue.component('star-rating', StarRating);
+
 Vue.config.productionTip = false
 
 new Vue({

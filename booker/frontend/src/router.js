@@ -20,17 +20,25 @@ import HotelInfo from '@/components/hotels/HotelInfo'
 import AdminsTable from '@/components/admins/AdminsTable'
 import RegisterAdmin from '@/components/admins/RegisterAdmin'
 
+// Rent a car
 import addRentACar from '@/components/rentACar/addRentACar'
 import RentACarsTable from '@/components/rentACar/rentACarTable'
 import RentACarInfo from '@/components/rentACar/RentACarInfo'
 import editRentACar from '@/components/rentACar/editRentACar'
-import VehiclesTable from '@/components/rentACar/VehiclesTable'
-import AddVehicle from '@/components/rentACar/AddVehicle'
-import EditVehicle from '@/components/rentACar/EditVehicle'
-import BranchOfficesTable from '@/components/rentACar/BranchOfficesTable'
-import AddBranchOffice from '@/components/rentACar/AddBranchOffice'
-import EditBranchOffice from '@/components/rentACar/EditBranchOffice'
+import RegisteredUserSearchRAC from '@/components/rentACar/RegisteredUser_searchRAC'
 
+// Branch offices
+import BranchOfficesTable from '@/components/branchOffices/BranchOfficesTable'
+import AddBranchOffice from '@/components/branchOffices/AddBranchOffice'
+import EditBranchOffice from '@/components/branchOffices/EditBranchOffice'
+
+// Vehicles
+import VehiclesTable from '@/components/vehicles/VehiclesTable'
+import AddVehicle from '@/components/vehicles/AddVehicle'
+import EditVehicle from '@/components/vehicles/EditVehicle'
+import RegisteredUserSearchVehicle from '@/components/vehicles/RegisteredUser_searchVehicle'
+
+// Admins
 import AirlineAdmin from '@/components/admins/AirlineAdmin'
 import HotelAdmin from '@/components/admins/HotelAdmin'
 import RentACarAdmin from '@/components/admins/RentACarAdmin'
@@ -38,12 +46,13 @@ import ChangePasswordFirstLogin from '@/components/admins/ChangePasswordFirstLog
 
 import Login from '@/components/users/Login'
 import Logout from '@/components/users/Logout'
+import ProfilePage from '@/components/account/ProfilePage'
 import ConfirmLogin from '@/components/users/ConfirmLogin'
 import Register from '@/components/users/Register'
 import RegisteredUserHomePage from '@/components/users/RegisteredUserHomePage'
 
 import IndexPage from '@/components/users/IndexPage'
-import ProfilePage from '@/components/account/ProfilePage'
+
 
 
 import addRooms from '@/components/rooms/addRooms'
@@ -84,7 +93,8 @@ export default new Router({
           path: 'hotels'
         },
         {
-          path: 'rent-a-cars'
+          path: 'rent-a-cars',
+          component: RegisteredUserSearchRAC
         },
         {
           path: 'profile-page',
@@ -101,6 +111,10 @@ export default new Router({
         {
           path: 'sign-out',
           component: Logout
+        },
+        {
+          path: 'vehicles-:rac_id',
+          component: RegisteredUserSearchVehicle
         }
       ]
     },
@@ -280,7 +294,7 @@ export default new Router({
           component: AddVehicle
         },
         {
-          path: 'edit-vehicle/:v_id',
+          path: 'edit-vehicle-:v_id',
           component: EditVehicle
         },
         {
@@ -292,7 +306,7 @@ export default new Router({
           component: AddBranchOffice
         },
         {
-          path: 'edit-branch-office/:bo_id',
+          path: 'edit-branch-office-:bo_id',
           component: EditBranchOffice
         },
         {
