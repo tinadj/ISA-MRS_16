@@ -7,12 +7,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.VehicleDTO;
 import org.tim16.booker.model.rent_a_car.RentACar;
+import org.tim16.booker.model.rent_a_car.RentACarReservation;
 import org.tim16.booker.model.rent_a_car.Vehicle;
 import org.tim16.booker.model.rent_a_car.VehicleType;
+import org.tim16.booker.service.RacReservationService;
 import org.tim16.booker.service.RentACarService;
 import org.tim16.booker.service.VehicleService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -24,6 +27,9 @@ public class VehicleController {
 
     @Autowired
     private RentACarService rentACarService;
+
+    @Autowired
+    private RacReservationService reservationService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<Vehicle>> getAll() {
@@ -117,6 +123,24 @@ public class VehicleController {
         }
         catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/is-reserved/{id}", method =  RequestMethod.GET)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
+    public HttpStatus isReserved(@PathVariable Integer id) {
+        try
+        {
+            Vehicle vehicle = vehicleService.findOne(id);
+
+            for (RentACarReservation reservation: reservationService.findAll()) {
+                if (reservation.getVehicle().getId() == id)
+                    return HttpStatus.FORBIDDEN;
+            }
+            return HttpStatus.OK;
+        }
+        catch (EntityNotFoundException e) {
+            return HttpStatus.BAD_REQUEST;
         }
     }
 

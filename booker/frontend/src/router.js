@@ -191,6 +191,10 @@ export default new Router({
       ]
     },
     {
+      path: '/sign-out',
+      component: Logout
+    },
+    {
       // Airline admin
       path: '/:id/airline-admin/',
       component: AirlineAdmin,

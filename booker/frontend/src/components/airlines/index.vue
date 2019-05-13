@@ -8,7 +8,7 @@
         <b-nav-item :to="{ path: '/admins'}"><font-awesome-icon :icon="adminsIcon" /> Admins</b-nav-item>
         <b-nav-item :to="{ path: '/register-admin'}"><font-awesome-icon :icon="addAdminIcon" /> Register admin</b-nav-item>
         <b-nav-item><font-awesome-icon :icon="discountIcon" /> Define discount</b-nav-item>
-        <b-nav-item><font-awesome-icon :icon="signOutIcon" /> Sign out</b-nav-item>
+        <b-nav-item :to="{ path: '/sign-out'}"><font-awesome-icon :icon="signOutIcon" /> Sign out</b-nav-item>
       </b-nav>
     </b-row>
 	
