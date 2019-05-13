@@ -110,25 +110,31 @@ export default {
                     'phoneNum': this.phoneNum,
                 }
 
-                AXIOS.post('/auth/register', user)
+                AXIOS.get('/auth/check-mail/' + this.email)
                 .then(response => {
                     if (response.data == "CONFLICT") {
-                        this.errorMessage = "Username is taken!"
-                        this.success = false
+                        this.errorMessage = "Email address is taken!"
+                        this.emailValid = false
                         this.error = true
                     } else {
-                        this.success = true
-                        this.error = false
+                        AXIOS.post('/auth/register', user)
+                        .then(response => {
+                            if (response.data == "CONFLICT") {
+                                this.errorMessage = "Username is taken!"
+                                this.success = false
+                                this.error = true
+                            } else {
+                                this.success = true
+                                this.error = false
+                            }
+                        })
+                        .catch(err => {
+                            this.errorMessage = "Something went wrong!"
+                            this.success = false
+                            this.error = true
+                        })
                     }
                 })
-                .catch(err => {
-                    this.errorMessage = "Something went wrong!"
-                    this.success = false
-                    this.error = true
-                })
-
-
-                
             } else {
                 this.success = false
                 this.error = true
@@ -173,7 +179,7 @@ export default {
         validateEmail() {
             var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(this.email).toLowerCase());
-}
+        }
     }
 }
 </script>

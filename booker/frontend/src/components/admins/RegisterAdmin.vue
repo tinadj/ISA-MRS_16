@@ -132,22 +132,30 @@ export default {
                 
                 // Registracija sys admina
                 if (this.adminRole == 3) {
-                    AXIOS.post("/auth/register-sys-admin", user)
-                    .then( response => {
+                    AXIOS.get('/auth/check-mail/' + this.email)
+                    .then(response => {
                         if (response.data == "CONFLICT") {
-                            this.errorMessage = "Username is taken!"
-                            this.success = false
+                            this.errorMessage = "Email address is taken!"
+                            this.emailValid = false
                             this.error = true
                         } else {
-                            this.success = true
-                            this.error = false
+                            AXIOS.post("/auth/register-sys-admin", user)
+                            .then( response => {
+                                if (response.data == "CONFLICT") {
+                                    this.errorMessage = "Username is taken!"
+                                    this.success = false
+                                    this.error = true
+                                } else {
+                                    this.success = true
+                                    this.error = false
+                                }
+                            })
+                            .catch( err => {
+                                this.success = true
+                                this.error = false
+                            })                      
                         }
                     })
-                    .catch( err => {
-                        this.success = true
-                        this.error = false
-                    })
-
                 // Registracija ostalih admina
                 } else {
                     if (this.adminRole == 0) {
@@ -157,22 +165,33 @@ export default {
                     } else if (this.adminRole == 2) {
                         user["adminOf"] = "rent-a-car"
                     }
-
-                    AXIOS.post("/auth/register-admin", user)
-                    .then( response => {
-                        if (esponse.data == "CONFLICT") {
-                            this.errorMessage = "Username is taken!"
-                            this.success = false
+                    
+                    AXIOS.get('/auth/check-mail/' + this.email)
+                    .then(response => {
+                        if (response.data == "CONFLICT") {
+                            this.errorMessage = "Email address is taken!"
+                            this.emailValid = false
                             this.error = true
                         } else {
-                            this.success = true
-                            this.error = false
+                            AXIOS.post("/auth/register-admin", user)
+                            .then( response => {
+                                if (esponse.data == "CONFLICT") {
+                                    this.errorMessage = "Username is taken!"
+                                    this.success = false
+                                    this.error = true
+                                } else {
+                                    this.success = true
+                                    this.error = false
+                                }
+                            })
+                            .catch( err => {
+                                this.success = true
+                                this.error = false
+                            })                     
                         }
                     })
-                    .catch( err => {
-                        this.success = true
-                        this.error = false
-                    })
+
+                    
                 }
             } else {
                 this.success = false
