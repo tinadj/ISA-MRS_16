@@ -53,11 +53,12 @@ import RegisteredUserHomePage from '@/components/users/RegisteredUserHomePage'
 
 import IndexPage from '@/components/users/IndexPage'
 
-
+// Rooms
 
 import addRooms from '@/components/rooms/addRooms'
 import RoomsTable from '@/components/rooms/RoomsTable'
 import editRoom from '@/components/rooms/editRoom'
+import editExtraServices from '@/components/rooms/editExtraServices'
 
 
 Vue.use(Router)
@@ -249,6 +250,10 @@ export default new Router({
         {
           path: 'edit-room/:r_id',
           component: editRoom
+        },
+        {
+          path: 'edit-extraservices',
+          component: editExtraServices
         },
         {
           path: 'profile-page',

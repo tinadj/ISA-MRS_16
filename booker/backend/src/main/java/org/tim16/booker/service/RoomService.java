@@ -32,20 +32,7 @@ public class RoomService implements IRoomService {
     }
 
     @Override
-    public Room create(RoomDTO roomDTO) {
-
-        Hotel hotel = hotelService.findOne(roomDTO.getHotelId());
-
-        Room room = new Room();
-        room.setBalcony(roomDTO.getBalcony());
-        room.setBeds(roomDTO.getBeds());
-        room.setDiscount(roomDTO.getDiscount());
-        room.setFloor(roomDTO.getFloor());
-        room.setHotel(hotel);
-        room.setRoomNum(roomDTO.getRoomNum());
-
-        return roomRepository.save(room);
-    }
+    public Room create(Room room) {return roomRepository.save(room);}
 
     @Override
     public Room update(Room room)
