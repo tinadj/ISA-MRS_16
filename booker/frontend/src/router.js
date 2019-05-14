@@ -7,6 +7,8 @@ import airlinesTable from '@/components/airlines/airlinesTable'
 import editProfile from '@/components/account/editProfile'
 import changePassword from '@/components/account/changePassword'
 import AirlineInfo from '@/components/airlines/airlineInfo'
+import RegisteredUserSearchAirline from '@/components/airlines/RegisteredUser_searchAirline'
+import UnregisteredUserSearchAirline from '@/components/airlines/UnregisteredUser_searchAirline'
 
 import AirlineView from '@/components/airlines/index'
 import HotelView from '@/components/hotels/index'
@@ -72,6 +74,10 @@ export default new Router({
       component: IndexPage,
       children: [
         {
+          path: 'search-airlines',
+          component: UnregisteredUserSearchAirline
+        },
+        {
           path: 'search-rent-a-cars',
           component: UnregisteredUserSearchRAC
         },
@@ -100,7 +106,8 @@ export default new Router({
       component: RegisteredUserHomePage,
       children: [
         {
-          path: 'airlines'
+          path: 'airlines',
+          component: RegisteredUserSearchAirline
         },
         {
           path: 'hotels'

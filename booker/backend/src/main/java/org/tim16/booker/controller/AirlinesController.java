@@ -24,7 +24,6 @@ public class AirlinesController {
     private DestinationService destinationService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<Airline>> getAll() {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }

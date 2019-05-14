@@ -3,7 +3,7 @@
     <b-row>
         <b-col>
             <b-nav tabs>
-            <b-nav-item :to="{ path: 'searcha-irlines' }"><font-awesome-icon :icon="planeIcon"/> Airlines</b-nav-item>
+            <b-nav-item :to="{ path: 'search-airlines' }"><font-awesome-icon :icon="planeIcon"/> Airlines</b-nav-item>
             <b-nav-item :to="{ path: 'search-hotels'}"><font-awesome-icon :icon="bedIcon"/> Hotels</b-nav-item>
             <b-nav-item :to="{ path: 'search-rent-a-cars'}"><font-awesome-icon :icon="carIcon"/> Rent a car Services</b-nav-item>
             </b-nav>
