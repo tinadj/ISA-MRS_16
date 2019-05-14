@@ -73,7 +73,7 @@
         </form><br>
 
         <b-alert variant="success" v-model="success">Successfully saved!</b-alert>
-        <b-alert variant="danger" v-model="error" dismissible>Something went wrong!</b-alert>
+        <b-alert variant="danger" v-model="error" dismissible>{{errorMessage}}</b-alert>
     </b-card>
   </b-card-group>
 </template>
@@ -107,7 +107,8 @@ export default {
       ],
       typeValid: null,
       success: false,
-      error: false
+      error: false,
+      errorMessage: ''
     }
   },
   methods: {
@@ -115,8 +116,9 @@ export default {
       e.preventDefault()
       
       this.typeValid = null
+      this.error = false
 
-      if (this.type != null) {
+      if (this.noEmptyFiedls() && this.type != null) {
         const vehicle = {
         'id': this.id,
         'name': this.name,
@@ -136,12 +138,19 @@ export default {
             this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/vehicles")
           })
           .catch(err => {
+            this.errorMessage = "Something went wrong!"
             this.success = false;
             this.error = true
           })
           
       } else {
-        this.typeValid = false
+        if (this.type == null) {
+          this.errorMessage = "Vehicle type isn't valid!"
+          this.typeValid = false
+        } else {
+          this.errorMessage = "Some fields are empty!"
+        }
+        this.error = true
       }
       
     },
@@ -161,7 +170,14 @@ export default {
           case "SUV": return 6;
           default: return null;
         }
+      },
+      noEmptyFiedls() {
+      if (this.name.length == 0 || this.brand.length == 0 || this.model.length == 0 ||
+            this.productionYear.length == 0 || this.seatsNum.length == 0 || this.price.length == 0) {
+                return false 
       }
+      return true
+    }
   },
   mounted() {
     let api = '/vehicles/' + this.id

@@ -4,10 +4,10 @@ import java.util.Date;
 
 public class VehicleSearchParamsDTO {
     private Integer racID;
-    private String pickUpLocation;
+    private Integer pickUpLocation;
     private Date pickUpDate;
     private Date dropOffDate;
-    private String dropOffLocation;
+    private Integer dropOffLocation;
     private Integer vehicleType;
     private Integer minPrice;
     private Integer maxPrice;
@@ -15,8 +15,8 @@ public class VehicleSearchParamsDTO {
 
     public VehicleSearchParamsDTO() {}
 
-    public VehicleSearchParamsDTO(Integer racID, String pickUpLocation, Date pickUpDate, Date dropOffDate,
-                                  String dropOffLocation, Integer vehicleType, Integer minPrice, Integer maxPrice, Integer criteria) {
+    public VehicleSearchParamsDTO(Integer racID, Integer pickUpLocation, Date pickUpDate, Date dropOffDate,
+                                  Integer dropOffLocation, Integer vehicleType, Integer minPrice, Integer maxPrice, Integer criteria) {
         this.racID = racID;
         this.pickUpLocation = pickUpLocation;
         this.pickUpDate = pickUpDate;
@@ -36,11 +36,11 @@ public class VehicleSearchParamsDTO {
         this.racID = racID;
     }
 
-    public String getPickUpLocation() {
+    public Integer getPickUpLocation() {
         return pickUpLocation;
     }
 
-    public void setPickUpLocation(String pickUpLocation) {
+    public void setPickUpLocation(Integer pickUpLocation) {
         this.pickUpLocation = pickUpLocation;
     }
 
@@ -60,11 +60,11 @@ public class VehicleSearchParamsDTO {
         this.dropOffDate = dropOffDate;
     }
 
-    public String getDropOffLocation() {
+    public Integer getDropOffLocation() {
         return dropOffLocation;
     }
 
-    public void setDropOffLocation(String dropOffLocation) {
+    public void setDropOffLocation(Integer dropOffLocation) {
         this.dropOffLocation = dropOffLocation;
     }
 

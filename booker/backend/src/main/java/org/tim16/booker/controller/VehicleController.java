@@ -9,6 +9,7 @@ import org.tim16.booker.comparator.*;
 import org.tim16.booker.dto.VehicleDTO;
 import org.tim16.booker.dto.VehicleSearchParamsDTO;
 import org.tim16.booker.model.rent_a_car.*;
+import org.tim16.booker.service.BranchOfficeService;
 import org.tim16.booker.service.RacReservationService;
 import org.tim16.booker.service.RentACarService;
 import org.tim16.booker.service.VehicleService;
@@ -29,6 +30,9 @@ public class VehicleController {
     @Autowired
     private RacReservationService reservationService;
 
+    @Autowired
+    private BranchOfficeService branchOfficeService;
+
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<Vehicle>> getAll() {
         return new ResponseEntity<>(vehicleService.findAll(), HttpStatus.OK);
@@ -38,12 +42,12 @@ public class VehicleController {
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<Vehicle> add(@RequestBody VehicleDTO dto) {
         // a new vehicle must have rent a car defined
-        if (dto.getRentACar() == null) {
+        if (dto.getRentACar() == null || dto.getCurrentlyIn() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         RentACar rentACar = rentACarService.findOne(dto.getRentACar().getId());
-
-        if (rentACar.getId() == null) {
+        BranchOffice branchOffice = branchOfficeService.findOne(dto.getCurrentlyIn());
+        if (rentACar.getId() == null || branchOffice.getId() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -58,6 +62,7 @@ public class VehicleController {
         vehicle.setType(intToVehicleType(dto.getType()));
         rentACar.addVehicle(vehicle);
         vehicle.setRentACar(rentACar);
+        vehicle.setCurrentlyIn(branchOffice);
 
         vehicle = vehicleService.create(vehicle);
         rentACarService.update(rentACar);
@@ -142,6 +147,20 @@ public class VehicleController {
         }
     }
 
+    @RequestMapping(value = "/update-vehicle-location/{id}/{officeID}", method = RequestMethod.PUT)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
+    public HttpStatus updateVehicleLocation(@PathVariable Integer id, @PathVariable Integer officeID) {
+        Vehicle vehicle = vehicleService.findOne(id);
+        BranchOffice branchOffice = branchOfficeService.findOne(officeID);
+        if (vehicle == null || branchOffice == null)
+            return HttpStatus.NOT_FOUND;
+
+        vehicle.setCurrentlyIn(branchOffice);
+        vehicleService.update(vehicle);
+        return HttpStatus.OK;
+    }
+
+
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<Vehicle>> searchRegisteredUser(@RequestBody VehicleSearchParamsDTO dto) {
@@ -152,6 +171,13 @@ public class VehicleController {
 
         List<Vehicle> vehicles = getVehicles(dto.getRacID());
         List<Vehicle> result = getVehicles(dto.getRacID());
+
+        if (dto.getPickUpLocation() != null) {
+            for (Vehicle vehicle: vehicles) {
+                if (vehicle.getCurrentlyIn().getId() != dto.getPickUpLocation())
+                    result.remove(vehicle);
+            }
+        }
 
         if (dto.getVehicleType() != null) {
             for (Vehicle vehicle: vehicles) {

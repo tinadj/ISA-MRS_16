@@ -31,7 +31,7 @@
           <b-button @click="onCancel">Cancel</b-button>
         </form><br>
         <b-alert variant="success" v-model="success">Successfully added!</b-alert>
-        <b-alert variant="danger" v-model="error" dismissible>Something went wrong!</b-alert>
+        <b-alert variant="danger" v-model="error" dismissible>{{errorMessage}}</b-alert>
       </b-card>
   </b-card-group>
 </template>
@@ -51,33 +51,51 @@ export default {
       longitude: '',
       description: '',
       success: false,
-      error: false
+      error: false,
+      errorMessage: ''
     }
   },
   methods: {
     add (e) {
       e.preventDefault()
 
-      const airline = {
-        'name': this.name,
-        'address': {
-     	    'city': this.city,
-     	    'state': this.state
-          },
-        'latitude': this.latitude,
-        'longitude': this.longitude,
-        'description': this.description
+      this.success = false;
+      this.error = false;
+
+      if (this.noEmptyFiedls()) {
+        const rentACar = {
+          'name': this.name,
+          'address': {
+            'city': this.city,
+            'state': this.state
+            },
+          'latitude': this.latitude,
+          'longitude': this.longitude,
+          'description': this.description
+        }
+
+        AXIOS.post('/rent-a-cars/add', rentACar)
+        .then(response => {
+          this.success = true;
+          this.error = false;
+        })
+        .catch(err => {
+          this.errorMessage = "Something went wrong!"
+          this.success = false;
+          this.error = true
+        })
+      } else {
+        this.errorMessage = "Some fields are empty!"
+        this.error = true
       }
 
-      AXIOS.post('/rent-a-cars/add', airline)
-      .then(response => {
-        this.success = true;
-        this.error = false;
-      })
-      .catch(err => {
-        this.success = false;
-        this.error = true
-      })
+    },
+    noEmptyFiedls() {
+      if (this.name.length == 0 || this.city.length == 0 || this.state.length == 0 ||
+            this.latitude.length == 0 || this.longitude.length == 0) {
+                return false 
+      }
+      return true
     },
     onCancel (e) {
       e.preventDefault()

@@ -14,10 +14,11 @@ public class VehicleDTO {
     private String description;
     private Float price;
     private RentACarDTO rentACar;
+    private Integer currentlyIn;
 
     public VehicleDTO() {}
 
-    public VehicleDTO(Integer id, String name, String brand, String model, Float price, int type, Integer productionYear, Integer seatsNum, String description, RentACarDTO rentACar) {
+    public VehicleDTO(Integer id, String name, String brand, String model, Integer productionYear, Integer seatsNum, int type, String description, Float price, RentACarDTO rentACar, Integer currentlyIn) {
         this.id = id;
         this.name = name;
         this.brand = brand;
@@ -26,8 +27,17 @@ public class VehicleDTO {
         this.seatsNum = seatsNum;
         this.type = type;
         this.description = description;
-        this.rentACar = rentACar;
         this.price = price;
+        this.rentACar = rentACar;
+        this.currentlyIn = currentlyIn;
+    }
+
+    public Integer getCurrentlyIn() {
+        return currentlyIn;
+    }
+
+    public void setCurrentlyIn(Integer currentlyIn) {
+        this.currentlyIn = currentlyIn;
     }
 
     public Integer getId() {

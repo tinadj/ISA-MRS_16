@@ -134,7 +134,7 @@ public class RentACarController {
     }
 
     @RequestMapping(value = "/{id}/branch-offices", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('RAC_ADMIN')")
+    @PreAuthorize("hasAuthority('RAC_ADMIN') or hasAuthority('USER')")
     public ResponseEntity<List<BranchOffice>> getBranchOffices(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
 

@@ -33,7 +33,7 @@
       </form><br>
 
       <b-alert variant="success" v-model="success">Successfully saved!</b-alert>
-      <b-alert variant="danger" v-model="error" dismissible>Something went wrong!</b-alert>
+      <b-alert variant="danger" v-model="error" dismissible>{{errorMessage}}</b-alert>
     </b-card>
   </b-card-group>
 </template>
@@ -51,38 +51,55 @@ export default {
       state: '',
       rentACar: '',
       success: false,
-      error: false
+      error: false,
+      errorMessage: ''
     }
   },
   methods: {
     edit(e) {
       e.preventDefault()
 
-      const branch_office = {
-        'id': this.id,
-        'name': this.name,
-        'address': {
-            'city': this.city,
-            'state': this.state
-        },
-        'rentACar': {
-          'id':  this.$route.params.id
+      this.error = false
+
+      if (this.noEmptyFiedls()) {
+        const branch_office = {
+          'id': this.id,
+          'name': this.name,
+          'address': {
+              'city': this.city,
+              'state': this.state
+          },
+          'rentACar': {
+            'id':  this.$route.params.id
+          }
         }
-     }
-      AXIOS.put('/branch-offices/update', branch_office)
-      .then(response => {
-        this.success = true;
-        this.error = false;
-      })
-      .catch(err => {
-        this.success = false;
+        AXIOS.put('/branch-offices/update', branch_office)
+        .then(response => {
+          this.success = true;
+          this.error = false;
+        })
+        .catch(err => {
+          this.errorMessage = "Something went wrong!"
+          this.success = false;
+          this.error = true
+        })
+        this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/branch-offices")
+      } else {
+        this.errorMessage = "Some fields are empty!"
         this.error = true
-      })
-      this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/branch-offices")
+      }
     },
       onCancel (e) {
         e.preventDefault()
         this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/branch-offices")
+    },
+      noEmptyFiedls() {
+        if (this.name.length == 0 || this.city.length == 0 || this.state.length == 0 ||
+              this.latitude.length == 0 || this.longitude.length == 0) {
+                  this.errorMessage = "Some fields are empty!"
+                  return false 
+        }
+        return true
     }
   },
   mounted() {

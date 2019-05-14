@@ -32,6 +32,12 @@
 									</div>
 								</div>
 
+                                <div class="profile-info-row">
+									<div class="profile-info-value">
+										<span><font-awesome-icon :icon="locationIcon"/> Currently in: {{item.currentlyIn.address.city}}, {{item.currentlyIn.address.state}}  </span>
+									</div>
+								</div>
+
                                 <!-- Link Show more details -->
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
@@ -82,7 +88,7 @@
 </template>
 
 <script>
-import { faEuroSign, faUser, faAlignLeft, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+import { faEuroSign, faUser, faAlignLeft, faInfoCircle, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
 
 export default {
     name: 'RegisteredUserVehicleInfo',
@@ -93,6 +99,7 @@ export default {
             details: false,
             days: 10,
             totalPrice: 0,
+            locationIcon: faMapMarkerAlt,
             euroIcon: faEuroSign,
             personIcon: faUser,
             infoIcon: faInfoCircle,

@@ -2,7 +2,7 @@
 <b-card-group deck>
     <b-card border-variant="light" style="max-width: 20rem;">
         <b-form-group>          
-            <b-form-input v-model="searchParams.pickUpLocation" placeholder="Pick-up Location"></b-form-input>
+            <b-form-select v-model="searchParams.pickUpLocation" :options="branchOfficesPickUp"></b-form-select>
         </b-form-group>
         
         <b-form-group>
@@ -11,7 +11,7 @@
         
 
         <b-form-group>          
-            <b-form-input v-model="searchParams.dropOffLocation" placeholder="Drop-off Location"></b-form-input>
+            <b-form-select v-model="searchParams.dropOffLocation" :options="branchOfficesDropOff"></b-form-select>
         </b-form-group>
         
         <b-form-group>
@@ -70,9 +70,9 @@
                 racID:  this.$route.params.rac_id,
                 vehicles: '',
                 searchParams: {
-                    pickUpLocation: '',
+                    pickUpLocation: null,
                     pickUpDate: '',
-                    dropOffLocation: '',
+                    dropOffLocation: null,
                     dropOffDate: '',
                     vehicleType: '',
                     vehicleType: null,
@@ -98,7 +98,13 @@
                     {value: 5, text: "Number of Seats Descending"}
                 ],
                 typeValid: null,
-                euroIcon: faEuroSign
+                euroIcon: faEuroSign,
+                branchOfficesPickUp: [
+                    {value: null, text: "Choose pick up location"}
+                ],
+                branchOfficesDropOff: [
+                    {value: null, text: "Choose drop off location"}
+                ],
             }
         },
         methods: {
@@ -183,6 +189,18 @@
                 }
             })
             .catch(err => console.log(err))
+
+            AXIOS.get('/rent-a-cars/' + this.$route.params.rac_id + '/branch-offices')
+            .then(response => { 
+                for (let i in response.data) {
+                    this.branchOfficesPickUp.push(
+                        {value: response.data[i].id, text: response.data[i].name}
+                    )
+                    this.branchOfficesDropOff.push(
+                    {   value: response.data[i].id, text: response.data[i].name}
+                    )
+                }
+            })
         }
     }
 </script>
