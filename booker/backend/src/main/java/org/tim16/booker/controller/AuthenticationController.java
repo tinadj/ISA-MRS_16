@@ -357,4 +357,16 @@ public class AuthenticationController {
         return HttpStatus.OK;
     }
 
+    /*
+    * Provera da li korisnik sa odredjenom email adresom postoji.
+     */
+    @RequestMapping(value = "/check-mail/{email}", method = RequestMethod.GET)
+    public HttpStatus isEmailExist(@PathVariable String email) {
+        User user = userService.findByEmail(email);
+        if(user != null)
+            return HttpStatus.CONFLICT;
+        else
+            return HttpStatus.OK;
+    }
+
 }

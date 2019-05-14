@@ -28,7 +28,7 @@
 
 								<div class="profile-info-row">
 									<div class="profile-info-value">
-										<span>{{item.seatsNum}} <font-awesome-icon :icon="personIcon"/> <b> | </b> Vehicle type: {{vehicleType}}</span>
+										<span>{{item.seatsNum}} <font-awesome-icon :icon="personIcon"/> <b> | </b> Vehicle type: {{this.vehicleType}}</span>
 									</div>
 								</div>
 
@@ -64,7 +64,7 @@
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
 										<span>
-                                            <b-button variant="outline-primary" :to="{ path: 'edit-vehicle-' + item.id} " class="mr-3">Edit</b-button>
+                                            <b-button variant="outline-primary" v-on:click="edit" class="mr-3">Edit</b-button>
                                             <b-button variant="outline-danger"  v-on:click="showModal">Remove</b-button>
                                             <b-modal ref="confirmation" hide-footer>
                                                 <div class="d-block text-center">
@@ -72,6 +72,11 @@
                                                 </div>
                                                 <b-button class="mt-3" variant="outline-primary" block v-on:click="removeVehicle">Yes</b-button>
                                                 <b-button class="mt-2" block v-on:click="hideModal">Cancel</b-button>
+                                            </b-modal>
+                                            <b-modal v-model="reservedVehicle" hide-footer>
+                                                <div class="d-block text-center">
+                                                    <h3>Vehicle is reserved!</h3>
+                                                </div>
                                             </b-modal>
                                         </span>
 									</div>
@@ -95,13 +100,14 @@ export default {
     props: ["item"],
     data() {
         return {
-            rating: '',
+            rating: 0,
             details: false,
             totalPrice: 0,
             euroIcon: faEuroSign,
             personIcon: faUser,
             infoIcon: faInfoCircle,
-            descriptionIcon: faAlignLeft
+            descriptionIcon: faAlignLeft,
+            reservedVehicle: false
         } 
     },
     methods: {
@@ -110,10 +116,20 @@ export default {
             return this.item.type.charAt(0).toUpperCase() + this.item.type.slice(1).toLowerCase()
         },
         showModal: function(id) {
-            this.$refs['confirmation'].show()
+            AXIOS.get('/vehicles/is-reserved/' + this.item.id)
+            .then(response => {
+                if (response.data == "OK")
+                     this.$refs['confirmation'].show()
+                else if (response.data = "FORBIDDEN")
+                    this.reservedVehicle = true
+                else
+                    console.log(response)
+            })
+            .catch(err => console.log(err))
+            
         },
         removeVehicle: function() {
-            AXIOS.delete('vehicles/remove/' + this.item.id)
+            AXIOS.delete('/vehicles/remove/' + this.item.id)
             .then(response => this.$router.go())
             .catch(err => console.log(err))
 
@@ -121,6 +137,18 @@ export default {
         },
         hideModal: function() {
             this.$refs['confirmation'].hide()
+        },
+        edit: function() {
+            AXIOS.get('/vehicles/is-reserved/' + this.item.id)
+            .then(response => {
+                if (response.data == "OK")
+                    this.$router.push("edit-vehicle-" + this.item.id)
+                else if (response.data = "FORBIDDEN")
+                    this.reservedVehicle = true
+                else
+                    console.log(response)
+            })
+            .catch(err => console.log(err))
         }
        
     },

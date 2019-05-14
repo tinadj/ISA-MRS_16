@@ -27,6 +27,7 @@ public class AirlineAdmin extends User {
 
     public AirlineAdmin(String username, String password, String name, String lastname, String email, String city, Integer phoneNum) {
         super(username, password, name, lastname, email, city, phoneNum);
+        this.passChanged = false;
     }
 
     public Airline getAirline() {
