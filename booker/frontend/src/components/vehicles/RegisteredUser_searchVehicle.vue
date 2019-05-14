@@ -32,7 +32,7 @@
 
     </b-card>
     <b-card border-variant="light" style="max-width: 40rem;">
-        <b-alert v-model="noResultMsg" variant="light">{{message}}!</b-alert>
+        <b-alert v-model="noResultMsg" variant="light">{{message}}</b-alert>
         <ul>
             <li v-for="item in vehicles">
                 <RegisteredUserVehicleInfo v-bind:item="item"></RegisteredUserVehicleInfo>
@@ -83,7 +83,7 @@
                     {value: 3, text: "Full size"},
                     {value: 4, text: "Luxury"},
                     {value: 5, text: "Minivan"},
-                    {value: 6, text: "SUV"},
+                    {value: 6, text: "SUV"}
                 ],
                 typeValid: null,
                 euroIcon: faEuroSign

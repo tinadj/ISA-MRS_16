@@ -19,12 +19,16 @@
         </b-input-group>
         </b-col>
 
-        <b-col lg="3">
+        <b-col lg="2">
             <v-date-picker mode="range" v-model="dates"/>
         </b-col>
 
-        <b-col lg="3">
-             <b-button variant="outline-primary" v-on:click="search">Search</b-button>
+        <b-col lg="2.5">
+            <b-form-select v-model="criteria" :options="criteriaOptions" ></b-form-select>
+        </b-col>
+
+        <b-col lg="1">
+            <b-button variant="outline-primary" v-on:click="search">Search</b-button>
         </b-col>
     </b-row>
     <b-row>
@@ -62,7 +66,16 @@
                 city: '',
                 state: '',
                 dates: '',
-                noResultMsg: false
+                noResultMsg: false,
+                criteria: 0,
+                criteriaOptions: [
+                    {value: 0, text: "Name Ascending"},
+                    {value: 1, text: "Name Descending"},
+                    {value: 2, text: "City Ascending"},
+                    {value: 3, text: "City Descending"},
+                    {value: 4, text: "State Ascending"},
+                    {value: 5, text: "State Descending"}
+                ]
             }
         },
         methods: {
@@ -77,7 +90,8 @@
                     'city': this.city,
                     'state': this.state,
                     'pickUpDate': null,
-                    'returnDate':  null
+                    'returnDate':  null,
+                    'criteria': this.criteria
                     } 
                    
                     AXIOS.post('/rent-a-cars/search', searchParams)
@@ -95,7 +109,8 @@
                     'city': this.city,
                     'state': this.state,
                     'pickUpDate': this.dates.start,
-                    'returnDate':  this.dates.end
+                    'returnDate':  this.dates.end,
+                    'criteria': this.criteria
                     }
                     
                     AXIOS.post('/rent-a-cars/search', searchParams)

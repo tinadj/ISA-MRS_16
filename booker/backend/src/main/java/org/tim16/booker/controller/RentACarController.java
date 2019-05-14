@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.tim16.booker.comparator.RentACarCity;
+import org.tim16.booker.comparator.RentACarName;
+import org.tim16.booker.comparator.RentACarState;
 import org.tim16.booker.dto.RACSearchParamsDTO;
 import org.tim16.booker.dto.RentACarDTO;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
@@ -19,10 +22,7 @@ import org.tim16.booker.service.VehicleService;
 import sun.util.resources.CalendarData;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api/rent-a-cars")
@@ -40,7 +40,9 @@ public class RentACarController {
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('USER')")
     public ResponseEntity<List<RentACar>> getAll() {
-        return new ResponseEntity<>(rentACarService.findAll(), HttpStatus.OK);
+        List<RentACar> rentACars = rentACarService.findAll();
+        Collections.sort(rentACars, new RentACarName());
+        return new ResponseEntity<>(rentACars, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
@@ -186,6 +188,32 @@ public class RentACarController {
                 }
             }
         }
+
+        if (dto.getCriteria() == 0) {
+            Collections.sort(result, new RentACarName());
+        }
+        else if (dto.getCriteria() == 1) {
+            Collections.sort(result, new RentACarName());
+            Collections.reverse(result);
+        }
+        else if (dto.getCriteria() == 2) {
+            Collections.sort(result, new RentACarCity());
+        }
+        else if (dto.getCriteria() == 3) {
+            Collections.sort(result, new RentACarCity());
+            Collections.reverse(result);
+        }
+        else if (dto.getCriteria() == 4) {
+            Collections.sort(result, new RentACarState());
+        }
+        else if (dto.getCriteria() == 5) {
+            Collections.sort(result, new RentACarState());
+            Collections.reverse(result);
+        }
+        else {
+            Collections.sort(result, new RentACarName());
+        }
+
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

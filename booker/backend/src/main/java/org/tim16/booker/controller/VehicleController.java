@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.VehicleDTO;
+import org.tim16.booker.dto.VehicleSearchParamsDTO;
 import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.rent_a_car.RentACarReservation;
 import org.tim16.booker.model.rent_a_car.Vehicle;
@@ -15,6 +16,7 @@ import org.tim16.booker.service.RentACarService;
 import org.tim16.booker.service.VehicleService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -144,6 +146,16 @@ public class VehicleController {
         }
     }
 
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<List<Vehicle>> searchRegisteredUser(@RequestBody VehicleSearchParamsDTO dto) {
+
+
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     private VehicleType intToVehicleType(Integer i)
     {
         switch (i)
@@ -157,5 +169,17 @@ public class VehicleController {
             case 6 : return VehicleType.SUV;
             default: return VehicleType.UNDEFINED;
         }
+    }
+
+    private List<Vehicle> getVehicles(Integer racId) {
+        RentACar rentACar = rentACarService.findOne(racId);
+        List<Vehicle> vehicles = new ArrayList<>();
+
+        if (rentACar != null) {
+            for (Vehicle v : rentACar.getVehicles()) {
+                vehicles.add(v);
+            }
+        }
+        return vehicles;
     }
 }

@@ -8,15 +8,17 @@ public class RACSearchParamsDTO {
     private String state;
     private Date pickUpDate;
     private Date returnDate;
+    private Integer criteria;
 
     public RACSearchParamsDTO() {}
 
-    public RACSearchParamsDTO(String name, String city, String state, Date pickUpDate, Date returnDate) {
+    public RACSearchParamsDTO(String name, String city, String state, Date pickUpDate, Date returnDate, Integer criteria) {
         this.name = name;
         this.city = city;
         this.state = state;
         this.pickUpDate = pickUpDate;
         this.returnDate = returnDate;
+        this.criteria = criteria;
     }
 
     public String getName() {
@@ -57,5 +59,13 @@ public class RACSearchParamsDTO {
 
     public void setReturnDate(Date returnDate) {
         this.returnDate = returnDate;
+    }
+
+    public Integer getCriteria() {
+        return criteria;
+    }
+
+    public void setCriteria(Integer criteria) {
+        this.criteria = criteria;
     }
 }
