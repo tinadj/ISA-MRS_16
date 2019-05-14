@@ -2,7 +2,7 @@
 <b-card-group deck>
     <b-card border-variant="light" style="max-width: 20rem;">
         <b-form-group>          
-            <b-form-input v-model="searchParams.pickUpLocation" placeholder="Pick-up Location"></b-form-input>
+            <b-form-select v-model="searchParams.pickUpLocation" :options="branchOfficesPickUp"></b-form-select>
         </b-form-group>
         
         <b-form-group>
@@ -11,7 +11,7 @@
         
 
         <b-form-group>          
-            <b-form-input v-model="searchParams.dropOffLocation" placeholder="Drop-off Location"></b-form-input>
+            <b-form-select v-model="searchParams.dropOffLocation" :options="branchOfficesDropOff"></b-form-select>
         </b-form-group>
         
         <b-form-group>
@@ -26,13 +26,17 @@
             <label class='labeltext'>Price Range (<font-awesome-icon :icon="euroIcon"/> per day)</label>
             <ejs-slider v-model="searchParams.priceRange" :tooltip="{ isVisible: true}" type="Range" :ticks="{ placement: 'After', largeStep: 10}"></ejs-slider>
         </b-form-group>
+
+        <b-form-group>
+            <b-form-select v-model="searchParams.criteria" :options="criteriaOptions" ></b-form-select>
+        </b-form-group>
         
         <b-button variant="outline-primary" v-on:click="search" class="mr-3">Search</b-button>
         <b-button @click="onCancel">Cancel</b-button>
 
     </b-card>
     <b-card border-variant="light" style="max-width: 40rem;">
-        <b-alert v-model="noResultMsg" variant="light">{{message}}!</b-alert>
+        <b-alert v-model="noResultMsg" variant="light">{{message}}</b-alert>
         <ul>
             <li v-for="item in vehicles">
                 <RegisteredUserVehicleInfo v-bind:item="item"></RegisteredUserVehicleInfo>
@@ -66,14 +70,14 @@
                 racID:  this.$route.params.rac_id,
                 vehicles: '',
                 searchParams: {
-                    pickUpLocation: '',
+                    pickUpLocation: null,
                     pickUpDate: '',
-                    dropOffLocation: '',
+                    dropOffLocation: null,
                     dropOffDate: '',
                     vehicleType: '',
-                    passengerNum: '',
                     vehicleType: null,
-                    priceRange: [0, 0]
+                    priceRange: [0, 0],
+                    criteria: 0
                 },
                 typeOptions: [
                     {value: null, text: "Choose vehicle type"},
@@ -83,14 +87,78 @@
                     {value: 3, text: "Full size"},
                     {value: 4, text: "Luxury"},
                     {value: 5, text: "Minivan"},
-                    {value: 6, text: "SUV"},
+                    {value: 6, text: "SUV"}
+                ],
+                criteriaOptions: [
+                    {value: 0, text: "Price Ascending"},
+                    {value: 1, text: "Price Descending"},
+                    {value: 2, text: "Year Ascending"},
+                    {value: 3, text: "Year Descending"},
+                    {value: 4, text: "Number of Seats Ascending"},
+                    {value: 5, text: "Number of Seats Descending"}
                 ],
                 typeValid: null,
-                euroIcon: faEuroSign
+                euroIcon: faEuroSign,
+                branchOfficesPickUp: [
+                    {value: null, text: "Choose pick up location"}
+                ],
+                branchOfficesDropOff: [
+                    {value: null, text: "Choose drop off location"}
+                ],
             }
         },
         methods: {
             search() {
+                AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
+
+                this.noResultMsg = false
+
+                if (this.dates == null) {
+                    const searchParams = {
+                    'racID': this.racID,
+                    'pickUpLocation': this.searchParams.pickUpLocation,
+                    'dropOffLocation': this.searchParams.dropOffLocation,
+                    'vehicleType': this.searchParams.vehicleType,
+                    'minPrice': this.searchParams.priceRange[0],
+                    'maxPrice': this.searchParams.priceRange[1],
+                    'criteria': this.searchParams.criteria
+                    } 
+
+                    console.log(searchParams)
+                   
+                    AXIOS.post('/vehicles/search', searchParams)
+                    .then(response => { 
+                        this.vehicles = response.data
+                        if (this.vehicles.length == 0) {
+                            this.message = "There are no results that match your search!"
+                            this.noResultMsg = true
+                        }
+                    })
+                    .catch(err => console.log(err))
+
+                } else {
+                    const searchParams = {
+                    'racID': this.racID,
+                    'pickUpLocation': this.searchParams.pickUpLocation,
+                    'pickUpDate': this.searchParams.pickUpDate,
+                    'dropOffDate': this.searchParams.dropOffDate,
+                    'dropOffLocation': this.searchParams.dropOffLocation,
+                    'vehicleType': this.searchParams.vehicleType,
+                    'minPrice': this.searchParams.priceRange[0],
+                    'maxPrice': this.searchParams.priceRange[1],
+                    'criteria': this.searchParams.criteria
+                    } 
+                    
+                    AXIOS.post('/vehicles/search', searchParams)
+                    .then(response => { 
+                        this.vehicles = response.data
+                        if (this.vehicles.length == 0) {
+                            this.message = "There are no results that match your search!"
+                            this.noResultMsg = true
+                        }
+                    })
+                    .catch(err => console.log(err))
+                }
             },
             getVehicleMaxPrice() {
                 maxPrice = 0
@@ -121,6 +189,18 @@
                 }
             })
             .catch(err => console.log(err))
+
+            AXIOS.get('/rent-a-cars/' + this.$route.params.rac_id + '/branch-offices')
+            .then(response => { 
+                for (let i in response.data) {
+                    this.branchOfficesPickUp.push(
+                        {value: response.data[i].id, text: response.data[i].name}
+                    )
+                    this.branchOfficesDropOff.push(
+                    {   value: response.data[i].id, text: response.data[i].name}
+                    )
+                }
+            })
         }
     }
 </script>

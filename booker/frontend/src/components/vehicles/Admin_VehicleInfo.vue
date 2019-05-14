@@ -28,7 +28,18 @@
 
 								<div class="profile-info-row">
 									<div class="profile-info-value">
-										<span>{{item.seatsNum}} <font-awesome-icon :icon="personIcon"/> <b> | </b> Vehicle type: {{this.vehicleType}}</span>
+										<span>{{item.seatsNum}} <font-awesome-icon :icon="personIcon"/> <b> | </b> Vehicle type: {{vehicleType}}</span>
+									</div>
+								</div>
+
+                                <div class="profile-info-row">
+									<div class="profile-info-value">
+										<span><font-awesome-icon :icon="locationIcon"/> Currently in: {{item.currentlyIn.address.city}}, {{item.currentlyIn.address.state}}&nbsp;&nbsp;<b-button variant="outline-dark" v-on:click="showVehicleLocationModal">Change</b-button></span>
+                                        <b-modal ref="vehicle-location" hide-footer>
+                                            <b-form-select v-model="currentlyIn" :options="branchOffices" :state="branchOfficeValid"></b-form-select>
+                                            <b-button class="mt-3" variant="outline-primary" block v-on:click="changeVehicleLocation">Save</b-button>
+                                            <b-button class="mt-2" block v-on:click="hideVehicleLocationModal">Cancel</b-button>
+                                        </b-modal>
 									</div>
 								</div>
 
@@ -93,7 +104,7 @@
 
 <script>
 import {AXIOS} from '../../http-common'
-import { faEuroSign, faUser, faAlignLeft, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+import { faEuroSign, faUser, faAlignLeft, faInfoCircle, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
 
 export default {
     name: 'AdminVehicleInfo',
@@ -102,12 +113,19 @@ export default {
         return {
             rating: 0,
             details: false,
+            vehicleType: '',
             totalPrice: 0,
+            locationIcon: faMapMarkerAlt,
             euroIcon: faEuroSign,
             personIcon: faUser,
             infoIcon: faInfoCircle,
             descriptionIcon: faAlignLeft,
-            reservedVehicle: false
+            reservedVehicle: false,
+            branchOffices: [
+                {value: null, text: "Choose branch office"}
+            ],
+            currentlyIn: null,
+            branchOfficeValid: null
         } 
     },
     methods: {
@@ -128,6 +146,42 @@ export default {
             .catch(err => console.log(err))
             
         },
+        showVehicleLocationModal: function(id) {
+            // pokupi sve lokacije branch office-a
+            AXIOS.get('/rent-a-cars/' + this.$route.params.id)
+            .then(response => {
+                console.log(response.data.branchOffices)
+                for (let i in response.data.branchOffices) {
+                    this.branchOffices.push(
+                        {value: response.data.branchOffices[i].id, text: response.data.branchOffices[i].name}
+                    )
+                }
+                // proveri da li je vozilo rezervisano, ako nije tada moze promeniti lokaciju
+                AXIOS.get('/vehicles/is-reserved/' + this.item.id)
+                .then(response => {
+                    if (response.data == "OK")
+                        this.$refs['vehicle-location'].show()
+                    else if (response.data = "FORBIDDEN")
+                        this.reservedVehicle = true
+                    else
+                        console.log(response)
+                })
+                .catch(err => console.log(err))
+                })
+            .catch(err => console.log(err))
+        },
+        changeVehicleLocation: function() {
+            this.branchOfficesValid = null
+
+            if (this.currentlyIn != null) {
+                AXIOS.put('/vehicles/update-vehicle-location/' + this.item.id + '/' +  this.currentlyIn)
+                .then(response => this.$router.go())
+                .catch(err=> console.log(err))
+                this.$refs['vehicle-location'].hide()
+            } else {
+                this.branchOfficesValid = false
+            }
+        },
         removeVehicle: function() {
             AXIOS.delete('/vehicles/remove/' + this.item.id)
             .then(response => this.$router.go())
@@ -137,6 +191,9 @@ export default {
         },
         hideModal: function() {
             this.$refs['confirmation'].hide()
+        },
+        hideVehicleLocationModal: function() {
+            this.$refs['vehicle-location'].hide()
         },
         edit: function() {
             AXIOS.get('/vehicles/is-reserved/' + this.item.id)

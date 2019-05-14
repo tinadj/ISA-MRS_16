@@ -28,7 +28,7 @@
 
         </form><br>
         <b-alert variant="success" v-model="success">Successfully added!</b-alert>
-        <b-alert variant="danger" v-model="error" dismissible>Something went wrong!</b-alert>
+        <b-alert variant="danger" v-model="error" dismissible>{{errorMessage}}</b-alert>
     </b-card>
   </b-card-group>
 </template>
@@ -47,33 +47,50 @@ export default {
       longitude: '',
       rentACar: '',
       success: false,
-      error: false
+      error: false,
+      errorMessage: ''
     }
   },
   methods: {
     add (e) {
       e.preventDefault()
+      
+      this.error = false
 
-      const branch_office = {
-        'name': this.name,
-        'address': {
-            'city': this.city,
-            'state': this.state
-        },
-        'latitude': this.latitude,
-        'longitude': this.longitude,
-        'rentACar': this.rentACar,
-      }
+      if (this.noEmptyFiedls()) {
+        const branch_office = {
+          'name': this.name,
+          'address': {
+              'city': this.city,
+              'state': this.state
+          },
+          'latitude': this.latitude,
+          'longitude': this.longitude,
+          'rentACar': this.rentACar,
+        }
 
-      AXIOS.post('/branch-offices/add', branch_office)
-      .then(response => {
-        this.success = true;
-        this.error = false;
-      })
-      .catch(err => {
-        this.success = false;
+        AXIOS.post('/branch-offices/add', branch_office)
+        .then(response => {
+          this.success = true;
+          this.error = false;
+        })
+        .catch(err => {
+          this.errorMessage = "Something went wrong!"
+          this.success = false;
+          this.error = true
+        })
+      } else {
+        this.errorMessage = "Some fields are empty!"
         this.error = true
-      })
+      }
+    },
+    noEmptyFiedls() {
+      if (this.name.length == 0 || this.city.length == 0 || this.state.length == 0 ||
+            this.latitude.length == 0 || this.longitude.length == 0) {
+                this.errorMessage = "Some fields are empty!"
+                return false 
+      }
+      return true
     }
   },
   mounted() {

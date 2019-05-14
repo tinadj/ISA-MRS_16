@@ -30,6 +30,10 @@
           <b-form-group>
             <b-form-input v-model="price" placeholder="Price per day" type="number"></b-form-input>
           </b-form-group>
+
+          <b-form-group>
+            <b-form-select v-model="currentlyIn" :options="branchOffices" :state="branchOfficeValid"></b-form-select>
+          </b-form-group>
           
           <b-form-group>
             <b-form-textarea v-model="description" placeholder="Description" rows="3"></b-form-textarea>
@@ -40,7 +44,7 @@
 
         </form><br>
         <b-alert variant="success" v-model="success">Successfully added!</b-alert>
-        <b-alert variant="danger" v-model="error" dismissible>Something went wrong!</b-alert>
+        <b-alert variant="danger" v-model="error" dismissible>{{errorMessage}}</b-alert>
     </b-card>
   </b-card-group>
 </template>
@@ -73,7 +77,14 @@ export default {
         {value: 5, text: "Minivan"},
         {value: 6, text: "SUV"},
       ],
-      typeValid: null // indikator da li je izabran tip vozila (nije ostalo na null)
+      typeValid: null, // indikator da li je izabran tip vozila (nije ostalo na null)
+      currentlyIn: null,
+      branchOffices: [
+        {value: null, text: "Choose branch office"}
+      ],
+      branchOfficeValid: null,
+      errorMessage: ''
+
     }
     
   },
@@ -82,8 +93,10 @@ export default {
       e.preventDefault()
 
       this.typeValid = null
+      this.branchOfficeValid = null
+      this.error = false
 
-      if (this.type != null) {
+      if (this.noEmptyFiedls() && this.type != null && this.currentlyIn != null) {
           const vehicle = {
           'name': this.name,
           'brand': this.brand,
@@ -93,7 +106,8 @@ export default {
           'seatsNum': this.seatsNum,
           'price': this.price,
           'rentACar': this.rentACar,
-          'description': this.description
+          'description': this.description,
+          'currentlyIn': this.currentlyIn
         }
 
         AXIOS.post('/vehicles/add', vehicle)
@@ -102,13 +116,31 @@ export default {
           this.error = false;
         })
         .catch(err => {
+          this.errorMessage = "Something went wrong!"
           this.success = false;
           this.error = true
         })
       } else {
-        this.typeValid = false
+        if (this.type == null) {
+          this.errorMessage = "Vehicle type isn't valid!"
+          this.typeValid = false
+        }
+        else if (this.branchOfficeValid == null) {
+          this.errorMessage = "Branch office isn't valid!"
+          this.branchOfficeValid = false
+        } else {
+          this.errorMessage = "Some fields are empty!"
+        }
+        this.error = true
       }
       
+    },
+    noEmptyFiedls() {
+      if (this.name.length == 0 || this.brand.length == 0 || this.model.length == 0 ||
+            this.productionYear.length == 0 || this.seatsNum.length == 0 || this.price.length == 0) {
+                return false 
+      }
+      return true
     }
   },
   mounted() {
@@ -117,7 +149,15 @@ export default {
     AXIOS.get(api)
     .then(response => { 
       this.rentACar = response.data
+
+      for (let i in response.data.branchOffices) {
+        this.branchOffices.push(
+          {value: response.data.branchOffices[i].id, text: response.data.branchOffices[i].name}
+        )
+      }
     })
+
+    
   }
 }
 </script>

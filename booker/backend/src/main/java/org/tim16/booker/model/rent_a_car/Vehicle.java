@@ -42,6 +42,9 @@ public class Vehicle {
     @JoinColumn(name = "rentACar", referencedColumnName = "id", nullable = false)
     private RentACar rentACar;
 
+    @ManyToOne()
+    private BranchOffice currentlyIn;
+
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<Rate>();
 
@@ -133,5 +136,13 @@ public class Vehicle {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    public BranchOffice getCurrentlyIn() {
+        return currentlyIn;
+    }
+
+    public void setCurrentlyIn(BranchOffice currentlyIn) {
+        this.currentlyIn = currentlyIn;
     }
 }
