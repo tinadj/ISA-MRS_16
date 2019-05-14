@@ -5,20 +5,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.tim16.booker.comparator.*;
 import org.tim16.booker.dto.VehicleDTO;
 import org.tim16.booker.dto.VehicleSearchParamsDTO;
-import org.tim16.booker.model.rent_a_car.RentACar;
-import org.tim16.booker.model.rent_a_car.RentACarReservation;
-import org.tim16.booker.model.rent_a_car.Vehicle;
-import org.tim16.booker.model.rent_a_car.VehicleType;
+import org.tim16.booker.model.rent_a_car.*;
 import org.tim16.booker.service.RacReservationService;
 import org.tim16.booker.service.RentACarService;
 import org.tim16.booker.service.VehicleService;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api/vehicles")
@@ -149,11 +145,65 @@ public class VehicleController {
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<Vehicle>> searchRegisteredUser(@RequestBody VehicleSearchParamsDTO dto) {
+        RentACar rentACar = rentACarService.findOne(dto.getRacID());
 
+        if (rentACar == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        List<Vehicle> vehicles = getVehicles(dto.getRacID());
+        List<Vehicle> result = getVehicles(dto.getRacID());
 
+        if (dto.getVehicleType() != null) {
+            for (Vehicle vehicle: vehicles) {
+                VehicleType type = intToVehicleType(dto.getVehicleType());
+                if (vehicle.getType() != type) {
+                    result.remove(vehicle);
+                }
+            }
+        }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (dto.getMinPrice() != 0 && dto.getMaxPrice()!= 0) {
+            for (Vehicle vehicle: vehicles) {
+                if (vehicle.getPrice() < dto.getMinPrice() || vehicle.getPrice() >= dto.getMaxPrice()) {
+                    result.remove(vehicle);
+                }
+            }
+        }
+
+        if (dto.getPickUpDate() != null && dto.getDropOffDate() != null) {
+            for (Vehicle vehicle: vehicles) {
+                if (isReserved(vehicle, dto.getPickUpDate(), dto.getDropOffDate())) {
+                    result.remove(vehicle);
+                }
+            }
+        }
+
+        if (dto.getCriteria() == 0) {
+            Collections.sort(result, new VehiclePrice());
+        }
+        else if (dto.getCriteria() == 1) {
+            Collections.sort(result, new VehiclePrice());
+            Collections.reverse(result);
+        }
+        else if (dto.getCriteria() == 2) {
+            Collections.sort(result, new VehicleYear());
+        }
+        else if (dto.getCriteria() == 3) {
+            Collections.sort(result, new VehicleYear());
+            Collections.reverse(result);
+        }
+        else if (dto.getCriteria() == 4) {
+            Collections.sort(result, new VehicleNumOfPassangers());
+        }
+        else if (dto.getCriteria() == 5) {
+            Collections.sort(result, new VehicleNumOfPassangers());
+            Collections.reverse(result);
+        }
+        else {
+            Collections.sort(result, new VehicleYear());
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     private VehicleType intToVehicleType(Integer i)
@@ -181,5 +231,25 @@ public class VehicleController {
             }
         }
         return vehicles;
+    }
+
+    private boolean isReserved(Vehicle vehicle, Date pickUp, Date dropOff) {
+        for (RentACarReservation reservation: reservationService.findAll()) {
+            if (reservation.getVehicle().getId() == vehicle.getId()) {
+                Date returnDate = calculateReturnDate(reservation);
+
+                if (reservation.getPickUpDate().before(dropOff) && returnDate.after(pickUp)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private Date calculateReturnDate(RentACarReservation reservation) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(reservation.getPickUpDate());
+        c.add(Calendar.DATE, reservation.getDays());
+        return c.getTime();
     }
 }

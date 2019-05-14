@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.comparator.RentACarCity;
 import org.tim16.booker.comparator.RentACarName;
 import org.tim16.booker.comparator.RentACarState;
+import org.tim16.booker.comparator.VehiclePrice;
 import org.tim16.booker.dto.RACSearchParamsDTO;
 import org.tim16.booker.dto.RentACarDTO;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
@@ -128,6 +129,7 @@ public class RentACarController {
             vehicles.add(v);
         }
 
+        Collections.sort(vehicles, new VehiclePrice());
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 

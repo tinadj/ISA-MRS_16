@@ -26,6 +26,10 @@
             <label class='labeltext'>Price Range (<font-awesome-icon :icon="euroIcon"/> per day)</label>
             <ejs-slider v-model="searchParams.priceRange" :tooltip="{ isVisible: true}" type="Range" :ticks="{ placement: 'After', largeStep: 10}"></ejs-slider>
         </b-form-group>
+
+        <b-form-group>
+            <b-form-select v-model="searchParams.criteria" :options="criteriaOptions" ></b-form-select>
+        </b-form-group>
         
         <b-button variant="outline-primary" v-on:click="search" class="mr-3">Search</b-button>
         <b-button @click="onCancel">Cancel</b-button>
@@ -71,9 +75,9 @@
                     dropOffLocation: '',
                     dropOffDate: '',
                     vehicleType: '',
-                    passengerNum: '',
                     vehicleType: null,
-                    priceRange: [0, 0]
+                    priceRange: [0, 0],
+                    criteria: 0
                 },
                 typeOptions: [
                     {value: null, text: "Choose vehicle type"},
@@ -85,12 +89,70 @@
                     {value: 5, text: "Minivan"},
                     {value: 6, text: "SUV"}
                 ],
+                criteriaOptions: [
+                    {value: 0, text: "Price Ascending"},
+                    {value: 1, text: "Price Descending"},
+                    {value: 2, text: "Year Ascending"},
+                    {value: 3, text: "Year Descending"},
+                    {value: 4, text: "Number of Seats Ascending"},
+                    {value: 5, text: "Number of Seats Descending"}
+                ],
                 typeValid: null,
                 euroIcon: faEuroSign
             }
         },
         methods: {
             search() {
+                AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
+
+                this.noResultMsg = false
+
+                if (this.dates == null) {
+                    const searchParams = {
+                    'racID': this.racID,
+                    'pickUpLocation': this.searchParams.pickUpLocation,
+                    'dropOffLocation': this.searchParams.dropOffLocation,
+                    'vehicleType': this.searchParams.vehicleType,
+                    'minPrice': this.searchParams.priceRange[0],
+                    'maxPrice': this.searchParams.priceRange[1],
+                    'criteria': this.searchParams.criteria
+                    } 
+
+                    console.log(searchParams)
+                   
+                    AXIOS.post('/vehicles/search', searchParams)
+                    .then(response => { 
+                        this.vehicles = response.data
+                        if (this.vehicles.length == 0) {
+                            this.message = "There are no results that match your search!"
+                            this.noResultMsg = true
+                        }
+                    })
+                    .catch(err => console.log(err))
+
+                } else {
+                    const searchParams = {
+                    'racID': this.racID,
+                    'pickUpLocation': this.searchParams.pickUpLocation,
+                    'pickUpDate': this.searchParams.pickUpDate,
+                    'dropOffDate': this.searchParams.dropOffDate,
+                    'dropOffLocation': this.searchParams.dropOffLocation,
+                    'vehicleType': this.searchParams.vehicleType,
+                    'minPrice': this.searchParams.priceRange[0],
+                    'maxPrice': this.searchParams.priceRange[1],
+                    'criteria': this.searchParams.criteria
+                    } 
+                    
+                    AXIOS.post('/vehicles/search', searchParams)
+                    .then(response => { 
+                        this.vehicles = response.data
+                        if (this.vehicles.length == 0) {
+                            this.message = "There are no results that match your search!"
+                            this.noResultMsg = true
+                        }
+                    })
+                    .catch(err => console.log(err))
+                }
             },
             getVehicleMaxPrice() {
                 maxPrice = 0
