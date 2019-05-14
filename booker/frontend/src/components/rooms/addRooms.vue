@@ -15,13 +15,45 @@
             <b-form-input v-model="beds" placeholder="Number of Beds" type="number"></b-form-input>
           </b-form-group>       
           
-          <b-form-checkbox id="balcony_checkbox" v-model="balcony_status" name="balcony_checkbox" value="true" unchecked-value="false">
-            Balcony inclusion
-          </b-form-checkbox>
-          
           <b-form-group>
             <b-form-input v-model="discount" placeholder="Discount" type="number"></b-form-input>
           </b-form-group>
+
+          <b-form-checkbox id="balcony_checkbox" v-model="balcony_status" name="balcony_checkbox" value="true" unchecked-value="false">
+            Balcony inclusion
+          </b-form-checkbox>
+
+          <!-- Extra Services -->
+
+          <b-form-checkbox id="breakfast_cb" v-model="breakfast" name="breakfast_cb" value="true" unchecked-value="false">
+            Breakfast 
+          </b-form-checkbox>
+          <b-form-checkbox id="hotel_restaurant_cb" v-model="hotel_restaurant" name="hotel_restaurant_cb" value="true" unchecked-value="false">
+            Hotel Restaurant
+          </b-form-checkbox>
+          <b-form-checkbox id="airport_transfer_cb" v-model="airport_transfer" name="airport_transfer_cb" value="true" unchecked-value="false">
+            Airport Transfer
+          </b-form-checkbox>
+          <b-form-checkbox id="parking_cb" v-model="parking" name="parking_cb" value="true" unchecked-value="false">
+            Parking
+          </b-form-checkbox>
+          <b-form-checkbox id="pool_cb" v-model="pool" name="pool_cb" value="true" unchecked-value="false">
+            Pool Access
+          </b-form-checkbox>
+          <b-form-checkbox id="wellness_spa_cb" v-model="wellness_spa" name="wellness_spa_cb" value="true" unchecked-value="false">
+            Wellness and Spa
+          </b-form-checkbox>
+          <b-form-checkbox id="wifi_cb" v-model="wifi" name="wifi_cb" value="true" unchecked-value="false">
+            Wifi Connection
+          </b-form-checkbox>
+          <b-form-checkbox id="tv_cb" v-model="tv" name="tv_cb" value="true" unchecked-value="false">
+            Television
+          </b-form-checkbox>
+          <b-form-checkbox id="minibar_cb" v-model="minibar" name="minibar_cb" value="true" unchecked-value="false">
+            Minibar
+          </b-form-checkbox>
+
+          <!-- -------------- -->
 
           <b-button variant="outline-primary" type="submit" class="mr-1">Add</b-button>
           <b-button :to="{ path: 'rooms'}">Cancel</b-button>
@@ -44,6 +76,15 @@ export default {
       roomNum: '',
       beds: '',
       balcony_status: 'false',
+      breakfast : 'false',
+      hotel_restaurant : 'false',
+      airport_transfer : 'false',
+      parking : 'false',
+      pool : 'false',
+      wellness_spa : 'false',
+      wifi : 'false',
+      tv : 'false',
+      minibar : 'false',
       discount: '',
       success: false,
       error: false
@@ -59,9 +100,20 @@ export default {
         'roomNum': this.roomNum,
         'beds': this.beds,
         'balcony': this.balcony_status,
+        'breakfast' : this.breakfast,
+        'hotel_restaurant' : this.hotel_restaurant,
+        'airport_transfer' : this.airport_transfer,
+        'parking' : this.parking,
+        'pool' : this.pool,
+        'wellness_spa' : this.wellness_spa,
+        'wifi' : this.wifi,
+        'tv' : this.tv,
+        'minibar' : this.minibar,
         'discount': this.discount,
         'hotelId':this.$route.params.id
       }
+
+      console.log(room)
 
       AXIOS.post('/room/add', room)
       .then(response => {

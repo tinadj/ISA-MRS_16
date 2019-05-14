@@ -1,17 +1,20 @@
 package org.tim16.booker.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.alps.Ext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.RoomDTO;
+import org.tim16.booker.model.hotel.ExtraService;
 import org.tim16.booker.model.hotel.Hotel;
 import org.tim16.booker.model.hotel.Room;
 import org.tim16.booker.service.HotelService;
 import org.tim16.booker.service.RoomService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -33,7 +36,63 @@ public class RoomController {
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addNewRoom(@RequestBody RoomDTO roomDTO){
 
-        roomService.create(roomDTO);
+        Hotel hotel = hotelService.findOne(roomDTO.getHotelId());
+
+        /* Provera da li je uneti sprat veci od broja spratova koje hotel ima */
+        int hotelfloors = hotel.getFloors();
+
+        if (hotelfloors < roomDTO.getFloor())
+        {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        /* Provera koliko ima prostora u hotelu da se doda nova soba (maxRoomNum) */
+        int existingrooms = 0;
+
+        for (int i = 0; i < hotel.getRooms().size(); i++)
+        {
+            existingrooms += 1;
+        }
+
+        if (existingrooms == hotel.getMaxRoomsNum())
+        {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        /* Provera da li je broj kreveta veci od 4 (hotel maksimalno moze imati cetvorokrevetnu sobu) */
+        if (roomDTO.getBeds() > 4)
+        {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        /* Provera da li ovaj broj sobe vec postoji */
+        int roomnum = roomDTO.getRoomNum();
+
+        for(Room r : hotel.getRooms())
+        {
+            if(roomnum == r.getRoomNum())
+            {
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        Room room = new Room();
+        room.setBalcony(roomDTO.getBalcony());
+        room.setBeds(roomDTO.getBeds());
+        room.setDiscount(roomDTO.getDiscount());
+        room.setFloor(roomDTO.getFloor());
+        room.setHotel(hotel);
+        room.setRoomNum(roomDTO.getRoomNum());
+
+        /* Kreiranje set<ExtraService> koji se preuzima iz podataka roomDTO, i dodavanje tog seta u room model */
+
+        HashSet<ExtraService> roomservices = roomExtraServicesSet(roomDTO);
+
+        /*  **********************************************************************************************      */
+
+        room.setExtraServices(roomservices);
+
+        roomService.create(room);
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -65,6 +124,10 @@ public class RoomController {
             Hotel hotel = hotelService.findOne(roomDTO.getHotelId());
             room.setHotel(hotel);
 
+            HashSet<ExtraService> roomservices = roomExtraServicesSet(roomDTO);
+
+            room.setExtraServices(roomservices);
+
             hotel.removeRoom(roomDTO.getId());
             hotel.add(room);
             hotelService.update(hotel);
@@ -95,19 +158,58 @@ public class RoomController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    /*
-
-    @PostMapping(value = "/remove", consumes = MediaType.APPLICATION_JSON_VALUE, produces = ?)
-    public ResponseEntity removeRoom(@RequestBody RoomDTO roomDTO)
+    /* Funkcija koja ucitava ekstraservise iz roomDTO i vraca taj set<extraservices> */
+    public HashSet<ExtraService> roomExtraServicesSet(RoomDTO roomDTO)
     {
-        roomService.remove(roomDTO);
-        return new ResponseEntity(HttpStatus.OK);
+        HashSet<ExtraService> roomservices = new HashSet<>();
+
+        if(roomDTO.getBreakfast().equals(true))
+        {
+            roomservices.add(ExtraService.BREAKFAST);
+        }
+
+        if(roomDTO.getHotel_restaurant().equals(true))
+        {
+            roomservices.add(ExtraService.HOTEL_RESTAURANT);
+        }
+
+        if(roomDTO.getAirport_transfer().equals(true))
+        {
+            roomservices.add(ExtraService.AIRPORT_TRANSFER);
+        }
+
+        if(roomDTO.getParking().equals(true))
+        {
+            roomservices.add(ExtraService.PARKING);
+        }
+
+        if(roomDTO.getPool().equals(true))
+        {
+            roomservices.add(ExtraService.POOL);
+        }
+
+        if(roomDTO.getWellness_spa().equals(true))
+        {
+            roomservices.add(ExtraService.WELLNESS_SPA);
+        }
+
+        if(roomDTO.getWifi().equals(true))
+        {
+            roomservices.add(ExtraService.WIFI);
+        }
+
+        if(roomDTO.getTv().equals(true))
+        {
+            roomservices.add(ExtraService.TV);
+        }
+
+        if(roomDTO.getMinibar().equals(true))
+        {
+            roomservices.add(ExtraService.MINIBAR);
+        }
+
+        return roomservices;
     }
 
-    */
-
-    //room =roomservice.findOne(id);
-    // if(!roomService.isRoomTaken()) roomService.delete(room);
-    // return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
 }
