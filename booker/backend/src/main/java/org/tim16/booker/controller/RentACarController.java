@@ -39,7 +39,6 @@ public class RentACarController {
     private RacReservationService reservationService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('SYS_ADMIN') or hasAuthority('USER')")
     public ResponseEntity<List<RentACar>> getAll() {
         List<RentACar> rentACars = rentACarService.findAll();
         Collections.sort(rentACars, new RentACarName());
@@ -116,7 +115,6 @@ public class RentACarController {
     }
 
     @RequestMapping(value = "/{id}/vehicles", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('RAC_ADMIN') or hasAuthority('USER')")
     public ResponseEntity<List<Vehicle>> getVehicles(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
 
@@ -134,7 +132,6 @@ public class RentACarController {
     }
 
     @RequestMapping(value = "/{id}/branch-offices", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('RAC_ADMIN') or hasAuthority('USER')")
     public ResponseEntity<List<BranchOffice>> getBranchOffices(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
 
@@ -152,8 +149,7 @@ public class RentACarController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<RentACar>> searchRegisteredUser(@RequestBody RACSearchParamsDTO dto) {
+    public ResponseEntity<List<RentACar>> search(@RequestBody RACSearchParamsDTO dto) {
         List<RentACar> rentACars = rentACarService.findAll();
         List<RentACar> result = rentACarService.findAll();
 

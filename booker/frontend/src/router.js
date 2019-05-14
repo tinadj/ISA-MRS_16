@@ -26,6 +26,7 @@ import RentACarsTable from '@/components/rentACar/rentACarTable'
 import RentACarInfo from '@/components/rentACar/RentACarInfo'
 import editRentACar from '@/components/rentACar/editRentACar'
 import RegisteredUserSearchRAC from '@/components/rentACar/RegisteredUser_searchRAC'
+import UnregisteredUserSearchRAC from '@/components/rentACar/UnregisteredUser_searchRAC'
 
 // Branch offices
 import BranchOfficesTable from '@/components/branchOffices/BranchOfficesTable'
@@ -37,6 +38,7 @@ import VehiclesTable from '@/components/vehicles/VehiclesTable'
 import AddVehicle from '@/components/vehicles/AddVehicle'
 import EditVehicle from '@/components/vehicles/EditVehicle'
 import RegisteredUserSearchVehicle from '@/components/vehicles/RegisteredUser_searchVehicle'
+import UnregisteredUserSearchVehicle from '@/components/vehicles/UnregisteredUser_searchVehicle'
 
 // Admins
 import AirlineAdmin from '@/components/admins/AirlineAdmin'
@@ -67,7 +69,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: IndexPage
+      component: IndexPage,
+      children: [
+        {
+          path: 'search-rent-a-cars',
+          component: UnregisteredUserSearchRAC
+        },
+        {
+          path: 'vehicles-:rac_id',
+          component: UnregisteredUserSearchVehicle
+        }
+
+      ]
     },
     {
       path: '/login',

@@ -162,8 +162,7 @@ public class VehicleController {
 
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<Vehicle>> searchRegisteredUser(@RequestBody VehicleSearchParamsDTO dto) {
+    public ResponseEntity<List<Vehicle>> search(@RequestBody VehicleSearchParamsDTO dto) {
         RentACar rentACar = rentACarService.findOne(dto.getRacID());
 
         if (rentACar == null)
