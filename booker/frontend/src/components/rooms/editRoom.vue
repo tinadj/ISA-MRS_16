@@ -157,7 +157,7 @@ export default {
       this.beds = response.data.beds
       this.discount = response.data.discount
       this.hotel = response.data.hotel
-      this.balcony = response.data.balcony
+      this.balcony_status = response.data.balcony
 
       for(let i in response.data.extraServices)
       {
