@@ -66,7 +66,7 @@
 import { faMapMarkerAlt, faInfoCircle, faAlignLeft, faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons'
 
 export default {
-    name: 'SysAdminAirlineInfo',
+    name: 'SysAdminHotelInfo',
     props: ["item"],
     data() {
         return {

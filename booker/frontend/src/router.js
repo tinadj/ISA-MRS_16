@@ -15,7 +15,7 @@ import HotelView from '@/components/hotels/index'
 import RentACarView from '@/components/rentACar/index'
 
 import addHotel from '@/components/hotels/addHotel'
-import hotelsTable from '@/components/hotels/hotelsTable'
+import SysAdminHotelsTable from '@/components/hotels/SysAdmin_HotelsTable'
 import editHotel from '@/components/hotels/editHotel'
 import HotelInfo from '@/components/hotels/HotelInfo'
 
@@ -164,7 +164,7 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: hotelsTable
+          component: SysAdminHotelsTable
         },
         {
         path: 'add',
