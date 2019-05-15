@@ -191,10 +191,6 @@ export default new Router({
       path: '/admins',
       component: RentACarView,
       children: [
-		{
-          path: '/',
-          component: AirlineInfo
-        },
         {
           path: '/',
           component: AdminsTable

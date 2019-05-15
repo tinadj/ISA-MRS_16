@@ -112,5 +112,25 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = "/get-admins", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    public ResponseEntity<List<User>> getAdmins( ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            List<User> users = userService.findAll();
+            List<User> result = new ArrayList<>();
+
+            for (User user: users) {
+                if (user instanceof AirlineAdmin || user instanceof RentACarAdmin || user instanceof HotelAdmin) {
+                    result.add(user);
+                }
+            }
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }
