@@ -63,32 +63,25 @@
 </template>
 
 <script>
-import { faMapMarkerAlt, faInfoCircle, faAlignLeft, faBriefcase } from '@fortawesome/free-solid-svg-icons'
+import { faMapMarkerAlt, faInfoCircle, faAlignLeft, faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons'
 
 export default {
-    name: 'SysAdminRACInfo',
+    name: 'UnregisteredUserAirlineInfo',
     props: ["item"],
     data() {
         return {
             locationIcon: faMapMarkerAlt,
             infoIcon: faInfoCircle,
             descriptionIcon: faAlignLeft,
-            officeIcon: faBriefcase,
             rating: 0,
             details: false,
-            locations: false,
-            officeLatitude: this.item.latitude,
-            officeLongitude: this.item.longitude
+            locations: false
         } 
     },
     methods: {
-        updateMap(latitude, longitude) {
-            this.officeLatitude = latitude
-            this.officeLongitude = longitude
-        }
     },
     mounted() {
-        // Racunannje prosecne ocene Rent a Car servisa
+        // Racunannje prosecne ocene aviokompanije
         if (this.item.rating.length > 0) {
             for (var i = 0; i < this.item.rating.length; i++) {
                 this.rating += this.item.rating.rate[i]

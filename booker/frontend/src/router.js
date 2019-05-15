@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 import addAirline from '@/components/airlines/addAirline'
 import editAirline from '@/components/airlines/editAirline'
-import airlinesTable from '@/components/airlines/airlinesTable'
+import SysAdminAirlineTable from '@/components/airlines/SysAdmin_AirlineTable'
 import editProfile from '@/components/account/editProfile'
 import changePassword from '@/components/account/changePassword'
 import AirlineInfo from '@/components/airlines/airlineInfo'
@@ -150,7 +150,7 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: airlinesTable
+          component: SysAdminAirlineTable
         },
         {
           path: 'add',
