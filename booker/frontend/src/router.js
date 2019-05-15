@@ -24,7 +24,7 @@ import RegisterAdmin from '@/components/admins/RegisterAdmin'
 
 // Rent a car
 import addRentACar from '@/components/rentACar/addRentACar'
-import RentACarsTable from '@/components/rentACar/rentACarTable'
+import SysAdminRACTable from '@/components/rentACar/SysAdmin_RACTable'
 import RentACarInfo from '@/components/rentACar/RentACarInfo'
 import editRentACar from '@/components/rentACar/editRentACar'
 import RegisteredUserSearchRAC from '@/components/rentACar/RegisteredUser_searchRAC'
@@ -179,7 +179,7 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: RentACarsTable
+          component: SysAdminRACTable
         },
         {
           path: 'add',

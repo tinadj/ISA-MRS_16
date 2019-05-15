@@ -86,18 +86,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         // TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/login");
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/register");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/auth/user-confirm/{token}");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/auth/check-mail/{email}");
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/default-sys-admin");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/rent-a-cars/all");
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/rent-a-cars/search");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/rent-a-cars/{id}/vehicles");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/rent-a-cars/{id}/branch-offices");
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/vehicles/search");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/airlines/all");
+        web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register", "/api/auth/default-sys-admin");
+        web.ignoring().antMatchers(HttpMethod.GET, "/api/auth/user-confirm/{token}", "/api/auth/check-mail/{email}");
 
+        web.ignoring().antMatchers(HttpMethod.GET, "/api/rent-a-cars/all", "/api/rent-a-cars/{id}/vehicles","/api/rent-a-cars/{id}/branch-offices");
+        web.ignoring().antMatchers(HttpMethod.POST, "/api/rent-a-cars/search", "/api/vehicles/search");
+
+        web.ignoring().antMatchers(HttpMethod.GET, "/api/airlines/all");
 
         web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js");
     }
