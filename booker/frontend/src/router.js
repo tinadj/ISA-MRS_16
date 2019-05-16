@@ -53,6 +53,7 @@ import ChangePasswordFirstLogin from '@/components/admins/ChangePasswordFirstLog
 import Login from '@/components/users/Login'
 import Logout from '@/components/users/Logout'
 import ProfilePage from '@/components/account/ProfilePage'
+import UserProfilePage from '@/components/account/UserProfilePage'
 import ConfirmLogin from '@/components/users/ConfirmLogin'
 import Register from '@/components/users/Register'
 import RegisteredUserHomePage from '@/components/users/RegisteredUserHomePage'
@@ -124,7 +125,7 @@ export default new Router({
         },
         {
           path: 'profile-page',
-          component: ProfilePage
+          component: UserProfilePage
         },
         {
           path: 'edit-profile',
