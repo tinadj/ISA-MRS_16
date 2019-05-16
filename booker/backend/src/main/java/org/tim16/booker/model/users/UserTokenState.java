@@ -1,4 +1,4 @@
-package org.tim16.booker.model.utility;
+package org.tim16.booker.model.users;
 
 public class UserTokenState {
 

@@ -12,7 +12,7 @@ import org.tim16.booker.model.admins.HotelAdmin;
 import org.tim16.booker.model.admins.RentACarAdmin;
 import org.tim16.booker.model.admins.SysAdmin;
 import org.tim16.booker.model.users.RegisteredUser;
-import org.tim16.booker.model.utility.User;
+import org.tim16.booker.model.users.User;
 import org.tim16.booker.model.utility.VerificationToken;
 
 import java.io.UnsupportedEncodingException;

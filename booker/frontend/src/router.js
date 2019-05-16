@@ -79,6 +79,9 @@ export default new Router({
           component: UnregisteredUserSearchAirline
         },
         {
+          path: 'search-hotels'
+        },
+        {
           path: 'search-rent-a-cars',
           component: UnregisteredUserSearchRAC
         },
@@ -204,6 +207,18 @@ export default new Router({
         {
           path: '/',
           component: RegisterAdmin
+        }
+      ]
+    },
+    {
+      path: '/discounts',
+      component: RentACarView,
+      children: [
+        {
+          path: '/',
+        },
+        {
+          path: '/edit',
         }
       ]
     },

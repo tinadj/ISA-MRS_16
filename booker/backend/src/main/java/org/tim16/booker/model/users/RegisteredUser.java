@@ -1,7 +1,6 @@
 package org.tim16.booker.model.users;
 
 import org.tim16.booker.model.utility.Rate;
-import org.tim16.booker.model.utility.User;
 
 import javax.persistence.*;
 import java.util.HashSet;
