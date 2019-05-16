@@ -4,7 +4,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.tim16.booker.model.utility.User;
+import org.tim16.booker.model.users.User;
 import org.tim16.booker.repository.UserRepository;
 import org.tim16.booker.service.interfaces.IUserService;
 
