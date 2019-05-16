@@ -11,27 +11,39 @@
                 </thead>
                 <tbody>
                     <tr>
-                    <td><img alt="Regular" src="../../assets/regular-user.png" ></td>
+                    <td>
+                        <img id="regular-user" alt="Regular" src="../../assets/regular-user.png" >
+                        <b-tooltip target="regular-user" title="Regular user" placement="left"></b-tooltip>
+                    </td>
                     <td>{{regular.minPts}} - {{bronze.minPts - 1}}</td>
                     <td>{{regular.discount}}</td>
                     </tr>
                     <tr>
-                    <td><img alt="Regular" src="../../assets/bronze-user.png" ></td>
+                    <td>
+                        <img id="bronze-user" alt="Regular" src="../../assets/bronze-user.png" >
+                        <b-tooltip target="bronze-user" title="Bronze user" placement="left"></b-tooltip>
+                    </td>
                     <td>{{bronze.minPts}} - {{silver.minPts - 1}}</td>
                     <td>{{bronze.discount}}</td>
                     </tr>
                     <tr>
-                    <td><img alt="Regular" src="../../assets/silver-user.png" ></td>
+                    <td>
+                        <img id="silver-user" alt="Regular" src="../../assets/silver-user.png" >
+                        <b-tooltip target="silver-user" title="Silver user" placement="left"></b-tooltip>
+                    </td>
                     <td>{{silver.minPts}} - {{gold.minPts - 1}}</td>
                     <td>{{silver.discount}}</td>
                     </tr>
                     <tr>
-                    <td><img alt="Regular" src="../../assets/gold-user.png" ></td>
+                    <td>
+                        <img id="gold-user" alt="Regular" src="../../assets/gold-user.png" >
+                        <b-tooltip target="gold-user" title="Gold user" placement="left"></b-tooltip>
+                    </td>
                     <td>{{gold.minPts}} >= </td>
                     <td>{{gold.discount}}</td>
                     </tr>
                 </tbody>
-                </table>
+            </table>
             <b-button variant="outline-primary" :to="{ path: 'edit'}" append>Edit</b-button>
         </b-card>
     </b-card-group>
