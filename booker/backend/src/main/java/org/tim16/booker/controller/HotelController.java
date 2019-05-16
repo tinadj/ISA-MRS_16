@@ -5,19 +5,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.tim16.booker.comparator.HotelCity;
+import org.tim16.booker.comparator.HotelName;
+import org.tim16.booker.comparator.HotelState;
 import org.tim16.booker.dto.HotelDTO;
 import org.tim16.booker.dto.HotelPricesDTO;
 import org.tim16.booker.dto.HotelsSearchParamsDTO;
-import org.tim16.booker.model.hotel.ExtraService;
-import org.tim16.booker.model.hotel.ExtraServicePrice;
-import org.tim16.booker.model.hotel.Hotel;
-import org.tim16.booker.model.hotel.Room;
+import org.tim16.booker.model.hotel.*;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.DestinationService;
 import org.tim16.booker.service.HotelService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -31,9 +32,11 @@ public class HotelController {
     private DestinationService destinationService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('SYS_ADMIN')")
-    public ResponseEntity<List<Hotel>> getAll() {
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<Hotel>> getAll()
+    {
+        List<Hotel> hotels = service.findAll();
+        Collections.sort(hotels, new HotelName());
+        return new ResponseEntity<>(hotels, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
@@ -247,6 +250,34 @@ public class HotelController {
                 }
             }
         }
+
+
+        if (dto.getCriteria() == 0) {
+            Collections.sort(hotels, new HotelName());
+        }
+        else if (dto.getCriteria() == 1) {
+            Collections.sort(hotels, new HotelName());
+            Collections.reverse(hotels);
+        }
+        else if (dto.getCriteria() == 2) {
+            Collections.sort(hotels, new HotelCity());
+        }
+        else if (dto.getCriteria() == 3) {
+            Collections.sort(hotels, new HotelCity());
+            Collections.reverse(hotels);
+        }
+        else if (dto.getCriteria() == 4) {
+            Collections.sort(hotels, new HotelState());
+        }
+        else if (dto.getCriteria() == 5) {
+            Collections.sort(hotels, new HotelState());
+            Collections.reverse(hotels);
+        }
+        else {
+            Collections.sort(hotels, new HotelName());
+        }
+
+
 
         return new ResponseEntity<>(hotels, HttpStatus.OK);
     }

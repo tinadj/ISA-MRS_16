@@ -14,10 +14,13 @@ import AirlineView from '@/components/airlines/index'
 import HotelView from '@/components/hotels/index'
 import RentACarView from '@/components/rentACar/index'
 
+// Hotel
+
 import addHotel from '@/components/hotels/addHotel'
 import hotelsTable from '@/components/hotels/hotelsTable'
 import editHotel from '@/components/hotels/editHotel'
 import HotelInfo from '@/components/hotels/HotelInfo'
+import registered_searchHotels from '@/components/hotels/registered_searchHotels'
 
 import AdminsTable from '@/components/admins/AdminsTable'
 import RegisterAdmin from '@/components/admins/RegisterAdmin'
@@ -111,7 +114,8 @@ export default new Router({
           component: RegisteredUserSearchAirline
         },
         {
-          path: 'hotels'
+          path: 'hotels',
+          component: registered_searchHotels
         },
         {
           path: 'rent-a-cars',

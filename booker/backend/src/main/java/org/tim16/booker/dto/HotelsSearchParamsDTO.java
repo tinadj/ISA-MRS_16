@@ -9,18 +9,20 @@ public class HotelsSearchParamsDTO
     private String state;
     private Date checkin;
     private Date checkout;
+    private Integer criteria;
 
 
     public HotelsSearchParamsDTO()
     {}
 
 
-    public HotelsSearchParamsDTO(String name, String city, String state, Date checkin, Date checkout) {
+    public HotelsSearchParamsDTO(String name, String city, String state, Date checkin, Date checkout, Integer criteria) {
         this.name = name;
         this.city = city;
         this.state = state;
         this.checkin = checkin;
         this.checkout = checkout;
+        this.criteria = criteria;
     }
 
     public String getName() {
@@ -61,5 +63,13 @@ public class HotelsSearchParamsDTO
 
     public void setCheckout(Date checkout) {
         this.checkout = checkout;
+    }
+
+    public Integer getCriteria() {
+        return criteria;
+    }
+
+    public void setCriteria(Integer criteria) {
+        this.criteria = criteria;
     }
 }
