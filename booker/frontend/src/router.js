@@ -21,6 +21,8 @@ import HotelInfo from '@/components/hotels/HotelInfo'
 
 import AdminsTable from '@/components/admins/AdminsTable'
 import RegisterAdmin from '@/components/admins/RegisterAdmin'
+import SysAdminDiscounts from '@/components/admins/SysAdmin_Discounts'
+import SysAdminEditDiscounts from '@/components/admins/SysAdmin_EditDiscounts'
 
 // Rent a car
 import addRentACar from '@/components/rentACar/addRentACar'
@@ -216,9 +218,11 @@ export default new Router({
       children: [
         {
           path: '/',
+          component: SysAdminDiscounts
         },
         {
-          path: '/edit',
+          path: 'edit',
+          component: SysAdminEditDiscounts
         }
       ]
     },

@@ -42,6 +42,36 @@ public class DiscountsController {
         return new ResponseEntity<List<UserDiscounts>>(result, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/get-regular", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    public ResponseEntity<UserDiscounts> getRegular() {
+        UserDiscounts discount = discountsService.findByUserType("REGULAR");
+        return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/get-bronze", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    public ResponseEntity<UserDiscounts> getBronze() {
+        UserDiscounts discount = discountsService.findByUserType("BRONZE");
+        return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/get-silver", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    public ResponseEntity<UserDiscounts> getSilver() {
+        UserDiscounts discount = discountsService.findByUserType("SILVER");
+        return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/get-gold", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    public ResponseEntity<UserDiscounts> getGold() {
+        UserDiscounts discount = discountsService.findByUserType("GOLD");
+        return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseEntity<HttpStatus> create() {
         UserDiscounts regularUser = discountsService.findByUserType("REGULAR");
