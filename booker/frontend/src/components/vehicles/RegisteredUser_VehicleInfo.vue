@@ -34,6 +34,12 @@
 
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
+										<span><font-awesome-icon :icon="discountIcon"/> {{item.discount}} %
+									</div>
+								</div>
+
+                                <div class="profile-info-row">
+									<div class="profile-info-value">
 										<span><font-awesome-icon :icon="locationIcon"/> Currently in: {{item.currentlyIn.address.city}}, {{item.currentlyIn.address.state}}  </span>
 									</div>
 								</div>
@@ -102,6 +108,7 @@ export default {
             locationIcon: faMapMarkerAlt,
             euroIcon: faEuroSign,
             personIcon: faUser,
+            discountIcon: faTag,
             infoIcon: faInfoCircle,
             descriptionIcon: faAlignLeft
         } 

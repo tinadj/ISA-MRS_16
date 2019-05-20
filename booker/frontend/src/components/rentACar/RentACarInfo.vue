@@ -45,7 +45,6 @@ export default {
   data () {
     return {
       rentACar: ''
-      
     }
   },
   mounted () {

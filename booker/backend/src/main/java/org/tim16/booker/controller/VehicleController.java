@@ -59,6 +59,7 @@ public class VehicleController {
         vehicle.setProductionYear(dto.getProductionYear());
         vehicle.setSeatsNum(dto.getSeatsNum());
         vehicle.setPrice(dto.getPrice());
+        vehicle.setDiscount(0);
         vehicle.setType(intToVehicleType(dto.getType()));
         rentACar.addVehicle(vehicle);
         vehicle.setRentACar(rentACar);
@@ -145,6 +146,19 @@ public class VehicleController {
         catch (EntityNotFoundException e) {
             return HttpStatus.BAD_REQUEST;
         }
+    }
+
+    @RequestMapping(value = "/discount/{id}/{discount}", method = RequestMethod.PUT)
+    @PreAuthorize("hasAnyAuthority('RAC_ADMIN')")
+    public ResponseEntity<HttpStatus> setDiscount(@PathVariable Integer id, @PathVariable Integer discount) {
+        Vehicle vehicle = vehicleService.findOne(id);
+
+        if (vehicle == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        vehicle.setDiscount(discount);
+        vehicleService.update(vehicle);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update-vehicle-location/{id}/{officeID}", method = RequestMethod.PUT)
