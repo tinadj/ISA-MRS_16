@@ -112,6 +112,7 @@ public class VehicleController {
             vehicle.setName(dto.getName());
             vehicle.setBrand(dto.getBrand());
             vehicle.setModel(dto.getModel());
+            vehicle.setSeatsNum(dto.getSeatsNum());
             vehicle.setProductionYear(dto.getProductionYear());
             vehicle.setDescription(dto.getDescription());
             vehicle.setType(intToVehicleType(dto.getType()));
@@ -189,6 +190,14 @@ public class VehicleController {
             for (Vehicle vehicle: vehicles) {
                 if (vehicle.getCurrentlyIn().getId() != dto.getPickUpLocation())
                     result.remove(vehicle);
+            }
+        }
+
+        if (dto.getPassangerNum() != null) {
+            for (Vehicle vehicle: vehicles) {
+                if (vehicle.getSeatsNum() < dto.getPassangerNum()) {
+                    result.remove(vehicle);
+                }
             }
         }
 

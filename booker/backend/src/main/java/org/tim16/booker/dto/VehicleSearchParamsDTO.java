@@ -12,11 +12,11 @@ public class VehicleSearchParamsDTO {
     private Integer minPrice;
     private Integer maxPrice;
     private Integer criteria;
+    private Integer passangerNum;
 
     public VehicleSearchParamsDTO() {}
 
-    public VehicleSearchParamsDTO(Integer racID, Integer pickUpLocation, Date pickUpDate, Date dropOffDate,
-                                  Integer dropOffLocation, Integer vehicleType, Integer minPrice, Integer maxPrice, Integer criteria) {
+    public VehicleSearchParamsDTO(Integer racID, Integer pickUpLocation, Date pickUpDate, Date dropOffDate, Integer dropOffLocation, Integer vehicleType, Integer minPrice, Integer maxPrice, Integer criteria, Integer passangerNum) {
         this.racID = racID;
         this.pickUpLocation = pickUpLocation;
         this.pickUpDate = pickUpDate;
@@ -26,6 +26,7 @@ public class VehicleSearchParamsDTO {
         this.minPrice = minPrice;
         this.maxPrice = maxPrice;
         this.criteria = criteria;
+        this.passangerNum = passangerNum;
     }
 
     public Integer getRacID() {
@@ -98,5 +99,13 @@ public class VehicleSearchParamsDTO {
 
     public void setCriteria(Integer criteria) {
         this.criteria = criteria;
+    }
+
+    public Integer getPassangerNum() {
+        return passangerNum;
+    }
+
+    public void setPassangerNum(Integer passangerNum) {
+        this.passangerNum = passangerNum;
     }
 }
