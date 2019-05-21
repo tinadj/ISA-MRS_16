@@ -35,9 +35,6 @@ public class RentACarReservation {
 
     private Float totalPrice;
 
-    @Version
-    private Long version;
-
     public RentACarReservation() {}
 
     public Integer getId() {
@@ -112,11 +109,4 @@ public class RentACarReservation {
         this.dropOffLocation = dropOffLocation;
     }
 
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 }

@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tim16.booker.dto.RacReservationDTO;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
-import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.rent_a_car.RentACarReservation;
 import org.tim16.booker.model.rent_a_car.Vehicle;
 import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.users.Reservation;
-import org.tim16.booker.service.*;
+import org.tim16.booker.service.ReservationService;
+import org.tim16.booker.service.RacReservationService;
+import org.tim16.booker.service.VehicleService;
+import org.tim16.booker.service.BranchOfficeService;
+import org.tim16.booker.service.UserService;
 
 @RestController
 @RequestMapping(value = "/api/rac-reservations")
@@ -24,29 +27,24 @@ public class RacReservationController {
 
     @Autowired
     private ReservationService reservationService;
-
     @Autowired
     private RacReservationService racReservationService;
-
     @Autowired
     private VehicleService vehicleService;
-
     @Autowired
     private BranchOfficeService branchOfficeService;
-
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/reserve-vehicle", method = RequestMethod.POST, consumes="application/json")
+    @RequestMapping(value = "/reserve-vehicle", method = RequestMethod.POST, consumes = "application/json")
     @PreAuthorize("hasAuthority('USER')")
     private ResponseEntity<HttpStatus> reserveVehicle(@RequestBody RacReservationDTO dto) {
         Reservation reservation = new Reservation();
         RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        RentACarReservation rentACarReservation = setUpRacReservtion(dto);
-        if (rentACarReservation == null) {
+        RentACarReservation rentACarReservation = setUpRACReservation(dto);
+        if (rentACarReservation == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
         reservation.setRentACarReservation(rentACarReservation);
         user.getReservations().add(reservation);
@@ -58,8 +56,10 @@ public class RacReservationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private RentACarReservation setUpRacReservtion(RacReservationDTO dto) {
-        RentACarReservation reservation = new RentACarReservation();
+    // Incijalizacija rent a car rezervacije
+    private RentACarReservation setUpRACReservation(RacReservationDTO dto) {
+        RentACarReservation rentACarReservation = new RentACarReservation();
+
         Vehicle vehicle = vehicleService.findOne(dto.getVehicle());
         BranchOffice pickUp = branchOfficeService.findOne(dto.getPickUpLocation());
         BranchOffice dropOff = branchOfficeService.findOne(dto.getDropOffLocation());
@@ -67,19 +67,19 @@ public class RacReservationController {
         if (vehicle == null || pickUp == null || dropOff == null)
             return null;
 
-        reservation.setVehicle(vehicle);
-        reservation.setPickUpDate(dto.getPickUpDate());
-        reservation.setDays(dto.getDays());
-        reservation.setPassangerNum(dto.getPassangerNum());
-        reservation.setPickUpLocation(pickUp);
-        reservation.setDropOffLocation(dropOff);
+        rentACarReservation.setVehicle(vehicle);
+        rentACarReservation.setPickUpDate(dto.getPickUpDate());
+        rentACarReservation.setDays(dto.getDays());
+        rentACarReservation.setPassangerNum(dto.getPassangerNum());
+        rentACarReservation.setPickUpLocation(pickUp);
+        rentACarReservation.setDropOffLocation(dropOff);
 
         Float price = vehicle.getPrice() * dto.getDays();
         if (vehicle.getDiscount() != 0) {
             price = price - (price / 100 * vehicle.getDiscount());
         }
+        rentACarReservation.setTotalPrice(price);
 
-        reservation.setTotalPrice(price);
-        return reservation;
+        return rentACarReservation;
     }
 }

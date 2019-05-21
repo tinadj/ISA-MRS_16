@@ -52,6 +52,7 @@ public class VehicleController {
         }
 
         Vehicle vehicle = new Vehicle();
+        vehicle.setVersion(0l);
         vehicle.setName(dto.getName());
         vehicle.setBrand(dto.getBrand());
         vehicle.setDescription(dto.getDescription());

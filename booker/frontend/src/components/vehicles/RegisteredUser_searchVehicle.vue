@@ -23,6 +23,10 @@
         </b-form-group>
 
         <b-form-group>
+            <b-form-input v-model="searchParams.passangerNum" placeholder="Number of passanger"></b-form-input>
+        </b-form-group>
+
+        <b-form-group>
             <label class='labeltext'>Price Range (<font-awesome-icon :icon="euroIcon"/> per day)</label>
             <ejs-slider v-model="searchParams.priceRange" :tooltip="{ isVisible: true}" type="Range" :ticks="{ placement: 'After', largeStep: 10}"></ejs-slider>
         </b-form-group>
@@ -32,14 +36,15 @@
         </b-form-group>
         
         <b-button variant="outline-primary" v-on:click="search" class="mr-3">Search</b-button>
-        <b-button @click="onCancel">Cancel</b-button>
+        <b-button @click="onCancel">Cancel</b-button><br><br>
+        <b-alert variant="danger" v-model="error" dismissible>{{errorMessage}}</b-alert>
 
     </b-card>
     <b-card border-variant="light" style="max-width: 40rem;">
         <b-alert v-model="noResultMsg" variant="light">{{message}}</b-alert>
         <ul>
             <li v-for="item in vehicles">
-                <RegisteredUserVehicleInfo v-bind:item="item"></RegisteredUserVehicleInfo>
+                <RegisteredUserVehicleInfo v-bind:item="item" v-bind:params="searchParams"></RegisteredUserVehicleInfo>
             </li>
         </ul>
     </b-card>
@@ -71,13 +76,13 @@
                 vehicles: '',
                 searchParams: {
                     pickUpLocation: null,
-                    pickUpDate: '',
+                    pickUpDate: null,
                     dropOffLocation: null,
-                    dropOffDate: '',
-                    vehicleType: '',
+                    dropOffDate: null,
                     vehicleType: null,
-                    priceRange: [0, 0],
-                    criteria: 0
+                    priceRange: [0, 100],
+                    criteria: 0,
+                    passangerNum: null
                 },
                 typeOptions: [
                     {value: null, text: "Choose vehicle type"},
@@ -105,26 +110,36 @@
                 branchOfficesDropOff: [
                     {value: null, text: "Choose drop off location"}
                 ],
+                error: false,
+                errorMessage: ''
             }
         },
         methods: {
+            // Provera da li su uneti svi parametri za rezervaciju
+            valid() {
+                if (this.searchParams.pickUpLocation == null || this.searchParams.dropOffLocation == null || this.searchParams.pickUpDate == null || this.searchParams.dropOffDate == null || this.searchParams.passangerNum.length == 0)
+                    return false
+                return true
+            },
             search() {
                 AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
-
+                this.vehicles = []
                 this.noResultMsg = false
-
-                if (this.dates == null) {
+                this.error = false
+                
+                if (this.valid() == true) {
                     const searchParams = {
                     'racID': this.racID,
                     'pickUpLocation': this.searchParams.pickUpLocation,
                     'dropOffLocation': this.searchParams.dropOffLocation,
+                    'pickUpDate': this.searchParams.pickUpDate,
+                    'dropOffDate': this.searchParams.dropOffDate,
                     'vehicleType': this.searchParams.vehicleType,
                     'minPrice': this.searchParams.priceRange[0],
                     'maxPrice': this.searchParams.priceRange[1],
-                    'criteria': this.searchParams.criteria
-                    } 
-
-                    console.log(searchParams)
+                    'criteria': this.searchParams.criteria,
+                    'passangerNum': this.searchParams.passangerNum
+                    }
                    
                     AXIOS.post('/vehicles/search', searchParams)
                     .then(response => { 
@@ -134,61 +149,24 @@
                             this.noResultMsg = true
                         }
                     })
-                    .catch(err => console.log(err))
-
-                } else {
-                    const searchParams = {
-                    'racID': this.racID,
-                    'pickUpLocation': this.searchParams.pickUpLocation,
-                    'pickUpDate': this.searchParams.pickUpDate,
-                    'dropOffDate': this.searchParams.dropOffDate,
-                    'dropOffLocation': this.searchParams.dropOffLocation,
-                    'vehicleType': this.searchParams.vehicleType,
-                    'minPrice': this.searchParams.priceRange[0],
-                    'maxPrice': this.searchParams.priceRange[1],
-                    'criteria': this.searchParams.criteria
-                    } 
-                    
-                    AXIOS.post('/vehicles/search', searchParams)
-                    .then(response => { 
-                        this.vehicles = response.data
-                        if (this.vehicles.length == 0) {
-                            this.message = "There are no results that match your search!"
-                            this.noResultMsg = true
-                        }
+                    .catch(err => {
+                        this.errorMessage = "Something went wrong!"
+                        this.error = true
                     })
-                    .catch(err => console.log(err))
+
+                }  else {
+                    this.errorMessage = "You need to fill in all fields!"
+                    this.error = true
                 }
-            },
-            getVehicleMaxPrice() {
-                maxPrice = 0
-                for (let v = 0; v < this.vehicles.length; i++) {
-                    if (v.price > maxPrice) {
-                        maxPrice = v.price
-                    }
-                }
-                return maxPrice
             },
             onCancel(e) {
                 e.preventDefault()
                 this.$router.push("rent-a-cars")
-            }
-                
+            }     
         },
         mounted() {
-            AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
-            AXIOS.get('/rent-a-cars/' + this.racID + '/vehicles')
-            .then(response => { 
-                this.vehicles = response.data
-                if (this.vehicles.length == 0) {
-                    this.noResultMsg = true
-                    this.message = "There are no available vehicles!"
-                } else {
-                    maxPrice = this.getVehicleMaxPrice()
-                    this.searchParams.priceRange = [0, maxPrice]
-                }
-            })
-            .catch(err => console.log(err))
+            this.noResultMsg = true
+            this.message = "Search for vehicles!"
 
             AXIOS.get('/rent-a-cars/' + this.$route.params.rac_id + '/branch-offices')
             .then(response => { 
@@ -201,6 +179,8 @@
                     )
                 }
             })
+
+            
         }
     }
 </script>

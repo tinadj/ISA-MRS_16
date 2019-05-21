@@ -50,6 +50,9 @@ public class Vehicle {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<Rate>();
 
+    @Version
+    private Long version;
+
     public Vehicle() {}
 
     public Integer getId() {
@@ -154,5 +157,13 @@ public class Vehicle {
 
     public void setDiscount(Integer discount) {
         this.discount = discount;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }
