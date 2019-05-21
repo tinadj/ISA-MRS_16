@@ -209,7 +209,6 @@ public class HotelController {
         }
     }
 
-    @PreAuthorize("hasAuthority('USER')")
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public ResponseEntity<List<Hotel>> searchHotels(@RequestBody HotelsSearchParamsDTO dto)
     {

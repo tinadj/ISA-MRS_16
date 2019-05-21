@@ -21,6 +21,7 @@ import hotelsTable from '@/components/hotels/hotelsTable'
 import editHotel from '@/components/hotels/editHotel'
 import HotelInfo from '@/components/hotels/HotelInfo'
 import registered_searchHotels from '@/components/hotels/registered_searchHotels'
+import UnregisteredUserSearchHotels from '@/components/hotels/unregistered_searchHotels'
 
 import AdminsTable from '@/components/admins/AdminsTable'
 import RegisterAdmin from '@/components/admins/RegisterAdmin'
@@ -88,6 +89,10 @@ export default new Router({
         {
           path: 'vehicles-:rac_id',
           component: UnregisteredUserSearchVehicle
+        },
+        {
+          path: 'search-hotels',
+          component: UnregisteredUserSearchHotels
         }
 
       ]

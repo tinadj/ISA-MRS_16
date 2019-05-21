@@ -18,8 +18,8 @@
 							<div class="profile-user-info">
 
 								<div class="profile-info-row">
-									<div class="profile-info-value">									
-                                        <span>
+									<div class="profile-info-value">
+										<span>
                                             {{item.name}}<br>
                                             <star-rating v-model="this.rating" :inline="true" :star-size="17" :show-rating="false" :read-only="true" :round-start-rating="false"></star-rating>
                                         </span> 
@@ -32,7 +32,7 @@
 									</div>
 								</div>
 
-                                <!-- Show more details  -->
+                                <!-- Link Show more details -->
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
 										<span>
@@ -51,6 +51,7 @@
                                         </span>
 									</div>
 								</div>
+
 
                                 <!-- Ovde treba da ide search na rooms -->
                                 <div class="profile-info-row">
@@ -74,7 +75,7 @@ import { faMapMarkerAlt, faInfoCircle, faAlignLeft } from '@fortawesome/free-sol
 import StarRating from 'vue-star-rating'
 
 export default {
-    name: 'RegisteredUserHotelsInfo',
+    name: 'UnregisteredUserHotelsInfo',
     props: ["item"],
     components: 
     {
@@ -106,6 +107,12 @@ export default {
 
 
 <style scoped>
+    ul {
+        list-style-type: none;
+        margin: 0; /* To remove default bottom margin */ 
+        padding: 0;
+    }
+
   body{margin-top:20px;}
 
   .align-center, .center {
