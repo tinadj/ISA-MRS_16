@@ -2,14 +2,11 @@ package org.tim16.booker.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -18,17 +15,12 @@ import org.tim16.booker.dto.UserDTO;
 import org.tim16.booker.model.admins.AirlineAdmin;
 import org.tim16.booker.model.admins.HotelAdmin;
 import org.tim16.booker.model.admins.RentACarAdmin;
-import org.tim16.booker.model.admins.SysAdmin;
-import org.tim16.booker.model.hotel.Hotel;
-import org.tim16.booker.model.users.RegisteredUser;
-import org.tim16.booker.model.utility.Authority;
-import org.tim16.booker.model.utility.User;
-import org.tim16.booker.model.utility.UserAuthorities;
+import org.tim16.booker.model.users.Authority;
+import org.tim16.booker.model.users.User;
+import org.tim16.booker.model.users.UserAuthorities;
 import org.tim16.booker.service.CustomUserDetailsService;
 import org.tim16.booker.service.UserService;
 
-import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,6 +99,26 @@ public class UserController {
             User user = userService.findByUsername(username);
 
             return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/get-admins", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('SYS_ADMIN')")
+    public ResponseEntity<List<User>> getAdmins( ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            List<User> users = userService.findAll();
+            List<User> result = new ArrayList<>();
+
+            for (User user: users) {
+                if (user instanceof AirlineAdmin || user instanceof RentACarAdmin || user instanceof HotelAdmin) {
+                    result.add(user);
+                }
+            }
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

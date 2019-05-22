@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,10 +32,10 @@ import org.tim16.booker.model.airline.Airline;
 import org.tim16.booker.model.hotel.Hotel;
 import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.users.RegisteredUser;
-import org.tim16.booker.model.utility.Authority;
-import org.tim16.booker.model.utility.User;
-import org.tim16.booker.model.utility.UserAuthorities;
-import org.tim16.booker.model.utility.UserTokenState;
+import org.tim16.booker.model.users.Authority;
+import org.tim16.booker.model.users.User;
+import org.tim16.booker.model.users.UserAuthorities;
+import org.tim16.booker.model.users.UserTokenState;
 import org.tim16.booker.security.TokenUtils;
 import org.tim16.booker.service.*;
 

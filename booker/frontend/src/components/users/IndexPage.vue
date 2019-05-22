@@ -41,8 +41,14 @@ export default {
     methods: {  
     },
     mounted() {
-        AXIOS.post("/auth/default-sys-admin")
-        .catch(err => console.log(err))
+      // registrovanje default sys admina ako ne postoji
+      AXIOS.post("/auth/default-sys-admin")
+      .catch(err => console.log(err))
+      
+      // postavljanje popusta na osnou korisnickog tipa ako ne postoji
+      AXIOS.post("/discounts/create")
+      .catch(err => console.log(err))
+        
     }
 }
 </script>

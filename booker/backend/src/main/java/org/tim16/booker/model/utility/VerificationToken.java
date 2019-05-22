@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.tim16.booker.model.users.RegisteredUser;
+import org.tim16.booker.model.users.User;
 
 @Entity
 @Table(name = "verification_tokens")

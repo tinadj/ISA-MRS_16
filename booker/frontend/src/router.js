@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 import addAirline from '@/components/airlines/addAirline'
 import editAirline from '@/components/airlines/editAirline'
-import airlinesTable from '@/components/airlines/airlinesTable'
+import SysAdminAirlineTable from '@/components/airlines/SysAdmin_AirlineTable'
 import editProfile from '@/components/account/editProfile'
 import changePassword from '@/components/account/changePassword'
 import AirlineInfo from '@/components/airlines/airlineInfo'
@@ -17,7 +17,7 @@ import RentACarView from '@/components/rentACar/index'
 // Hotel
 
 import addHotel from '@/components/hotels/addHotel'
-import hotelsTable from '@/components/hotels/hotelsTable'
+import SysAdminHotelsTable from '@/components/hotels/SysAdmin_HotelsTable'
 import editHotel from '@/components/hotels/editHotel'
 import HotelInfo from '@/components/hotels/HotelInfo'
 import registered_searchHotels from '@/components/hotels/registered_searchHotels'
@@ -25,10 +25,12 @@ import UnregisteredUserSearchHotels from '@/components/hotels/unregistered_searc
 
 import AdminsTable from '@/components/admins/AdminsTable'
 import RegisterAdmin from '@/components/admins/RegisterAdmin'
+import SysAdminDiscounts from '@/components/admins/SysAdmin_Discounts'
+import SysAdminEditDiscounts from '@/components/admins/SysAdmin_EditDiscounts'
 
 // Rent a car
 import addRentACar from '@/components/rentACar/addRentACar'
-import RentACarsTable from '@/components/rentACar/rentACarTable'
+import SysAdminRACTable from '@/components/rentACar/SysAdmin_RACTable'
 import RentACarInfo from '@/components/rentACar/RentACarInfo'
 import editRentACar from '@/components/rentACar/editRentACar'
 import RegisteredUserSearchRAC from '@/components/rentACar/RegisteredUser_searchRAC'
@@ -55,6 +57,7 @@ import ChangePasswordFirstLogin from '@/components/admins/ChangePasswordFirstLog
 import Login from '@/components/users/Login'
 import Logout from '@/components/users/Logout'
 import ProfilePage from '@/components/account/ProfilePage'
+import UserProfilePage from '@/components/account/UserProfilePage'
 import ConfirmLogin from '@/components/users/ConfirmLogin'
 import Register from '@/components/users/Register'
 import RegisteredUserHomePage from '@/components/users/RegisteredUserHomePage'
@@ -81,6 +84,9 @@ export default new Router({
         {
           path: 'search-airlines',
           component: UnregisteredUserSearchAirline
+        },
+        {
+          path: 'search-hotels'
         },
         {
           path: 'search-rent-a-cars',
@@ -128,7 +134,7 @@ export default new Router({
         },
         {
           path: 'profile-page',
-          component: ProfilePage
+          component: UserProfilePage
         },
         {
           path: 'edit-profile',
@@ -159,7 +165,7 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: airlinesTable
+          component: SysAdminAirlineTable
         },
         {
           path: 'add',
@@ -173,7 +179,7 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: hotelsTable
+          component: SysAdminHotelsTable
         },
         {
         path: 'add',
@@ -188,7 +194,7 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: RentACarsTable
+          component: SysAdminRACTable
         },
         {
           path: 'add',
@@ -200,10 +206,6 @@ export default new Router({
       path: '/admins',
       component: RentACarView,
       children: [
-		{
-          path: '/',
-          component: AirlineInfo
-        },
         {
           path: '/',
           component: AdminsTable
@@ -217,6 +219,20 @@ export default new Router({
         {
           path: '/',
           component: RegisterAdmin
+        }
+      ]
+    },
+    {
+      path: '/discounts',
+      component: RentACarView,
+      children: [
+        {
+          path: '/',
+          component: SysAdminDiscounts
+        },
+        {
+          path: 'edit',
+          component: SysAdminEditDiscounts
         }
       ]
     },

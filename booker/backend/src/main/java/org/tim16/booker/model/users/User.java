@@ -1,4 +1,4 @@
-package org.tim16.booker.model.utility;
+package org.tim16.booker.model.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.userdetails.UserDetails;

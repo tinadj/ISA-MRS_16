@@ -1,63 +1,53 @@
 <template>
-  <b-card-group>
-    <b-card border-variant="light" class="mb-2 mx-auto">
-        <table class="center">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Last Name</th>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Admin of</th>
-              <th>Activated</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="admin in admins">
-            </tr>
-          </tbody>
-        </table>
-    </b-card>
-  </b-card-group>
+    <b-container>
+    <b-row>
+        <b-col>
+            <br>
+            <b-card-group>
+                <b-card style="max-width: 62rem;">
+                    <b-alert variant="light">There are no registered admins!</b-alert>
+                    <ul>
+                        <li v-for="item in admins">
+                            <SysAdminAdminInfo v-bind:item="item"></SysAdminAdminInfo>
+                        </li>
+                    </ul>
+                </b-card>
+            </b-card-group>
+        </b-col>
+    </b-row>
+    </b-container>
 </template>
 
 <script>
-import {AXIOS} from '../../http-common'
+    import {AXIOS} from '../../http-common'
+    import SysAdminAdminInfo from './SysAdmin_AdminInfo'
 
-export default {
-  data () {
-    return {
-      admins: []
+    export default {
+        name: "SysAdminRACTable",
+        components: {
+            SysAdminAdminInfo
+        },
+        data()
+        {
+            return {
+                admins: ''
+            }
+        },
+        mounted() {
+          AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
+          AXIOS.get('/users/get-admins')
+          .then(response => { this.admins = response.data})
+          .catch(err => console.log(err))
+        }
     }
-  },
-  mounted () {
-    
-  }
-}
 </script>
 
 <style scoped>
-table {
-    border: solid 1px #DDEEEE;
-    border-collapse: collapse;
-    border-spacing: 0;
-    font: normal 13px Arial, sans-serif;
-    width: 100%;
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #eeeeee;
+  opacity: 1; /* Firefox */
 }
-th {
-    background-color: #DDEFEF;
-    border: solid 1px #DDEEEE;
-    color: #6666ff;
-    padding: 10px;
-    text-align: left;
-    text-shadow: 1px 1px 1px #fff;
-}
-td {
-    border: solid 1px #DDEEEE;
-    color: #333;
-    padding: 10px;
-    text-align: left;
-    text-shadow: 1px 1px 1px #fff;
+ul {
+  list-style-type: none;
 }
 </style>
