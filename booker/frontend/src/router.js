@@ -31,6 +31,8 @@ import RentACarInfo from '@/components/rentACar/RentACarInfo'
 import editRentACar from '@/components/rentACar/editRentACar'
 import RegisteredUserSearchRAC from '@/components/rentACar/RegisteredUser_searchRAC'
 import UnregisteredUserSearchRAC from '@/components/rentACar/UnregisteredUser_searchRAC'
+import RACReports from '@/components/reports/RACReports'
+import RACIncome from '@/components/reports/RACIncome'
 
 // Branch offices
 import BranchOfficesTable from '@/components/branchOffices/BranchOfficesTable'
@@ -369,6 +371,14 @@ export default new Router({
         {
           path: 'sign-out',
           component: Logout
+        },
+        {
+          path: 'rac-reports',
+          component: RACReports
+        },
+        {
+          path: 'rac-income',
+          component: RACIncome
         }
       ]
     },

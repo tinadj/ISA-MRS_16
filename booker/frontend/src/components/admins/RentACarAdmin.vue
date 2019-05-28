@@ -6,6 +6,15 @@
         <b-nav-item :to="{ path: 'edit' }"><font-awesome-icon :icon="editIcon"/> Edit information</b-nav-item>
         <b-nav-item :to="{ path: 'vehicles'}"><font-awesome-icon :icon="carIcon"/> Vehicles</b-nav-item>
         <b-nav-item :to="{ path: 'branch-offices'}"><font-awesome-icon :icon="officeIcon"/> Branch offices</b-nav-item>
+        <b-nav-item-dropdown
+          text="Reports"
+          toggle-class="nav-link-custom"
+          right
+        >
+          <b-dropdown-item :to="{ path: 'rac-reports'}">Reserved vehicles</b-dropdown-item>
+          <b-dropdown-divider></b-dropdown-divider>
+          <b-dropdown-item :to="{ path: 'rac-income'}">Income</b-dropdown-item>
+        </b-nav-item-dropdown>
         <b-nav-item :to="{ path: 'profile-page'}"><font-awesome-icon :icon="profileIcon"/> Profile</b-nav-item>
         <b-nav-item :to="{ path: 'sign-out'}"><font-awesome-icon :icon="singOutIcon"/> Sign out</b-nav-item>
       </b-nav>

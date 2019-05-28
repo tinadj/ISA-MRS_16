@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.RacReservationDTO;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
 import org.tim16.booker.model.rent_a_car.RentACarReservation;
@@ -16,6 +13,17 @@ import org.tim16.booker.model.rent_a_car.Vehicle;
 import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.users.Reservation;
 import org.tim16.booker.service.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/rac-reservations")
@@ -86,6 +94,113 @@ public class RacReservationController {
 
         return rentACarReservation;
     }
+
+    @RequestMapping(value = "report-daily/{rac}/{strStartDate}/{strEndDate}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
+    public ResponseEntity<List<Integer>> reportDaily(@PathVariable Integer rac, @PathVariable String strStartDate, @PathVariable String strEndDate) {
+        List<Integer> result = new ArrayList<>();
+
+        try {
+            Date start = new SimpleDateFormat("yyyy-MM-dd").parse(strStartDate);
+            Date end = new SimpleDateFormat("yyyy-MM-dd").parse(strEndDate);
+            Integer vehicleCnt;
+
+            while (start.before(end)) {
+                vehicleCnt = 0;
+                for (RentACarReservation reservation : racReservationService.findAll()) {
+                    if (reservation.getVehicle().getRentACar().getId() == rac) {
+                        if (reservation.getPickUpDate().equals(start))
+                            vehicleCnt++;
+                    }
+                }
+                result.add(vehicleCnt);
+                start = addDays(start, 1);
+            }
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (ParseException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "report-weekly/{rac}/{strStartDate}/{strEndDate}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
+    public ResponseEntity<List<Integer>> reportWeekly(@PathVariable Integer rac, @PathVariable String strStartDate, @PathVariable String strEndDate) {
+        List<Integer> result = new ArrayList<>();
+
+        try {
+            Date start = new SimpleDateFormat("yyyy-MM-dd").parse(strStartDate);
+            Date end = new SimpleDateFormat("yyyy-MM-dd").parse(strEndDate);
+            int weeks = getFullWeeks(start, end);
+
+            Date d2 = addDays(start, 7);
+            Integer vehicleCnt;
+
+            while (weeks > 0) {
+                vehicleCnt = sumVehicles(start, d2, rac);
+                result.add(vehicleCnt);
+                start = d2;
+                d2 = addDays(start, 7);
+                weeks--;
+            }
+
+            // poslednja nedelja (mozda nije kompletna)
+            vehicleCnt = sumVehicles(start, end, rac);
+            result.add(vehicleCnt);
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (ParseException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /*
+    Sumira broj iznajmljenih vozila svakog dana
+     */
+    private Integer sumVehicles(Date start, Date end, Integer rac) {
+        Integer vehicleCnt = 0;
+
+        while (start.before(end)) {
+            for (RentACarReservation reservation : racReservationService.findAll()) {
+                if (reservation.getVehicle().getRentACar().getId() == rac) {
+                    if (reservation.getPickUpDate().equals(start))
+                        vehicleCnt++;
+                }
+            }
+            start = addDays(start, 1);
+        }
+        return vehicleCnt;
+    }
+
+    /*
+    Racuna broj nedelja izmedju dva datuma
+     */
+    private int getFullWeeks(Date date1, Date date2){
+        Calendar c1 = Calendar.getInstance();
+        c1.setTime(date1);
+        Calendar c2 = Calendar.getInstance();
+        c2.setTime(date2);
+        Instant d1i = Instant.ofEpochMilli(c1.getTimeInMillis());
+        Instant d2i = Instant.ofEpochMilli(c2.getTimeInMillis());
+
+        LocalDateTime startDate = LocalDateTime.ofInstant(d1i, ZoneId.systemDefault());
+        LocalDateTime endDate = LocalDateTime.ofInstant(d2i, ZoneId.systemDefault());
+
+        return (int)ChronoUnit.WEEKS.between(startDate, endDate);
+    }
+
+    /*
+    Dodaja broj dana na datum
+     */
+    private Date addDays(Date date, Integer days) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DATE, days);
+        return c.getTime();
+    }
+
+
 
 
 }
