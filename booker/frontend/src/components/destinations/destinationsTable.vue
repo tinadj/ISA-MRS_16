@@ -1,6 +1,23 @@
 <template>
   <div>
-    <b-table striped hover :items="destinations"></b-table>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">City</th>
+          <th scope="col">State</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(dest, index) in destinations">
+          <th scope="row">{{ dest.id }}</th>
+          <td>{{ dest.city }}</td>
+          <td>{{ dest.state }}</td>
+          <td><button type="button" class="btn btn-danger" @click="deleteDestination(dest.id, index)">Delete</button></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -29,6 +46,19 @@ export default {
         }
       })
       .catch(err => console.log(err))
+  },
+  methods : {
+    deleteDestination (dest, index) {
+    console.log("tff")
+        let api = '/destinations/remove/' +  dest + "/" +this.$route.params.id;
+          AXIOS.delete(api)
+          .then(response => {
+            this.destinations.splice(index, 1);
+
+          })
+          .catch(err => console.log(err))
+      }
+
   }
 }
 </script>
