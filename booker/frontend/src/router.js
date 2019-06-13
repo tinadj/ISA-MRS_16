@@ -70,6 +70,7 @@ import addRooms from '@/components/rooms/addRooms'
 import RoomsTable from '@/components/rooms/RoomsTable'
 import editRoom from '@/components/rooms/editRoom'
 import editExtraServices from '@/components/rooms/editExtraServices'
+import RegisteredUserSearchRooms from '@/components/rooms/registered_searchRoom'
 
 
 Vue.use(Router)
@@ -84,9 +85,6 @@ export default new Router({
         {
           path: 'search-airlines',
           component: UnregisteredUserSearchAirline
-        },
-        {
-          path: 'search-hotels'
         },
         {
           path: 'search-rent-a-cars',
@@ -151,6 +149,10 @@ export default new Router({
         {
           path: 'vehicles-:rac_id',
           component: RegisteredUserSearchVehicle
+        },
+        {
+          path: 'rooms-:hotel_id',
+          component: RegisteredUserSearchRooms
         }
       ]
     },

@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.RoomDTO;
+import org.tim16.booker.dto.RoomSearchParamsDTO;
 import org.tim16.booker.model.hotel.ExtraService;
 import org.tim16.booker.model.hotel.Hotel;
 import org.tim16.booker.model.hotel.Room;
@@ -14,6 +15,7 @@ import org.tim16.booker.service.HotelService;
 import org.tim16.booker.service.RoomService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -209,6 +211,38 @@ public class RoomController {
         }
 
         return roomservices;
+    }
+
+    /* Funkcija kojoj se prosledjuje hotelID, a koja vraca sve sobe tog hotela u ArrayList<Room> */
+    private List<Room> getRooms(Integer hotelID)
+    {
+        Hotel hotel = hotelService.findOne(hotelID);
+        List<Room> rooms = new ArrayList<>();
+
+        if(hotel != null)
+        {
+            for(Room r : hotel.getRooms())
+            {
+                rooms.add(r);
+            }
+        }
+
+        return rooms;
+    }
+
+
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public ResponseEntity<List<Room>> search(@RequestBody RoomSearchParamsDTO dto)
+    {
+        Hotel hotel = hotelService.findOne(dto.getHotelID());
+
+        if (hotel == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        List<Room> rooms = getRooms(dto.getHotelID());
+        List<Room> result = getRooms(dto.getHotelID());
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 

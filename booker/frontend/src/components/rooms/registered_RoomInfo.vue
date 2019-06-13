@@ -16,34 +16,35 @@
 						<div class="col-xs-12 col-sm-9">
 
 							<div class="profile-user-info">
-
-								<div class="profile-info-row">
-									<div class="profile-info-value">									
-                                        <span>
-                                            {{item.name}}<br>
+                                
+                                <div class="profile-info-row">
+									<div class="profile-info-value">
+										<span>
+                                            Room is on floor: {{item.floor}}<br>
                                             <star-rating v-model="this.rating" :inline="true" :star-size="17" :show-rating="false" :read-only="true" :round-start-rating="false"></star-rating>
                                         </span> 
 									</div>
 								</div>
 
-								<div class="profile-info-row">
+                                <div class="profile-info-row">
 									<div class="profile-info-value">
-										<span><font-awesome-icon :icon="locationIcon"/> {{item.address.city}}, {{item.address.state}}</span>
+										<span>{{item.beds}} <font-awesome-icon :icon="personIcon"/></span>
 									</div>
 								</div>
 
-                                <!-- Show more details  -->
+                                <!-- Link Show more details -->
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
 										<span>
                                             <b-link v-on:click="details = !details"><font-awesome-icon :icon="infoIcon"/>  Show more details...</b-link>
                                             <b-modal v-model="details" hide-footer>
-                                                <template slot="modal-title">{{item.name}}</template>
+                                                <template slot="modal-title">Description</template>
                                                 <b-card-group deck>
                                                     <b-card border-variant="light">
                                                         <p class="text-left">                         
                                                             <font-awesome-icon :icon="descriptionIcon"/> 
-                                                            {{item.description}}
+                                                            <!-- OVDE TREBA DA PISE SHOW MORE INFO SOBE, za vehicles je bilo {{item.description}} ali soba nema description -->
+                                                            OPIS SOBE
                                                         </p>      
                                                     </b-card>
                                                 </b-card-group>
@@ -52,13 +53,25 @@
 									</div>
 								</div>
 
-                                <!-- Ovde treba da ide search na rooms -->
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
-										<span><b-button :to="{ path: 'rooms-' + item.id}" variant="outline-secondary">Search Rooms</b-button></span>
+										<span>
+                                            <b-container>
+                                                <b-row>
+                                                    <b-col>
+                                                        <b>{{totalPrice}} </b><font-awesome-icon :icon="euroIcon"/><br>
+                                                        (price for {{days}} nights)<br>
+                                                    </b-col>
+                                                    <b-col>
+                                                        <b-button :to="{ path: 'rooms-' + item.id} " variant="outline-secondary">Book</b-button>
+                                                    </b-col>
+                                                </b-row>
+                                            </b-container>
+                                            
+                                            
+                                        </span>
 									</div>
 								</div>
-
 							</div>
 						</div><!-- /.col -->
 					</div><!-- /.row -->				
@@ -68,30 +81,27 @@
     </b-card >
   </b-card-group>
 </template>
-
+                    
 <script>
-import { faMapMarkerAlt, faInfoCircle, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
-import StarRating from 'vue-star-rating'
+import { faEuroSign, faUser, faAlignLeft, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 
 export default {
-    name: 'RegisteredUserHotelsInfo',
+    name: 'RegisteredUserRoomInfo',
     props: ["item"],
-    components: 
-    {
-            StarRating
-    },
-
     data() {
         return {
-            locationIcon: faMapMarkerAlt,
-            infoIcon : faInfoCircle,
-            descriptionIcon: faAlignLeft,
-            rating: 0,
-            details: false
-        }       
+            rating: '',
+            details: false,
+            days: 1,
+            totalPrice: 0,
+            euroIcon: faEuroSign,
+            personIcon: faUser,
+            infoIcon: faInfoCircle,
+            descriptionIcon: faAlignLeft
+        } 
     },
     mounted() {
-        // Racunanje prosecne ocene Hotela
+        // Racunanje prosecne ocene sobe
         if (this.item.rating.length > 0) {
             for (var i = 0; i < this.item.rating.length; i++) {
                 this.rating += this.item.rating.rate[i]
@@ -100,12 +110,20 @@ export default {
         } else {
             this.rating = 0
         }
+
+        this.totalPrice = this.days * this.item.price
     }
 }
 </script>
 
 
 <style scoped>
+    ul {
+        list-style-type: none;
+        margin: 0; /* To remove default bottom margin */ 
+        padding: 0;
+    }
+
   body{margin-top:20px;}
 
   .align-center, .center {
