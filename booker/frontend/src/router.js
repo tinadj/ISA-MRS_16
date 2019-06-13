@@ -17,6 +17,10 @@ import RentACarView from '@/components/rentACar/index'
 import destinationsTable from '@/components/destinations/destinationsTable'
 
 
+//Flights
+import addFlight from '@/components/flights/addFlight'
+
+
 // Destinations
 
 import addDestination from '@/components/destinations/addDestination'
@@ -283,6 +287,10 @@ export default new Router({
         {
           path: 'add-destination',
           component: addDestination,
+        },
+        {
+          path: 'add-flight',
+          component: addFlight,
         },
         {
           path: 'sign-out',
