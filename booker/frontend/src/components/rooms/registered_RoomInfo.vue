@@ -28,7 +28,7 @@
 
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
-										<span>{{item.beds}} <font-awesome-icon :icon="personIcon"/></span>
+										<span><font-awesome-icon :icon="personIcon"/> &nbsp Number of Beds: {{item.beds}}</span>
 									</div>
 								</div>
 

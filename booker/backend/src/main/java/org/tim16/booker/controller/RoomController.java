@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.tim16.booker.comparator.*;
 import org.tim16.booker.dto.RoomDTO;
 import org.tim16.booker.dto.RoomSearchParamsDTO;
 import org.tim16.booker.model.hotel.ExtraService;
@@ -18,6 +19,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api/room")
@@ -241,6 +243,21 @@ public class RoomController {
 
         List<Room> rooms = getRooms(dto.getHotelID());
         List<Room> result = getRooms(dto.getHotelID());
+
+        if (dto.getCriteria() == 0) {
+            Collections.sort(result, new RoomPrice());
+        }
+        else if (dto.getCriteria() == 1) {
+            Collections.sort(result, new RoomPrice());
+            Collections.reverse(result);
+        }
+        else if (dto.getCriteria() == 2) {
+            Collections.sort(result, new RoomBeds());
+        }
+        else if (dto.getCriteria() == 3) {
+            Collections.sort(result, new RoomBeds());
+            Collections.reverse(result);
+        }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

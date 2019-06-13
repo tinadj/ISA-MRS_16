@@ -1,8 +1,8 @@
 package org.tim16.booker.comparator;
 
-import org.tim16.booker.model.rent_a_car.Vehicle;
+        import org.tim16.booker.model.rent_a_car.Vehicle;
 
-import java.util.Comparator;
+        import java.util.Comparator;
 
 public class VehiclePrice implements Comparator<Vehicle> {
 

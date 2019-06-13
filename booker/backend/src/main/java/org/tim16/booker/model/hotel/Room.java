@@ -29,6 +29,7 @@ public class Room {
     private Integer beds;
     private Boolean balcony;
 
+    private Float price;
     private Integer discount;
 
     @JsonBackReference("room-price")
@@ -43,6 +44,14 @@ public class Room {
     private Set<Rate> rating = new HashSet<Rate>();
 
     public Room() {}
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
 
     public Integer getId() {
         return id;
