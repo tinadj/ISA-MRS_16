@@ -59,8 +59,8 @@
                                             <b-container>
                                                 <b-row>
                                                     <b-col>
-                                                        <b>{{totalPrice}} </b><font-awesome-icon :icon="euroIcon"/><br>
-                                                        (price for {{days}} nights)<br>
+                                                        <b>{{this.item.price}} </b><font-awesome-icon :icon="euroIcon"/><br>
+                                                        (price per night)<br>
                                                     </b-col>
                                                     <b-col>
                                                         <b-button :to="{ path: 'rooms-' + item.id} " variant="outline-secondary">Book</b-button>
@@ -92,8 +92,6 @@ export default {
         return {
             rating: '',
             details: false,
-            days: 1,
-            totalPrice: 0,
             euroIcon: faEuroSign,
             personIcon: faUser,
             infoIcon: faInfoCircle,
@@ -110,8 +108,6 @@ export default {
         } else {
             this.rating = 0
         }
-
-        this.totalPrice = this.days * this.item.price
     }
 }
 </script>

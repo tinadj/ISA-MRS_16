@@ -16,6 +16,10 @@
           </b-form-group>       
           
           <b-form-group>
+            <b-form-input v-model="price" placeholder="Price per Night" type="number"></b-form-input>
+          </b-form-group>
+
+          <b-form-group>
             <b-form-input v-model="discount" placeholder="Discount" type="number"></b-form-input>
           </b-form-group>
 
@@ -85,6 +89,7 @@ export default {
       wifi : 'false',
       tv : 'false',
       minibar : 'false',
+      price: '',
       discount: '',
       success: false,
       error: false
@@ -109,6 +114,7 @@ export default {
         'wifi' : this.wifi,
         'tv' : this.tv,
         'minibar' : this.minibar,
+        'price' : this.price,
         'discount': this.discount,
         'hotelId':this.$route.params.id
       }

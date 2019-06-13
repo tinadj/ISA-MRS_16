@@ -29,6 +29,14 @@
           </b-form-group>
           
           <b-form-group 
+            label="Price per Night: " 
+            label-cols="4" 
+            label-cols-lg="2" 
+            label-for="input-5">
+            <b-form-input id="input-5" v-model="price" placeholder="Price per Night" type="number"></b-form-input>
+          </b-form-group>
+
+          <b-form-group 
             label="Discount: " 
             label-cols="4" 
             label-cols-lg="2" 
@@ -103,6 +111,7 @@ export default {
       wifi : 'false',
       tv : 'false',
       minibar : 'false',
+      price: '',
       discount: '',
       hotelId: '',
       success: false,
@@ -128,6 +137,7 @@ export default {
         'wifi' : this.wifi,
         'tv' : this.tv,
         'minibar' : this.minibar,
+        'price' : this.price,
         'discount': this.discount,
         'hotelId':this.$route.params.id
     }
@@ -155,6 +165,7 @@ export default {
       this.floor = response.data.floor
       this.roomNum = response.data.roomNum
       this.beds = response.data.beds
+      this.price = response.data.price
       this.discount = response.data.discount
       this.hotel = response.data.hotel
       this.balcony_status = response.data.balcony

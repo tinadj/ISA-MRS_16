@@ -83,6 +83,7 @@ public class RoomController {
         Room room = new Room();
         room.setBalcony(roomDTO.getBalcony());
         room.setBeds(roomDTO.getBeds());
+        room.setPrice(roomDTO.getPrice());
         room.setDiscount(roomDTO.getDiscount());
         room.setFloor(roomDTO.getFloor());
         room.setHotel(hotel);
@@ -124,6 +125,7 @@ public class RoomController {
             room.setRoomNum(roomDTO.getRoomNum());
             room.setBeds(roomDTO.getBeds());
             room.setBalcony(roomDTO.getBalcony());
+            room.setPrice(roomDTO.getPrice());
             room.setDiscount(roomDTO.getDiscount());
             Hotel hotel = hotelService.findOne(roomDTO.getHotelId());
             room.setHotel(hotel);
@@ -244,12 +246,42 @@ public class RoomController {
         List<Room> rooms = getRooms(dto.getHotelID());
         List<Room> result = getRooms(dto.getHotelID());
 
+
+        /* Ukoliko je cena sobe van okvira zeljene cene -> soba se izbacuje iz liste za pretragu */
+        if (dto.getMinPrice() != 0 && dto.getMaxPrice()!= 0) {
+            for (Room r : rooms) {
+                if (r.getPrice() < dto.getMinPrice() || r.getPrice() >= dto.getMaxPrice()) {
+                    result.remove(r);
+                }
+            }
+        }
+
+        /* Da li je balkon ukljucen ili ne */
+        if(dto.isBalcony())
+        {
+            for(Room r : rooms)
+            {
+                if(r.getBalcony() == false)
+                {
+                    result.remove(r);
+                }
+            }
+        }
+        else if (!dto.isBalcony()) {
+            for (Room r : rooms) {
+                if (r.getBalcony() == true) {
+                    result.remove(r);
+                }
+            }
+        }
+
+        /* Sortiranje po odredjenom kriterijumu */
+
         if (dto.getCriteria() == 0) {
-            Collections.sort(result, new RoomPrice());
+            RoomPrice.RoomPriceAscending(result);
         }
         else if (dto.getCriteria() == 1) {
-            Collections.sort(result, new RoomPrice());
-            Collections.reverse(result);
+            RoomPrice.RoomPriceDescending(result);
         }
         else if (dto.getCriteria() == 2) {
             Collections.sort(result, new RoomBeds());

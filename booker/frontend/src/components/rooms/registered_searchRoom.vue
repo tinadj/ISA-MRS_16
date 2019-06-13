@@ -17,7 +17,7 @@
 
         <b-card>
             
-            <b-form-checkbox id="balcony_checkbox" v-model="balcony_status" name="balcony_checkbox" value="true" unchecked-value="false">
+            <b-form-checkbox id="balcony_checkbox" v-model="balcony" name="balcony_checkbox" value="true" unchecked-value="false">
                 Balcony inclusion
             </b-form-checkbox>
 

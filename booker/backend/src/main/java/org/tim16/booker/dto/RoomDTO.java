@@ -16,13 +16,14 @@ public class RoomDTO {
     private Boolean wifi;
     private Boolean tv;
     private Boolean minibar;
+    private Float price;
     private Integer discount;
     private Integer hotelId;
 
     public RoomDTO() {
     }
 
-    public RoomDTO(Integer id, Integer floor, Integer roomNum, Integer beds, Boolean balcony, Boolean breakfast, Boolean hotel_restaurant, Boolean airport_transfer, Boolean parking, Boolean pool, Boolean wellnes_spa, Boolean wifi, Boolean tv, Boolean minibar, Integer discount, Integer hotelId) {
+    public RoomDTO(Integer id, Integer floor, Integer roomNum, Integer beds, Boolean balcony, Boolean breakfast, Boolean hotel_restaurant, Boolean airport_transfer, Boolean parking, Boolean pool, Boolean wellnes_spa, Boolean wifi, Boolean tv, Boolean minibar, Float price, Integer discount, Integer hotelId) {
         this.id = id;
         this.floor = floor;
         this.roomNum = roomNum;
@@ -37,8 +38,17 @@ public class RoomDTO {
         this.wifi = wifi;
         this.tv = tv;
         this.minibar = minibar;
+        this.price = price;
         this.discount = discount;
         this.hotelId = hotelId;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 
     public Integer getId() {
