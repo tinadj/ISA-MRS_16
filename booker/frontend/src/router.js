@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import addAirline from '@/components/airlines/addAirline'
+
 import editAirline from '@/components/airlines/editAirline'
 import SysAdminAirlineTable from '@/components/airlines/SysAdmin_AirlineTable'
 import editProfile from '@/components/account/editProfile'
@@ -13,6 +14,12 @@ import UnregisteredUserSearchAirline from '@/components/airlines/UnregisteredUse
 import AirlineView from '@/components/airlines/index'
 import HotelView from '@/components/hotels/index'
 import RentACarView from '@/components/rentACar/index'
+import destinationsTable from '@/components/destinations/destinationsTable'
+
+
+// Destinations
+
+import addDestination from '@/components/destinations/addDestination'
 
 // Hotel
 
@@ -268,6 +275,14 @@ export default new Router({
         {
           path: 'change-pass',
           component: changePassword
+        },
+        {
+          path: 'destinations',
+          component: destinationsTable,
+        },
+        {
+          path: 'add-destination',
+          component: addDestination,
         },
         {
           path: 'sign-out',
