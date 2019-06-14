@@ -155,6 +155,58 @@ public class RacReservationController {
         }
     }
 
+    @RequestMapping(value = "report-income/{rac}/{month}/{year}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
+    public ResponseEntity<List<Float>> reportIncome(@PathVariable Integer rac, @PathVariable Integer month, @PathVariable Integer year) {
+        List<Float> result = new ArrayList<>();
+
+        Date start = getStartDate(month, year);
+        Date end = getEndDate(month, year);
+
+        if (start == null || end == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Float income;
+        while (start.before(end)) {
+            income = 0f;
+            for (RentACarReservation reservation : racReservationService.findAll()) {
+                if (reservation.getVehicle().getRentACar().getId() == rac) {
+                    if (reservation.getPickUpDate().equals(start))
+                        income += reservation.getTotalPrice();
+                }
+            }
+            result.add(income);
+            start = addDays(start, 1);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+
+    }
+
+    /*
+    Vraca prvi datum u mesecu
+     */
+    public Date getStartDate(Integer month, Integer year) {
+        Calendar date = Calendar.getInstance();
+        date.set(Calendar.YEAR, year);
+        date.set(Calendar.MONTH, month);
+        date.set(Calendar.DAY_OF_MONTH, 1);
+
+        return date.getTime();
+    }
+
+    /*
+    Vraca poslednji datum u mesecu
+     */
+    public Date getEndDate(Integer month, Integer year) {
+        Calendar date = Calendar.getInstance();
+        date.set(Calendar.YEAR, year);
+        date.set(Calendar.MONTH, month);
+        date.set(Calendar.DAY_OF_MONTH, date.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        return date.getTime();
+    }
+
     /*
     Sumira broj iznajmljenih vozila svakog dana
      */

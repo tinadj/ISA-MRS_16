@@ -74,7 +74,7 @@
                                                         (price for {{days}} days)<br>
                                                     </b-col>
                                                     <b-col>
-                                                        <b-button v-on:click="book" variant="outline-secondary">Book</b-button>
+                                                        <b-button v-if="buttonShow" v-on:click="book" variant="outline-secondary">Book</b-button>
                                                     </b-col>
                                                 </b-row>
                                             </b-container>
@@ -121,7 +121,8 @@ export default {
             descriptionIcon: faAlignLeft,
             success: false,
             error: false,
-            errorMessage: ''
+            errorMessage: '',
+            buttonShow: true
         } 
     },
     methods: {
@@ -146,6 +147,7 @@ export default {
 
             AXIOS.post('/rac-reservations/reserve-vehicle', reservation)
             .then(response => { 
+                this.buttonShow = false
                 this.success = true
             })
             .catch(err => {
