@@ -17,6 +17,7 @@ import org.tim16.booker.service.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -105,11 +106,11 @@ public class RacReservationController {
             Date end = new SimpleDateFormat("yyyy-MM-dd").parse(strEndDate);
             Integer vehicleCnt;
 
-            while (start.before(end)) {
+            while (!start.after(end)) {
                 vehicleCnt = 0;
                 for (RentACarReservation reservation : racReservationService.findAll()) {
                     if (reservation.getVehicle().getRentACar().getId() == rac) {
-                        if (reservation.getPickUpDate().equals(start))
+                        if (checkIfSameDay(reservation.getPickUpDate(), start))
                             vehicleCnt++;
                     }
                 }
@@ -155,6 +156,49 @@ public class RacReservationController {
         }
     }
 
+    @RequestMapping(value = "report-monthly/{rac}/{strStartDate}/{strEndDate}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
+    public ResponseEntity<List<Integer>> reportMonthly(@PathVariable Integer rac, @PathVariable String strStartDate, @PathVariable String strEndDate) {
+        List<Integer> result = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+
+        try {
+            Date start = new SimpleDateFormat("yyyy-MM-dd").parse(strStartDate);
+            Date end = new SimpleDateFormat("yyyy-MM-dd").parse(strEndDate);
+            int months = getMonths(start, end);
+
+            cal.setTime(start);
+            int month = cal.get(Calendar.MONTH);
+            int year = cal.get(Calendar.YEAR);
+            Date d2 = getEndDate(month, year);
+
+            if (d2.after(end)) // poslednji mesec
+                d2 = end;
+
+            Integer vehicleCnt = 0;
+
+            while (months >= 0) {
+                vehicleCnt = sumVehicles(start, d2, rac);
+                result.add(vehicleCnt);
+
+                start = addDays(d2, 1);
+
+                cal.setTime(start);
+                month = cal.get(Calendar.MONTH);
+                year = cal.get(Calendar.YEAR);
+                d2 = getEndDate(month, year);
+
+                if (d2.after(end)) // poslednji mesec
+                    d2 = end;
+
+                months--;
+            }
+        } catch (ParseException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "report-income/{rac}/{month}/{year}", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<Float>> reportIncome(@PathVariable Integer rac, @PathVariable Integer month, @PathVariable Integer year) {
@@ -180,8 +224,6 @@ public class RacReservationController {
             start = addDays(start, 1);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
-
-
     }
 
     /*
@@ -214,10 +256,10 @@ public class RacReservationController {
     private Integer sumVehicles(Date start, Date end, Integer rac) {
         Integer vehicleCnt = 0;
 
-        while (start.before(end)) {
+        while (!start.after(end)) {
             for (RentACarReservation reservation : racReservationService.findAll()) {
                 if (reservation.getVehicle().getRentACar().getId() == rac) {
-                    if (reservation.getPickUpDate().equals(start))
+                    if (checkIfSameDay(reservation.getPickUpDate(), start))
                         vehicleCnt++;
                 }
             }
@@ -241,6 +283,23 @@ public class RacReservationController {
         LocalDateTime endDate = LocalDateTime.ofInstant(d2i, ZoneId.systemDefault());
 
         return (int)ChronoUnit.WEEKS.between(startDate, endDate);
+    }
+
+    /*
+    Racuna broj meseci izmedju dva datuma
+     */
+    private int getMonths(Date date1, Date date2) {
+        /*
+        long monthsBetween = ChronoUnit.MONTHS.between(
+                LocalDate.parse(date1).withDayOfMonth(1),
+                LocalDate.parse(date2).withDayOfMonth(1));
+                */
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date1);
+        int month1 = cal.get(Calendar.MONTH);
+        cal.setTime(date2);
+        int month2 = cal.get(Calendar.MONTH);
+        return month2 - month1;
     }
 
     /*

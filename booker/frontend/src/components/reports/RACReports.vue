@@ -2,7 +2,7 @@
     <b-container>
     <b-row>
         <b-col lg="4">
-            <b-form-group
+            <b-form-group 
                 label-cols-sm="4"
                 label-cols-lg="4"
                 label="Choose dates: "
@@ -10,6 +10,7 @@
                 <v-date-picker mode="range" v-model="dates"/>
             </b-form-group>
         </b-col>
+
         <b-col lg="1">
             <b-button variant="primary" v-on:click="show">Show</b-button>
         </b-col>
@@ -110,8 +111,8 @@ export default Vue.extend({
             this.seriesData = []
 
             if (this.dates != null) {
-                let strStartDate = this.dates.start.toISOString().substring(0, 10);
-                let strEndDate = this.dates.end.toISOString().substring(0, 10);
+                let strStartDate = this.dates.start.getFullYear() + "-" + (this.dates.start.getMonth()+1) + "-" +  this.dates.start.getDate()
+                let strEndDate = this.dates.end.getFullYear() + "-" + (this.dates.end.getMonth()+1) + "-" +  this.dates.end.getDate()
 
                 let dateCounter = this.dates.start
 
@@ -133,7 +134,7 @@ export default Vue.extend({
                 
                 // Weekly reserved vehicles
                 } else if (this.reportType == 1) {
-                    this.primaryXAxis.labelFormat = "d M y"
+                    this.primaryXAxis.labelFormat = "d-M-y"
                     this.marker.visible = true
 
                     AXIOS.get("/rac-reservations/report-weekly/" + this.$route.params.id + "/" + strStartDate + "/" + strEndDate)
@@ -150,15 +151,20 @@ export default Vue.extend({
                 // Monthly reserved vehicles
                 } else {
                     this.primaryXAxis.labelFormat = "M y"
-                    this.marker.visible = false
+                    this.marker.visible = true
 
                     AXIOS.get("/rac-reservations/report-monthly/" + this.$route.params.id + "/" + strStartDate + "/" + strEndDate)
                     .then( response => {
+                        for (let i = 0; i < response.data.length; i++) {
+                            this.seriesData.push(
+                                {x: new Date(dateCounter.getFullYear(), dateCounter.getMonth(), dateCounter.getDate()), y: response.data[i]}
+                            )
+                            dateCounter = this.nextMonth(dateCounter)
+                        }
+                        
                     })
                     .catch(err => console.log(err))
                 }
-
-                
             }
             
         },
@@ -166,11 +172,18 @@ export default Vue.extend({
             var result = new Date(date);
             result.setDate(result.getDate() + days);
             return result;
+        },
+        nextMonth: function(date) {
+                if (date.getMonth() == 11) {
+                    return new Date(date.getFullYear() + 1, 0, 1);
+                } else {
+                    return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+                }
         }
-    }, 
+    },
     mounted() {
 
-    }     
+    }   
 })
 </script>
 
