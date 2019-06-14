@@ -70,9 +70,7 @@ export default Vue.extend({
         //Initializing Primary X Axis
         primaryXAxis: {
             valueType: "DateTime",
-            labelFormat: "y",
-            intervalType: "Years",
-            edgeLabelPlacement: "Shift",
+            labelFormat: "d-M-y",
             majorGridLines: { width: 0 }
         },
         //Initializing Primary Y Axis
@@ -80,8 +78,8 @@ export default Vue.extend({
             labelFormat: "{value}",
             rangePadding: "None",
             minimum: 0,
-            maximum: 100,
-            interval: 10,
+            maximum: 50,
+            interval: 5,
             lineStyle: { width: 0 },
             majorTickLines: { width: 0 },
             minorTickLines: { width: 0 }
@@ -93,7 +91,7 @@ export default Vue.extend({
         },
         width : Browser.isDevice ? '100%' : '60%',
         marker: {
-            visible: true,
+            visible: false,
             height: 10,
             width: 10
         },
@@ -112,35 +110,48 @@ export default Vue.extend({
             this.seriesData = []
 
             if (this.dates != null) {
-                console.log(this.dates.start)
                 let strStartDate = this.dates.start.toISOString().substring(0, 10);
                 let strEndDate = this.dates.end.toISOString().substring(0, 10);
 
                 let dateCounter = this.dates.start
 
+                // Daily resrved vehicles
                 if (this.reportType == 0) {
+                    this.primaryXAxis.labelFormat = "d-M-y"
+                    this.marker.visible = false
+
                     AXIOS.get("/rac-reservations/report-daily/" + this.$route.params.id + "/" + strStartDate + "/" + strEndDate)
                     .then( response => {
                         for (let i = 0; i < response.data.length; i++) {
                             this.seriesData.push(
-                                {x: dateCounter, y: response.data[i]}
+                                {x: new Date(dateCounter.getFullYear(), dateCounter.getMonth(), dateCounter.getDate()), y: response.data[i]}
                             )
                             dateCounter = this.addDays(dateCounter, 1)
                         }
                     })
                     .catch(err => console.log(err))
+                
+                // Weekly reserved vehicles
                 } else if (this.reportType == 1) {
+                    this.primaryXAxis.labelFormat = "d M y"
+                    this.marker.visible = true
+
                     AXIOS.get("/rac-reservations/report-weekly/" + this.$route.params.id + "/" + strStartDate + "/" + strEndDate)
                     .then( response => {
                         for (let i = 0; i < response.data.length; i++) {
                             this.seriesData.push(
-                                {x: dateCounter, y: response.data[i]}
+                                {x: new Date(dateCounter.getFullYear(), dateCounter.getMonth(), dateCounter.getDate()), y: response.data[i]}
                             )
                             dateCounter = this.addDays(dateCounter, 7)
                         }
                     })
                     .catch(err => console.log(err))
+                
+                // Monthly reserved vehicles
                 } else {
+                    this.primaryXAxis.labelFormat = "M y"
+                    this.marker.visible = false
+
                     AXIOS.get("/rac-reservations/report-monthly/" + this.$route.params.id + "/" + strStartDate + "/" + strEndDate)
                     .then( response => {
                     })
