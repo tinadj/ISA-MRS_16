@@ -163,15 +163,16 @@ public class RacReservationController {
         Date start = getStartDate(month, year);
         Date end = getEndDate(month, year);
 
+
         if (start == null || end == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         Float income;
-        while (start.before(end)) {
+        while (!start.after(end)) {
             income = 0f;
             for (RentACarReservation reservation : racReservationService.findAll()) {
                 if (reservation.getVehicle().getRentACar().getId() == rac) {
-                    if (reservation.getPickUpDate().equals(start))
+                    if (checkIfSameDay(reservation.getPickUpDate(), start))
                         income += reservation.getTotalPrice();
                 }
             }
@@ -243,13 +244,26 @@ public class RacReservationController {
     }
 
     /*
-    Dodaja broj dana na datum
+    Dodaje broj dana na datum
      */
     private Date addDays(Date date, Integer days) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         c.add(Calendar.DATE, days);
         return c.getTime();
+    }
+
+    /*
+    Proverava da li su dva datuma isti dan
+     */
+    private boolean checkIfSameDay(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+        boolean sameDay = cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+        return sameDay;
     }
 
 
