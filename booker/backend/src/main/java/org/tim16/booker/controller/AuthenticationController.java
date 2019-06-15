@@ -17,7 +17,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -74,7 +73,7 @@ public class AuthenticationController {
     * Ukoliko su uneti ispravni usernmae i password vraca http status OK i token, a u suprotnom
      * vraca http status BAD REQUEST.
      */
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping(path = "/login")
     public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody UserDTO dto) {
         try {
             final Authentication authentication = authenticationManagerUser
@@ -112,8 +111,8 @@ public class AuthenticationController {
     * cije polje enable je postavljeno na false. Korisnik se sacuva u bazi podataka i poziva se funkacija za slanje
     * aktivacionog mail-a.
      */
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public HttpStatus Register(@RequestBody UserDTO dto) throws AuthenticationException {
+    @PostMapping(path = "/register")
+    public HttpStatus register(@RequestBody UserDTO dto) {
 
         User u = userService.findByUsername(dto.getUsername());
         if(u != null) {
@@ -141,7 +140,7 @@ public class AuthenticationController {
     * Funkcija koja se realziuje nakon sto se klikne na aktivacioni mail.
     * Ukoliko postoji korisnik sa odredjenim tokenom, njegovo polje enable se postavi na true.
      */
-    @RequestMapping(value = "/user-confirm/{token}", method = RequestMethod.GET)
+    @GetMapping(path = "/user-confirm/{token}")
     public HttpStatus confirmRegistration(@PathVariable String token) {
         User user = userService.findByToken(token);
 
@@ -155,7 +154,7 @@ public class AuthenticationController {
         return HttpStatus.OK;
     }
 
-    @RequestMapping(value = "/refresh", method = RequestMethod.POST)
+    @PostMapping(path = "/refresh")
     public ResponseEntity<UserTokenState> refreshAuthenticationToken(HttpServletRequest request) {
 
         String token = tokenUtils.getToken(request);
@@ -173,8 +172,7 @@ public class AuthenticationController {
         }
     }
 
-
-    @RequestMapping(value = "/change-password", method = RequestMethod.POST)
+    @PostMapping(path = "/change-password")
     public ResponseEntity<HashMap> changePassword(@RequestBody PasswordChanger passwordChanger) {
         userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
 
@@ -192,7 +190,7 @@ public class AuthenticationController {
     * Registrovanje sistemskog admina ukoliko ne postoji u bazi podataka.
     * Poziva se prilikom ucitavanje pocetne stranice aplikacije.
      */
-    @RequestMapping(value = "/default-sys-admin", method = RequestMethod.POST)
+    @PostMapping(path = "/default-sys-admin")
     public HttpStatus registerDefaultSysAdmin()  {
 
         if (userService.findByUsername("sys") == null) {
@@ -216,7 +214,7 @@ public class AuthenticationController {
     /*
     * Registrovanje admina aviokompanije, hotela ili rent a car servisa.
      */
-    @RequestMapping(value = "/register-admin", method = RequestMethod.POST)
+    @PostMapping(path = "/register-admin")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public HttpStatus registerAdmin(@RequestBody AdminInfoDTO dto) {
 
@@ -329,7 +327,7 @@ public class AuthenticationController {
     /*
      * Registrovanje sys admina.
      */
-    @RequestMapping(value = "/register-sys-admin", method = RequestMethod.POST)
+    @PostMapping(path = "/register-sys-admin")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public HttpStatus registerSysAdmin(@RequestBody AdminInfoDTO dto) {
 
@@ -359,7 +357,7 @@ public class AuthenticationController {
     /*
     * Provera da li korisnik sa odredjenom email adresom postoji.
      */
-    @RequestMapping(value = "/check-mail/{email}", method = RequestMethod.GET)
+    @GetMapping(path = "/check-mail/{email}")
     public HttpStatus isEmailExist(@PathVariable String email) {
         User user = userService.findByEmail(email);
         if(user != null)

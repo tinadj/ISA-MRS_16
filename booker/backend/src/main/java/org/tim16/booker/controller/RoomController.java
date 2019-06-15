@@ -1,7 +1,6 @@
 package org.tim16.booker.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.alps.Ext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +15,7 @@ import org.tim16.booker.service.RoomService;
 import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/room")
@@ -27,13 +27,12 @@ public class RoomController {
     @Autowired
     private HotelService hotelService;
 
-
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @GetMapping(path = "/all")
     public ResponseEntity<List<Room>> getAll() {
         return new ResponseEntity<>(roomService.findAll(), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addNewRoom(@RequestBody RoomDTO roomDTO){
 
         Hotel hotel = hotelService.findOne(roomDTO.getHotelId());
@@ -86,7 +85,7 @@ public class RoomController {
 
         /* Kreiranje set<ExtraService> koji se preuzima iz podataka roomDTO, i dodavanje tog seta u room model */
 
-        HashSet<ExtraService> roomservices = roomExtraServicesSet(roomDTO);
+        Set<ExtraService> roomservices = roomExtraServicesSet(roomDTO);
 
         /*  **********************************************************************************************      */
 
@@ -96,7 +95,7 @@ public class RoomController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}")
     public ResponseEntity<Room> getRoom(@PathVariable Integer id)
     {
         Room room = roomService.findOne(id);
@@ -109,7 +108,7 @@ public class RoomController {
         return new ResponseEntity<>(room, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update", method =  RequestMethod.PUT)
+    @PutMapping(path = "/update")
     public ResponseEntity<Room> updateRoom(@RequestBody RoomDTO roomDTO)
     {
         try
@@ -124,7 +123,7 @@ public class RoomController {
             Hotel hotel = hotelService.findOne(roomDTO.getHotelId());
             room.setHotel(hotel);
 
-            HashSet<ExtraService> roomservices = roomExtraServicesSet(roomDTO);
+            Set<ExtraService> roomservices = roomExtraServicesSet(roomDTO);
 
             room.setExtraServices(roomservices);
 
@@ -140,7 +139,7 @@ public class RoomController {
         }
     }
 
-    @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(path = "/remove/{id}")
     public ResponseEntity<List<Room>> removeRoom(@PathVariable Integer id)
     {
         Room room = roomService.findOne(id);
@@ -159,21 +158,21 @@ public class RoomController {
     }
 
     /* Funkcija koja ucitava ekstraservise iz roomDTO i vraca taj set<extraservices> */
-    public HashSet<ExtraService> roomExtraServicesSet(RoomDTO roomDTO)
+    public Set<ExtraService> roomExtraServicesSet(RoomDTO roomDTO)
     {
-        HashSet<ExtraService> roomservices = new HashSet<>();
+        Set<ExtraService> roomservices = new HashSet<>();
 
         if(roomDTO.getBreakfast().equals(true))
         {
             roomservices.add(ExtraService.BREAKFAST);
         }
 
-        if(roomDTO.getHotel_restaurant().equals(true))
+        if(roomDTO.getHotelRestaurant().equals(true))
         {
             roomservices.add(ExtraService.HOTEL_RESTAURANT);
         }
 
-        if(roomDTO.getAirport_transfer().equals(true))
+        if(roomDTO.getAirportTransfer().equals(true))
         {
             roomservices.add(ExtraService.AIRPORT_TRANSFER);
         }
@@ -188,7 +187,7 @@ public class RoomController {
             roomservices.add(ExtraService.POOL);
         }
 
-        if(roomDTO.getWellness_spa().equals(true))
+        if(roomDTO.getWellnessSpa().equals(true))
         {
             roomservices.add(ExtraService.WELLNESS_SPA);
         }

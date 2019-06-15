@@ -3,11 +3,12 @@ package org.tim16.booker.model.rent_a_car;
 import org.tim16.booker.model.users.Reservation;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "rent_a_car_reservations")
-public class RentACarReservation {
+public class RentACarReservation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

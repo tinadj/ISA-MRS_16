@@ -17,7 +17,6 @@ import org.tim16.booker.service.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -47,7 +46,7 @@ public class RacReservationController {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
 
-    @RequestMapping(value = "reserve-vehicle", method = RequestMethod.POST, consumes="application/json")
+    @PostMapping(path = "reserve-vehicle", consumes="application/json")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<HttpStatus> reserveVehicle(@RequestBody RacReservationDTO dto) {
         Reservation reservation = new Reservation();
@@ -98,7 +97,7 @@ public class RacReservationController {
         return rentACarReservation;
     }
 
-    @RequestMapping(value = "report-daily/{rac}/{strStartDate}/{strEndDate}", method = RequestMethod.GET)
+    @GetMapping(path = "report-daily/{rac}/{strStartDate}/{strEndDate}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<Integer>> reportDaily(@PathVariable Integer rac, @PathVariable String strStartDate, @PathVariable String strEndDate) {
         List<Integer> result = new ArrayList<>();
@@ -125,7 +124,7 @@ public class RacReservationController {
         }
     }
 
-    @RequestMapping(value = "report-weekly/{rac}/{strStartDate}/{strEndDate}", method = RequestMethod.GET)
+    @GetMapping(path = "report-weekly/{rac}/{strStartDate}/{strEndDate}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<Integer>> reportWeekly(@PathVariable Integer rac, @PathVariable String strStartDate, @PathVariable String strEndDate) {
         List<Integer> result = new ArrayList<>();
@@ -157,7 +156,7 @@ public class RacReservationController {
         }
     }
 
-    @RequestMapping(value = "report-monthly/{rac}/{strStartDate}/{strEndDate}", method = RequestMethod.GET)
+    @GetMapping(path = "report-monthly/{rac}/{strStartDate}/{strEndDate}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<Integer>> reportMonthly(@PathVariable Integer rac, @PathVariable String strStartDate, @PathVariable String strEndDate) {
         List<Integer> result = new ArrayList<>();
@@ -200,7 +199,7 @@ public class RacReservationController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "report-income/{rac}/{month}/{year}", method = RequestMethod.GET)
+    @GetMapping(path = "report-income/{rac}/{month}/{year}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<Float>> reportIncome(@PathVariable Integer rac, @PathVariable Integer month, @PathVariable Integer year) {
         List<Float> result = new ArrayList<>();
@@ -314,9 +313,8 @@ public class RacReservationController {
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(date1);
         cal2.setTime(date2);
-        boolean sameDay = cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+        return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
                 cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
-        return sameDay;
     }
 
 

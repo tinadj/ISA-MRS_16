@@ -35,7 +35,7 @@ public class Hotel implements Serializable {
     private BigDecimal longitude;
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<ExtraServicePrice> extraServicePrices = new HashSet<ExtraServicePrice>();
+    private Set<ExtraServicePrice> extraServicePrices = new HashSet<>();
 
     @Column(name = "description")
     private String description;
@@ -46,17 +46,17 @@ public class Hotel implements Serializable {
 
     @JsonManagedReference("hotel-room")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="hotel")
-    private Set<Room> rooms = new HashSet<Room>();
+    private Set<Room> rooms = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rating = new HashSet<Rate>();
+    private Set<Rate> rating = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<HotelReservation> reservations = new HashSet<HotelReservation>();
+    private Set<HotelReservation> reservations = new HashSet<>();
 
     @JsonBackReference("hotel-admin")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="hotel")
-    private Set<HotelAdmin> admins = new HashSet<HotelAdmin>();
+    private Set<HotelAdmin> admins = new HashSet<>();
 
     public Hotel() { /* empty constructor */}
 

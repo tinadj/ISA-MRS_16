@@ -17,7 +17,7 @@
             label-cols="2" 
             label-cols-lg="2" 
             label-for="input-2">
-            <b-form-input id="input-2" v-model="hotel_restaurant" placeholder="Hotel Restaurant Price" type="number" step="0.01"></b-form-input>
+            <b-form-input id="input-2" v-model="hotelRestaurant" placeholder="Hotel Restaurant Price" type="number" step="0.01"></b-form-input>
           </b-form-group>
 
           <b-form-group 
@@ -25,7 +25,7 @@
             label-cols="2" 
             label-cols-lg="2" 
             label-for="input-3">
-            <b-form-input id="input-3" v-model="airport_transfer" placeholder="Price for Airport Transfer" type="number" step="0.01"></b-form-input>
+            <b-form-input id="input-3" v-model="airportTransfer" placeholder="Price for Airport Transfer" type="number" step="0.01"></b-form-input>
           </b-form-group>
 
           <b-form-group 
@@ -49,7 +49,7 @@
             label-cols="4" 
             label-cols-lg="2" 
             label-for="input-6">
-            <b-form-input id="input-6" v-model="wellness_spa" placeholder="Wellness and Spa Price" type="number" step="0.01"></b-form-input>
+            <b-form-input id="input-6" v-model="wellnessSpa" placeholder="Wellness and Spa Price" type="number" step="0.01"></b-form-input>
           </b-form-group>
 
           <b-form-group 
@@ -96,11 +96,11 @@ export default {
     return {
       id : '',
       breakfast : 0.0,
-      hotel_restaurant : 0.0,
-      airport_transfer : 0.0,
+      hotelRestaurant : 0.0,
+      airportTransfer : 0.0,
       parking : 0.0,
       pool : 0.0,
-      wellness_spa : 0.0,
+      wellnessSpa : 0.0,
       wifi : 0.0,
       tv : 0.0,
       minibar : 0.0,
@@ -115,11 +115,11 @@ export default {
     .then(response => {
       this.id = response.data.id;
       this.breakfast = response.data.breakfast;
-      this.hotel_restaurant = response.data.hotel_restaurant;
-      this.airport_transfer = response.data.airport_transfer;
+      this.hotelRestaurant = response.data.hotelRestaurant;
+      this.airportTransfer = response.data.airportTransfer;
       this.parking = response.data.parking;
       this.pool = response.data.pool;
-      this.wellness_spa = response.data.wellness_spa;
+      this.wellnessSpa = response.data.wellnessSpa;
       this.wifi = response.data.wifi;
       this.tv = response.data.tv;
       this.minibar = response.data.minibar;
@@ -132,11 +132,11 @@ export default {
       const extraprices  = {
         'id': this.$route.params.id,
         'breakfast': this.breakfast,
-        'hotel_restaurant': this.hotel_restaurant,
-        'airport_transfer': this.airport_transfer,
+        'hotelRestaurant': this.hotelRestaurant,
+        'airportTransfer': this.airportTransfer,
         'parking': this.parking,
         'pool': this.pool,
-        'wellness_spa': this.wellness_spa,
+        'wellnessSpa': this.wellnessSpa,
         'wifi': this.wifi,
         'tv': this.tv,
         'minibar': this.minibar

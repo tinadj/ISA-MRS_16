@@ -3,10 +3,11 @@ package org.tim16.booker.model.airline;
 import org.tim16.booker.model.users.Reservation;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "flight_reservations")
-public class FlightReservation {
+public class FlightReservation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

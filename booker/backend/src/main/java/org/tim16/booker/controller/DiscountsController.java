@@ -3,13 +3,9 @@ package org.tim16.booker.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tim16.booker.dto.DiscountsDTO;
-import org.tim16.booker.model.users.User;
 import org.tim16.booker.model.users.UserType;
 import org.tim16.booker.model.utility.UserDiscounts;
 import org.tim16.booker.service.UserDiscountsService;
@@ -29,7 +25,7 @@ public class DiscountsController {
     @Autowired
     UserDiscountsService discountsService;
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    @GetMapping(path = "/get")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<UserDiscounts>> getAll() {
         List<UserDiscounts> result = new ArrayList<>();
@@ -44,40 +40,38 @@ public class DiscountsController {
         result.add(silverUser);
         result.add(goldUser);
 
-        return new ResponseEntity<List<UserDiscounts>>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/get-regular", method = RequestMethod.GET)
+    @GetMapping(path = "/get-regular")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<UserDiscounts> getRegular() {
         UserDiscounts discount = discountsService.findByUserType(REGULAR);
-        return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
+        return new ResponseEntity<>(discount, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/get-bronze", method = RequestMethod.GET)
+    @GetMapping(path = "/get-bronze")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<UserDiscounts> getBronze() {
         UserDiscounts discount = discountsService.findByUserType(BRONZE);
-        return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
+        return new ResponseEntity<>(discount, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/get-silver", method = RequestMethod.GET)
+    @GetMapping(path = "/get-silver")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<UserDiscounts> getSilver() {
         UserDiscounts discount = discountsService.findByUserType(SILVER);
-        return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
+        return new ResponseEntity<>(discount, HttpStatus.OK);
     }
 
-
-    @RequestMapping(value = "/get-gold", method = RequestMethod.GET)
+    @GetMapping(path = "/get-gold")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<UserDiscounts> getGold() {
         UserDiscounts discount = discountsService.findByUserType(GOLD);
-        return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
+        return new ResponseEntity<>(discount, HttpStatus.OK);
     }
 
-
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @PostMapping(path = "/create")
     public ResponseEntity<HttpStatus> create() {
         UserDiscounts regularUser = discountsService.findByUserType(REGULAR);
         UserDiscounts bronzeUser = discountsService.findByUserType(BRONZE);
@@ -101,7 +95,7 @@ public class DiscountsController {
         }
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PutMapping(path = "/update")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<UserDiscounts>> update(@RequestBody DiscountsDTO dto) {
         UserDiscounts regularUser = discountsService.findByUserType(REGULAR);
@@ -128,7 +122,7 @@ public class DiscountsController {
         discounts.add(silverUser);
         discounts.add(goldUser);
 
-        return new ResponseEntity<List<UserDiscounts>>(discounts, HttpStatus.OK);
+        return new ResponseEntity<>(discounts, HttpStatus.OK);
     }
 
 }

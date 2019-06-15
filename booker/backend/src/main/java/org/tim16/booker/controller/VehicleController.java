@@ -33,12 +33,12 @@ public class VehicleController {
     @Autowired
     private BranchOfficeService branchOfficeService;
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @GetMapping(path = "/all")
     public ResponseEntity<List<Vehicle>> getAll() {
         return new ResponseEntity<>(vehicleService.findAll(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
+    @PostMapping(path = "/add", consumes="application/json")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<Vehicle> add(@RequestBody VehicleDTO dto) {
         // a new vehicle must have rent a car defined
@@ -71,7 +71,7 @@ public class VehicleController {
         return new ResponseEntity<>(vehicle, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<Vehicle> getVehicle(@PathVariable Integer id)
     {
@@ -84,7 +84,7 @@ public class VehicleController {
         return new ResponseEntity<>(vehicle, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(path = "/remove/{id}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<Vehicle>> removeVehicle(@PathVariable Integer id)
     {
@@ -102,7 +102,7 @@ public class VehicleController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update", method =  RequestMethod.PUT, consumes = "application/json")
+    @PutMapping(path = "/update", consumes = "application/json")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<Vehicle> updateVehicle(@RequestBody VehicleDTO dto)
     {
@@ -132,7 +132,7 @@ public class VehicleController {
         }
     }
 
-    @RequestMapping(value = "/is-reserved/{id}", method =  RequestMethod.GET)
+    @GetMapping(path = "/is-reserved/{id}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public HttpStatus isReserved(@PathVariable Integer id) {
         try
@@ -148,7 +148,7 @@ public class VehicleController {
         }
     }
 
-    @RequestMapping(value = "/discount/{id}/{discount}", method = RequestMethod.PUT)
+    @PutMapping(path = "/discount/{id}/{discount}")
     @PreAuthorize("hasAnyAuthority('RAC_ADMIN')")
     public ResponseEntity<HttpStatus> setDiscount(@PathVariable Integer id, @PathVariable Integer discount) {
         Vehicle vehicle = vehicleService.findOne(id);
@@ -161,7 +161,7 @@ public class VehicleController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update-vehicle-location/{id}/{officeID}", method = RequestMethod.PUT)
+    @PutMapping(path = "/update-vehicle-location/{id}/{officeID}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public HttpStatus updateVehicleLocation(@PathVariable Integer id, @PathVariable Integer officeID) {
         Vehicle vehicle = vehicleService.findOne(id);
@@ -174,8 +174,7 @@ public class VehicleController {
         return HttpStatus.OK;
     }
 
-
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @PostMapping(path = "/search")
     public ResponseEntity<List<Vehicle>> search(@RequestBody VehicleSearchParamsDTO dto) {
         RentACar rentACar = rentACarService.findOne(dto.getRacID());
 

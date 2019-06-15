@@ -5,11 +5,12 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
 @Table(name = "flights")
-public class Flight {
+public class Flight implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,17 +47,17 @@ public class Flight {
     // lokacije presedanja
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Seat> seats = new HashSet<Seat>();
+    private Set<Seat> seats = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<TicketPrice> ticketPrices = new HashSet<TicketPrice>();
+    private Set<TicketPrice> ticketPrices = new HashSet<>();
 
     @JsonManagedReference("flight-tickets")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Ticket> tickets = new HashSet<Ticket>();
+    private Set<Ticket> tickets = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rating = new HashSet<Rate>();
+    private Set<Rate> rating = new HashSet<>();
 
     public Flight() { /* empty constructor */}
 

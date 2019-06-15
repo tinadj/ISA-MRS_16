@@ -39,27 +39,27 @@ public class Airline implements Serializable {
     @JoinTable(name = "airline_destinations",
             joinColumns = @JoinColumn(name = "airline_id"),
             inverseJoinColumns = @JoinColumn(name = "destination_id"))
-    private Set<Destination> destinations = new HashSet<Destination>();
+    private Set<Destination> destinations = new HashSet<>();
 
     @JsonBackReference("airline-flight")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Flight> flights = new HashSet<Flight>();
+    private Set<Flight> flights = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Ticket> discountTickets = new HashSet<Ticket>();
+    private Set<Ticket> discountTickets = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<LuggagePrice> luggagePrices = new HashSet<LuggagePrice>();
+    private Set<LuggagePrice> luggagePrices = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rating = new HashSet<Rate>();
+    private Set<Rate> rating = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<FlightReservation> reservations = new HashSet<FlightReservation>();
+    private Set<FlightReservation> reservations = new HashSet<>();
 
     @JsonBackReference("airline-admin")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="airline")
-    private Set<AirlineAdmin> admins = new HashSet<AirlineAdmin>();
+    private Set<AirlineAdmin> admins = new HashSet<>();
 
     public Airline() { /* empty constructor */}
 

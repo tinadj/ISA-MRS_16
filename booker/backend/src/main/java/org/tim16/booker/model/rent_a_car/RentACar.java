@@ -39,21 +39,21 @@ public class RentACar implements Serializable {
 
     @JsonManagedReference("rent_a_car-branch_office")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="rentACar")
-    private Set<BranchOffice> branchOffices = new HashSet<BranchOffice>();
+    private Set<BranchOffice> branchOffices = new HashSet<>();
 
     @JsonManagedReference("rent_a_car-vehicles")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Vehicle> vehicles = new HashSet<Vehicle>();
+    private Set<Vehicle> vehicles = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rating = new HashSet<Rate>();
+    private Set<Rate> rating = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<RentACarReservation> reservations = new HashSet<RentACarReservation>();
+    private Set<RentACarReservation> reservations = new HashSet<>();
 
     @JsonBackReference("rent_a_car-admin")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy = "rentACar")
-    private Set<RentACarAdmin> admins = new HashSet<RentACarAdmin>();
+    private Set<RentACarAdmin> admins = new HashSet<>();
 
 
     public RentACar() { /* empty constructor */ }

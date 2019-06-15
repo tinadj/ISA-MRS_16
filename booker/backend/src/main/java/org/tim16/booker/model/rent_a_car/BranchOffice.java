@@ -6,12 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.tim16.booker.model.utility.Destination;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "branch_offices")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class BranchOffice {
+public class BranchOffice implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

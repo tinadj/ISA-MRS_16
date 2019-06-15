@@ -20,7 +20,6 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.DestinationService;
 import org.tim16.booker.service.RacReservationService;
 import org.tim16.booker.service.RentACarService;
-import org.tim16.booker.service.VehicleService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
@@ -36,14 +35,14 @@ public class RentACarController {
     @Autowired
     private RacReservationService reservationService;
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @GetMapping(path = "/all")
     public ResponseEntity<List<RentACar>> getAll() {
         List<RentACar> rentACars = rentACarService.findAll();
         Collections.sort(rentACars, new RentACarName());
         return new ResponseEntity<>(rentACars, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
+    @PostMapping(path = "/add", consumes="application/json")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<RentACar> add(@RequestBody RentACarDTO dto) {
         RentACar rentACar = new RentACar(dto.getName(), dto.getDescription(), dto.getLatitude(), dto.getLongitude());
@@ -58,7 +57,7 @@ public class RentACarController {
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<RentACar> getRentACar(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
@@ -70,7 +69,7 @@ public class RentACarController {
         return new ResponseEntity<>(rentACar, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PutMapping(path = "/update")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<RentACar> update(@RequestBody RentACarDTO dto) {
 
@@ -90,7 +89,7 @@ public class RentACarController {
         }
     }
 
-    @RequestMapping(value = "/{id}/vehicles", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}/vehicles")
     public ResponseEntity<List<Vehicle>> getVehicles(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
 
@@ -107,7 +106,7 @@ public class RentACarController {
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}/branch-offices", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}/branch-offices")
     public ResponseEntity<List<BranchOffice>> getBranchOffices(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
 
@@ -124,7 +123,7 @@ public class RentACarController {
 
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @PostMapping(path = "/search")
     public ResponseEntity<List<RentACar>> search(@RequestBody RACSearchParamsDTO dto) {
         List<RentACar> rentACars = rentACarService.findAll();
         List<RentACar> result = rentACarService.findAll();
@@ -142,7 +141,7 @@ public class RentACarController {
         }
 
         if (dto.getPickUpDate() != null && dto.getReturnDate() != null) {
-            result = searchByDates(rentACars, result, dto.getPickUpDate(), dto.getReturnDate());
+            result = searchByDates(result, dto.getPickUpDate(), dto.getReturnDate());
         }
 
         result = sort(dto.getCriteria(), result);
@@ -177,7 +176,7 @@ public class RentACarController {
     /*
     Pretraga po datumu
      */
-    private List<RentACar> searchByDates(List<RentACar> rentACars, List<RentACar> result, Date pickUpDate, Date returnDate) {
+    private List<RentACar> searchByDates(List<RentACar> result, Date pickUpDate, Date returnDate) {
         for (RentACarReservation reservation: reservationService.findAll()) {
             Date returnDateCalc = calculateReturnDate(reservation);
 

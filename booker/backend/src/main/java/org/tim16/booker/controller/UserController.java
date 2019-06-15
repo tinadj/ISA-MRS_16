@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.multipart.MultipartFile;
 import org.tim16.booker.dto.RoleIdDTO;
 import org.tim16.booker.dto.UserDTO;
 import org.tim16.booker.model.admins.AirlineAdmin;
@@ -34,7 +33,7 @@ public class UserController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    @RequestMapping(value = "/get-role-and-id", method = RequestMethod.GET)
+    @GetMapping(path = "/get-role-and-id")
     public ResponseEntity<RoleIdDTO> getRoleAndID() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,7 +62,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}")
     public ResponseEntity<User> getUser(@PathVariable Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -77,7 +76,7 @@ public class UserController {
 
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PutMapping(path = "/update")
     public ResponseEntity<User> update(@RequestBody UserDTO dto) {
         User user = userService.findByUsername(dto.getUsername());
 
@@ -91,7 +90,7 @@ public class UserController {
         return new ResponseEntity<>(userDetailsService.update(user), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/get-admins", method = RequestMethod.GET)
+    @GetMapping(path = "/get-admins")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<User>> getAdmins( ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

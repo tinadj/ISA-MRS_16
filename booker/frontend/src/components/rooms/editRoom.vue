@@ -45,10 +45,10 @@
           <b-form-checkbox id="breakfast_cb" v-model="breakfast" name="breakfast_cb" value="true" unchecked-value="false">
             Breakfast 
           </b-form-checkbox>
-          <b-form-checkbox id="hotel_restaurant_cb" v-model="hotel_restaurant" name="hotel_restaurant_cb" value="true" unchecked-value="false">
+          <b-form-checkbox id="hotelRestaurant_cb" v-model="hotelRestaurant" name="hotelRestaurant_cb" value="true" unchecked-value="false">
             Hotel Restaurant
           </b-form-checkbox>
-          <b-form-checkbox id="airport_transfer_cb" v-model="airport_transfer" name="airport_transfer_cb" value="true" unchecked-value="false">
+          <b-form-checkbox id="airportTransfer_cb" v-model="airportTransfer" name="airportTransfer_cb" value="true" unchecked-value="false">
             Airport Transfer
           </b-form-checkbox>
           <b-form-checkbox id="parking_cb" v-model="parking" name="parking_cb" value="true" unchecked-value="false">
@@ -57,7 +57,7 @@
           <b-form-checkbox id="pool_cb" v-model="pool" name="pool_cb" value="true" unchecked-value="false">
             Pool Access
           </b-form-checkbox>
-          <b-form-checkbox id="wellness_spa_cb" v-model="wellness_spa" name="wellness_spa_cb" value="true" unchecked-value="false">
+          <b-form-checkbox id="wellnessSpa_cb" v-model="wellnessSpa" name="wellnessSpa_cb" value="true" unchecked-value="false">
             Wellness and Spa
           </b-form-checkbox>
           <b-form-checkbox id="wifi_cb" v-model="wifi" name="wifi_cb" value="true" unchecked-value="false">
@@ -95,11 +95,11 @@ export default {
       beds: '',
       balcony_status: 'false',
       breakfast : 'false',
-      hotel_restaurant : 'false',
-      airport_transfer : 'false',
+      hotelRestaurant : 'false',
+      airportTransfer : 'false',
       parking : 'false',
       pool : 'false',
-      wellness_spa : 'false',
+      wellnessSpa : 'false',
       wifi : 'false',
       tv : 'false',
       minibar : 'false',
@@ -120,11 +120,11 @@ export default {
         'beds': this.beds,
         'balcony': this.balcony_status,
         'breakfast' : this.breakfast,
-        'hotel_restaurant' : this.hotel_restaurant,
-        'airport_transfer' : this.airport_transfer,
+        'hotelRestaurant' : this.hotelRestaurant,
+        'airportTransfer' : this.airportTransfer,
         'parking' : this.parking,
         'pool' : this.pool,
-        'wellness_spa' : this.wellness_spa,
+        'wellnessSpa' : this.wellnessSpa,
         'wifi' : this.wifi,
         'tv' : this.tv,
         'minibar' : this.minibar,
@@ -165,16 +165,16 @@ export default {
           this.breakfast = true
         else if(response.data.extraServices[i] == 'POOL')
           this.pool = true
-        else if(response.data.extraServices[i] == 'WELLNESS_SPA')
-          this.wellness_spa = true
+        else if(response.data.extraServices[i] == 'wellnessSpa')
+          this.wellnessSpa = true
         else if(response.data.extraServices[i] == 'TV')
           this.tv = true
         else if(response.data.extraServices[i] == 'MINIBAR')
           this.minibar = true
-        else if(response.data.extraServices[i] == 'HOTEL_RESTAURANT')
-          this.hotel_restaurant = true
-        else if(response.data.extraServices[i] == 'AIRPORT_TRANSFER')
-          this.airport_transfer = true
+        else if(response.data.extraServices[i] == 'hotelRestaurant')
+          this.hotelRestaurant = true
+        else if(response.data.extraServices[i] == 'airportTransfer')
+          this.airportTransfer = true
         else if(response.data.extraServices[i] == 'PARKING')
           this.parking = true
         else if(response.data.extraServices[i] == 'WIFI')

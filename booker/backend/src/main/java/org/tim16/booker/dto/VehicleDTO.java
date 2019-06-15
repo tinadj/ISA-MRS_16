@@ -1,7 +1,5 @@
 package org.tim16.booker.dto;
 
-import org.tim16.booker.model.rent_a_car.VehicleType;
-
 public class VehicleDTO {
 
     private Integer id;
