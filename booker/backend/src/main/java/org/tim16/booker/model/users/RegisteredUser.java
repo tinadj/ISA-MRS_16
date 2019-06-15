@@ -18,7 +18,7 @@ public class RegisteredUser extends User {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Friendship> friends = new HashSet<Friendship>();
 
-    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
+    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
     private Set<Reservation> reservations = new HashSet<Reservation>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
@@ -34,6 +34,16 @@ public class RegisteredUser extends User {
         this.reservations = new HashSet<>();
         this.rates = new HashSet<>();
         super.setEnabled(false);
+    }
+
+    public void addReservations(Reservation r)
+    {
+        if (r.getUser() != null)
+        {
+            r.getUser().getReservations().remove(r);
+        }
+        r.setUser(this);
+        this.getReservations().add(r);
     }
 
     public Integer getBonusPts() {

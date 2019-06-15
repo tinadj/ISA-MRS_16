@@ -53,14 +53,14 @@
 									</div>
 								</div>
 
-                                <div class="profile-info-row">
-                                    <div class="profile-info-name"> Bonus points </div>
-									<div class="profile-info-value">
-										<span>
-                                            <img id="user-type" alt="User Type" :src=userTypeIcon>
-                                            <b-tooltip target="user-type" placement="left">{{iconTooltip}}</b-tooltip>
-                                            &nbsp{{user.bonusPts}}
-                                        </span>
+                <div class="profile-info-row">
+                  <div class="profile-info-name"> Bonus points </div>
+                  <div class="profile-info-value">
+                    <span>
+                      <img id="user-type" alt="User Type" :src=userTypeIcon>
+                      <b-tooltip target="user-type" placement="left">{{iconTooltip}}</b-tooltip>
+                      &nbsp{{user.bonusPts}}
+                    </span>
 									</div>
 								</div>
 							</div>

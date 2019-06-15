@@ -52,6 +52,7 @@ public class VehicleController {
         }
 
         Vehicle vehicle = new Vehicle();
+        vehicle.setVersion(0l);
         vehicle.setName(dto.getName());
         vehicle.setBrand(dto.getBrand());
         vehicle.setDescription(dto.getDescription());
@@ -59,6 +60,7 @@ public class VehicleController {
         vehicle.setProductionYear(dto.getProductionYear());
         vehicle.setSeatsNum(dto.getSeatsNum());
         vehicle.setPrice(dto.getPrice());
+        vehicle.setDiscount(0);
         vehicle.setType(intToVehicleType(dto.getType()));
         rentACar.addVehicle(vehicle);
         vehicle.setRentACar(rentACar);
@@ -111,6 +113,7 @@ public class VehicleController {
             vehicle.setName(dto.getName());
             vehicle.setBrand(dto.getBrand());
             vehicle.setModel(dto.getModel());
+            vehicle.setSeatsNum(dto.getSeatsNum());
             vehicle.setProductionYear(dto.getProductionYear());
             vehicle.setDescription(dto.getDescription());
             vehicle.setType(intToVehicleType(dto.getType()));
@@ -147,6 +150,19 @@ public class VehicleController {
         }
     }
 
+    @RequestMapping(value = "/discount/{id}/{discount}", method = RequestMethod.PUT)
+    @PreAuthorize("hasAnyAuthority('RAC_ADMIN')")
+    public ResponseEntity<HttpStatus> setDiscount(@PathVariable Integer id, @PathVariable Integer discount) {
+        Vehicle vehicle = vehicleService.findOne(id);
+
+        if (vehicle == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        vehicle.setDiscount(discount);
+        vehicleService.update(vehicle);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/update-vehicle-location/{id}/{officeID}", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public HttpStatus updateVehicleLocation(@PathVariable Integer id, @PathVariable Integer officeID) {
@@ -175,6 +191,14 @@ public class VehicleController {
             for (Vehicle vehicle: vehicles) {
                 if (vehicle.getCurrentlyIn().getId() != dto.getPickUpLocation())
                     result.remove(vehicle);
+            }
+        }
+
+        if (dto.getPassangerNum() != null) {
+            for (Vehicle vehicle: vehicles) {
+                if (vehicle.getSeatsNum() < dto.getPassangerNum()) {
+                    result.remove(vehicle);
+                }
             }
         }
 

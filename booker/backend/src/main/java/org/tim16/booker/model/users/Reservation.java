@@ -12,6 +12,8 @@ import javax.persistence.*;
 public class Reservation {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
     @JsonBackReference("user-reservation")
@@ -20,10 +22,10 @@ public class Reservation {
     private RegisteredUser user;
 
     @OneToOne
-    private FlightReservation flight;
+    private FlightReservation flightReservation;
 
     @OneToOne
-    private HotelReservation hotel;
+    private HotelReservation hotelReservation;
 
     @OneToOne
     private RentACarReservation rentACarReservation;
@@ -46,20 +48,20 @@ public class Reservation {
         this.user = user;
     }
 
-    public FlightReservation getFlight() {
-        return flight;
+    public FlightReservation getFlightReservation() {
+        return flightReservation;
     }
 
-    public void setFlight(FlightReservation flight) {
-        this.flight = flight;
+    public void setFlightReservation(FlightReservation flightReservation) {
+        this.flightReservation = flightReservation;
     }
 
-    public HotelReservation getHotel() {
-        return hotel;
+    public HotelReservation getHotelReservation() {
+        return hotelReservation;
     }
 
-    public void setHotel(HotelReservation hotel) {
-        this.hotel = hotel;
+    public void setHotelReservation(HotelReservation hotelReservation) {
+        this.hotelReservation = hotelReservation;
     }
 
     public RentACarReservation getRentACarReservation() {

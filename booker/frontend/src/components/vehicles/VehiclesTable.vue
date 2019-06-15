@@ -1,14 +1,26 @@
 <template>
-  <b-card-group>
-    <b-card border-variant="light" class="mb-2 mx-auto">
-      <b-alert v-model="noResult" variant="light">There are no vehicles!</b-alert>
-      <ul>
-        <li v-for="item in vehicles">
-          <AdminVehicleInfo v-bind:item="item"></AdminVehicleInfo>
-        </li>
-      </ul>        
-    </b-card>
-  </b-card-group>
+  <b-container>
+      <b-row>
+        <b-col lg="3">
+            <b-button variant="outline-primary" :to="{ path: 'add-vehicle'}">Add new Vehicle</b-button>
+        </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <br>
+        <b-card-group>
+          <b-card border-variant="light" class="mb-2 mx-auto">
+            <b-alert v-model="noResult" variant="light">There are no vehicles!</b-alert>
+            <ul>
+              <li v-for="item in vehicles">
+                <AdminVehicleInfo v-bind:item="item"></AdminVehicleInfo>
+              </li>
+            </ul>        
+          </b-card>
+        </b-card-group>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>

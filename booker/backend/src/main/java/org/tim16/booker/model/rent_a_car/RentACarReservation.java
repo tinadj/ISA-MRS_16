@@ -16,6 +16,7 @@ public class RentACarReservation {
     @OneToOne
     private Reservation reservation;
 
+
     @ManyToOne
     private Vehicle vehicle;
 
@@ -23,6 +24,12 @@ public class RentACarReservation {
     private Date pickUpDate;
 
     private Integer days;
+
+    @ManyToOne
+    private BranchOffice pickUpLocation;
+
+    @ManyToOne
+    private BranchOffice dropOffLocation;
 
     private Integer passangerNum;
 
@@ -85,4 +92,21 @@ public class RentACarReservation {
     public void setReservation(Reservation reservation) {
         this.reservation = reservation;
     }
+
+    public BranchOffice getPickUpLocation() {
+        return pickUpLocation;
+    }
+
+    public void setPickUpLocation(BranchOffice pickUpLocation) {
+        this.pickUpLocation = pickUpLocation;
+    }
+
+    public BranchOffice getDropOffLocation() {
+        return dropOffLocation;
+    }
+
+    public void setDropOffLocation(BranchOffice dropOffLocation) {
+        this.dropOffLocation = dropOffLocation;
+    }
+
 }
