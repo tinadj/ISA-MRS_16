@@ -154,68 +154,110 @@ public class RentACarController {
         List<RentACar> result = rentACarService.findAll();
 
         if (!dto.getName().isEmpty()) {
-            for (RentACar rentACar: rentACars) {
-                if (!rentACar.getName().toLowerCase().contains(dto.getName().toLowerCase())) {
-                    result.remove(rentACar);
-                }
-            }
+            result = searchByName(rentACars, result, dto.getName());
         }
 
         if (!dto.getCity().isEmpty()) {
-            for (RentACar rentACar: rentACars) {
-                if (!rentACar.getAddress().getCity().toLowerCase().contains(dto.getCity().toLowerCase())) {
-                    result.remove(rentACar);
-                }
-            }
+            result = searchByCity(rentACars, result, dto.getCity());
         }
 
         if (!dto.getState().isEmpty()) {
-            for (RentACar rentACar: rentACars) {
-                if (!rentACar.getAddress().getState().toLowerCase().contains(dto.getState().toLowerCase())) {
-                    result.remove(rentACar);
-                }
-            }
+            result = searchByState(rentACars, result, dto.getState());
         }
 
         if (dto.getPickUpDate() != null && dto.getReturnDate() != null) {
-            for (RentACarReservation reservation: reservationService.findAll()) {
-                Date returnDate = calculateReturnDate(reservation);
+            result = searchByDates(rentACars, result, dto.getPickUpDate(), dto.getReturnDate());
+        }
 
-                if (reservation.getPickUpDate().before(dto.getReturnDate()) && returnDate.after(dto.getPickUpDate())) {
-                    result.remove(reservation.getVehicle().getRentACar());
-                }
+        result = sort(dto.getCriteria(), result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /*
+    Pretraga po imenu
+     */
+    private List<RentACar> searchByName(List<RentACar> rentACars, List<RentACar> result, String name) {
+        for (RentACar rentACar: rentACars) {
+            if (!rentACar.getName().toLowerCase().contains(name.toLowerCase())) {
+                result.remove(rentACar);
             }
         }
+        return result;
+    }
 
-        if (dto.getCriteria() == 0) {
+    /*
+    Pretraga po gradu
+     */
+    private List<RentACar> searchByCity(List<RentACar> rentACars, List<RentACar> result, String city) {
+        for (RentACar rentACar: rentACars) {
+            if (!rentACar.getAddress().getCity().toLowerCase().contains(city.toLowerCase())) {
+                result.remove(rentACar);
+            }
+        }
+        return result;
+    }
+
+    /*
+    Pretraga po datumu
+     */
+    private List<RentACar> searchByDates(List<RentACar> rentACars, List<RentACar> result, Date pickUpDate, Date returnDate) {
+        for (RentACarReservation reservation: reservationService.findAll()) {
+            Date returnDateCalc = calculateReturnDate(reservation);
+
+            if (reservation.getPickUpDate().before(returnDate) && returnDateCalc.after(pickUpDate)) {
+                result.remove(reservation.getVehicle().getRentACar());
+            }
+        }
+        return result;
+    }
+
+    /*
+    Pretraga po drzavi
+    */
+    private List<RentACar> searchByState(List<RentACar> rentACars, List<RentACar> result, String state) {
+        for (RentACar rentACar: rentACars) {
+            if (!rentACar.getAddress().getState().toLowerCase().contains(state.toLowerCase())) {
+                result.remove(rentACar);
+            }
+        }
+        return result;
+    }
+
+    /*
+    Sortira listu na osnovu zadatog kriterijuma
+     */
+    private List<RentACar> sort(int criteria, List<RentACar> result) {
+        if (criteria == 0) {
             Collections.sort(result, new RentACarName());
         }
-        else if (dto.getCriteria() == 1) {
+        else if (criteria == 1) {
             Collections.sort(result, new RentACarName());
             Collections.reverse(result);
         }
-        else if (dto.getCriteria() == 2) {
+        else if (criteria == 2) {
             Collections.sort(result, new RentACarCity());
         }
-        else if (dto.getCriteria() == 3) {
+        else if (criteria == 3) {
             Collections.sort(result, new RentACarCity());
             Collections.reverse(result);
         }
-        else if (dto.getCriteria() == 4) {
+        else if (criteria == 4) {
             Collections.sort(result, new RentACarState());
         }
-        else if (dto.getCriteria() == 5) {
+        else if (criteria == 5) {
             Collections.sort(result, new RentACarState());
             Collections.reverse(result);
         }
         else {
             Collections.sort(result, new RentACarName());
         }
-
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return result;
     }
 
+    /*
+    Izracunava datum povratka vozila na osnovu datuma preuzimanja i broja dana
+     */
     private Date calculateReturnDate(RentACarReservation reservation) {
         Calendar c = Calendar.getInstance();
         c.setTime(reservation.getPickUpDate());
