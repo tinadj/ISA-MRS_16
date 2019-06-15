@@ -73,7 +73,7 @@ public class Hotel implements Serializable {
 
     public void removeRoom(Integer id) {
         for (Room r : getRooms()) {
-            if (r.getId() == id) {
+            if (r.getId().equals(id)) {
                 this.getRooms().remove(r);
                 return;
             }

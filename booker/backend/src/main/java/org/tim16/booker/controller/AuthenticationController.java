@@ -129,7 +129,7 @@ public class AuthenticationController {
         authority.setName(UserAuthorities.USER.toString());
         authorityList.add(authority);
 
-        user.setAuthority(authorityList);
+        user.setAuthorities(authorityList);
 
         userDetailsService.create(user);
         mailService.sendActivationLink(user);
@@ -250,7 +250,7 @@ public class AuthenticationController {
         authority.setName(UserAuthorities.AIRLINE_ADMIN.toString());
         authorityList.add(authority);
 
-        admin.setAuthority(authorityList);
+        admin.setAuthorities(authorityList);
 
         Airline airline = airlineService.findOne(dto.getItemID());
         if (airline == null)
@@ -280,7 +280,7 @@ public class AuthenticationController {
         authority.setName(UserAuthorities.HOTEL_ADMIN.toString());
         authorityList.add(authority);
 
-        admin.setAuthority(authorityList);
+        admin.setAuthorities(authorityList);
 
         Hotel hotel = hotelService.findOne(dto.getItemID());
         if (hotel == null)
@@ -310,7 +310,7 @@ public class AuthenticationController {
         authority.setName(UserAuthorities.RAC_ADMIN.toString());
         authorityList.add(authority);
 
-        admin.setAuthority(authorityList);
+        admin.setAuthorities(authorityList);
 
         RentACar rentACar = rentACarService.findOne(dto.getItemID());
         if (rentACar == null)
@@ -348,7 +348,7 @@ public class AuthenticationController {
         authority.setName(UserAuthorities.SYS_ADMIN.toString());
         authorityList.add(authority);
 
-        admin.setAuthority(authorityList);
+        admin.setAuthorities(authorityList);
 
         userDetailsService.create(admin);
         mailService.sendActivationLink(admin);

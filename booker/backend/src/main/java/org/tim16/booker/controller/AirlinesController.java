@@ -52,7 +52,7 @@ public class AirlinesController {
             return new ResponseEntity<>(airline, HttpStatus.CREATED);
         } catch(Exception e)
         {   // catches duplicate name
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

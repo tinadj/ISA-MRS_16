@@ -91,19 +91,6 @@ public class UserController {
         return new ResponseEntity<>(userDetailsService.update(user), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update-profile-pic", method = RequestMethod.PUT, consumes ="multipart/form-data")
-    public ResponseEntity<User> updateProfilePic(MultipartFile file) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            String username = authentication.getName();
-            User user = userService.findByUsername(username);
-
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @RequestMapping(value = "/get-admins", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<User>> getAdmins( ) {

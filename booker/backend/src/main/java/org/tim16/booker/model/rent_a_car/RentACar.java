@@ -58,6 +58,13 @@ public class RentACar implements Serializable {
 
     public RentACar() { /* empty constructor */ }
 
+    public RentACar(String name, String description, BigDecimal latitude, BigDecimal longitude) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+    }
+
     public void addVehicle(Vehicle v)
     {
         if (v.getRentACar() != null)
@@ -73,7 +80,7 @@ public class RentACar implements Serializable {
 
         for (Vehicle v: getVehicles())
         {
-            if (v.getId() == id)
+            if (v.getId().equals(id))
             {
                 this.getVehicles().remove(v);
                 return;
@@ -95,7 +102,7 @@ public class RentACar implements Serializable {
     {
         for (BranchOffice bv : getBranchOffices())
         {
-            if (bv.getId() == id)
+            if (bv.getId().equals(id))
             {
                 this.getBranchOffices().remove(bv);
                 return;

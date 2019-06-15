@@ -129,10 +129,9 @@ public abstract class User implements UserDetails {
         return authorities;
     }
 
-    public void setAuthority(List<Authority> authorities) {
+    public void setAuthorities(List<Authority> authorities) {
         this.authorities = authorities;
     }
-
 
     @JsonIgnore
     @Override
@@ -161,9 +160,7 @@ public abstract class User implements UserDetails {
         this.enabled = enabled;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
-        this.authorities = authorities;
-    }
+
 
     public Timestamp getLastPasswordResetDate() {
         return lastPasswordResetDate;

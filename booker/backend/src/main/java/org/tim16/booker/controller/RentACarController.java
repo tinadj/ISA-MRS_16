@@ -9,6 +9,7 @@ import org.tim16.booker.comparator.RentACarCity;
 import org.tim16.booker.comparator.RentACarName;
 import org.tim16.booker.comparator.RentACarState;
 import org.tim16.booker.comparator.VehiclePrice;
+import org.tim16.booker.dto.DestinationDTO;
 import org.tim16.booker.dto.RACSearchParamsDTO;
 import org.tim16.booker.dto.RentACarDTO;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
@@ -20,7 +21,6 @@ import org.tim16.booker.service.DestinationService;
 import org.tim16.booker.service.RacReservationService;
 import org.tim16.booker.service.RentACarService;
 import org.tim16.booker.service.VehicleService;
-import sun.util.resources.CalendarData;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
@@ -34,8 +34,6 @@ public class RentACarController {
     @Autowired
     private DestinationService destinationService;
     @Autowired
-    private VehicleService vehicleService;
-    @Autowired
     private RacReservationService reservationService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -48,28 +46,15 @@ public class RentACarController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<RentACar> add(@RequestBody RentACarDTO dto) {
-        RentACar rentACar = new RentACar();
-        rentACar.setName(dto.getName());
-        rentACar.setDescription(dto.getDescription());
-        rentACar.setLatitude(dto.getLatitude());
-        rentACar.setLongitude(dto.getLongitude());
-
-        Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
-
-        if (destination == null) {
-            destination = new Destination();
-            destination.setCity(dto.getAddress().getCity());
-            destination.setState(dto.getAddress().getState());
-            destinationService.create(destination);
-        }
-        rentACar.setAddress(destination);
+        RentACar rentACar = new RentACar(dto.getName(), dto.getDescription(), dto.getLatitude(), dto.getLongitude());
+        rentACar.setAddress(generateDestination(dto.getAddress()));
 
         try {
             rentACar = rentACarService.create(rentACar);
             return new ResponseEntity<>(rentACar, HttpStatus.CREATED);
         } catch(Exception e)
         {   // catches duplicate name
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -96,16 +81,7 @@ public class RentACarController {
             rentACar.setDescription(dto.getDescription());
             rentACar.setLatitude(dto.getLatitude());
             rentACar.setLongitude(dto.getLongitude());
-
-            Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
-
-            if (destination == null) {
-                destination = new Destination();
-                destination.setCity(dto.getAddress().getCity());
-                destination.setState(dto.getAddress().getState());
-                destinationService.create(destination);
-            }
-            rentACar.setAddress(destination);
+            rentACar.setAddress(generateDestination(dto.getAddress()));
 
             return new ResponseEntity<>(rentACarService.update(rentACar), HttpStatus.OK);
         }
@@ -263,6 +239,21 @@ public class RentACarController {
         c.setTime(reservation.getPickUpDate());
         c.add(Calendar.DATE, reservation.getDays());
         return c.getTime();
+    }
+
+    /*
+    Vraca novu ili vec psotojecu destinaciju na kojoj se nalazi rent a ca r servis
+     */
+    private Destination generateDestination(DestinationDTO dto) {
+        Destination destination = destinationService.findByCityAndState(dto.getCity(), dto.getCity());
+
+        if (destination == null) {
+            destination = new Destination();
+            destination.setCity(dto.getCity());
+            destination.setState(dto.getState());
+            destinationService.create(destination);
+        }
+        return destination;
     }
 
 

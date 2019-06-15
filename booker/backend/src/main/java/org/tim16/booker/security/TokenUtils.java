@@ -61,16 +61,14 @@ public class TokenUtils {
     // Functions for refreshing JWT token
 
     public String refreshToken(String token) {
-        String refreshedToken;
-        try {
-            final Claims claims = this.getAllClaimsFromToken(token);
+        String refreshedToken = null;
+        final Claims claims = this.getAllClaimsFromToken(token);
+        if (claims != null) {
             claims.setIssuedAt(timeProvider.now());
             refreshedToken = Jwts.builder()
                     .setClaims(claims)
                     .setExpiration(generateExpirationDate())
                     .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
-        } catch (Exception e) {
-            refreshedToken = null;
         }
         return refreshedToken;
     }
@@ -103,8 +101,7 @@ public class TokenUtils {
     }
 
     private Boolean ignoreTokenExpiration(String token) {
-        String audience = this.getAudienceFromToken(token);
-        return false;
+        return true;
     }
 
     // Functions for getting data from token
@@ -123,46 +120,34 @@ public class TokenUtils {
     }
 
     public String getUsernameFromToken(String token) {
-        String username;
-        try {
-            final Claims claims = this.getAllClaimsFromToken(token);
+        String username = null;
+        final Claims claims = this.getAllClaimsFromToken(token);
+        if (claims != null)
             username = claims.getSubject();
-        } catch (Exception e) {
-            username = null;
-        }
         return username;
     }
 
     public Date getIssuedAtDateFromToken(String token) {
-        Date issueAt;
-        try {
-            final Claims claims = this.getAllClaimsFromToken(token);
+        Date issueAt = null;
+        final Claims claims = this.getAllClaimsFromToken(token);
+        if (claims != null)
             issueAt = claims.getIssuedAt();
-        } catch (Exception e) {
-            issueAt = null;
-        }
         return issueAt;
     }
 
     public String getAudienceFromToken(String token) {
-        String audience;
-        try {
-            final Claims claims = this.getAllClaimsFromToken(token);
+        String audience = null;
+        final Claims claims = this.getAllClaimsFromToken(token);
+        if (claims != null)
             audience = claims.getAudience();
-        } catch (Exception e) {
-            audience = null;
-        }
         return audience;
     }
 
     public Date getExpirationDateFromToken(String token) {
-        Date expiration;
-        try {
-            final Claims claims = this.getAllClaimsFromToken(token);
+        Date expiration = null;
+        final Claims claims = this.getAllClaimsFromToken(token);
+        if (claims != null)
             expiration = claims.getExpiration();
-        } catch (Exception e) {
-            expiration = null;
-        }
         return expiration;
     }
 

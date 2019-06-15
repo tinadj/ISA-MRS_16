@@ -31,7 +31,7 @@ public class FlightReservation {
         this.id = id;
     }
 
-    /*
+
     public Flight getFlight() {
         return flight;
     }
@@ -39,7 +39,6 @@ public class FlightReservation {
     public void setFlight(Flight flight) {
         this.flight = flight;
     }
-    */
 
     public Float getTotalPrice() {
         return totalPrice;

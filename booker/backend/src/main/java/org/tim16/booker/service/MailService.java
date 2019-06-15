@@ -58,8 +58,7 @@ public class MailService {
             RegisteredUser registeredUser = (RegisteredUser)user;
             message.setTo(registeredUser.getEmail());
             try {
-                content = String.format(
-                        HELLO + registeredUser.getName() + LOGIN_MSG,
+                content = String.format(HELLO + registeredUser.getName() + LOGIN_MSG,
                         URLEncoder.encode(token, ENC));
             } catch (UnsupportedEncodingException e) {
                 return;
@@ -68,9 +67,7 @@ public class MailService {
             AirlineAdmin admin = (AirlineAdmin) user;
             message.setTo((admin.getEmail()));
             try {
-                content = String.format(
-                        HELLO + admin.getName() + LOGIN_MSG +
-                                ADMIN_USERNAME + admin.getUsername() + ADMIN_PASSWORD,
+                content = String.format(HELLO + admin.getName() + LOGIN_MSG + ADMIN_USERNAME + admin.getUsername() + ADMIN_PASSWORD,
                         URLEncoder.encode(token, ENC));
             } catch (UnsupportedEncodingException e) {
                 return;
@@ -79,9 +76,7 @@ public class MailService {
             HotelAdmin admin = (HotelAdmin) user;
             message.setTo((admin.getEmail()));
             try {
-                content = String.format(
-                        HELLO + admin.getName() + LOGIN_MSG +
-                                ADMIN_USERNAME + admin.getUsername() + ADMIN_PASSWORD,
+                content = String.format(HELLO + admin.getName() + LOGIN_MSG + ADMIN_USERNAME + admin.getUsername() + ADMIN_PASSWORD,
                         URLEncoder.encode(token, ENC));
             } catch (UnsupportedEncodingException e) {
                 return;
@@ -90,9 +85,7 @@ public class MailService {
             RentACarAdmin admin = (RentACarAdmin) user;
             message.setTo((admin.getEmail()));
             try {
-                content = String.format(
-                        HELLO + admin.getName() + LOGIN_MSG +
-                                ADMIN_USERNAME + admin.getUsername() + ADMIN_PASSWORD,
+                content = String.format(HELLO + admin.getName() + LOGIN_MSG + ADMIN_USERNAME + admin.getUsername() + ADMIN_PASSWORD,
                         URLEncoder.encode(token, ENC));
             } catch (UnsupportedEncodingException e) {
                 return;
@@ -101,9 +94,7 @@ public class MailService {
             SysAdmin admin = (SysAdmin) user;
             message.setTo((admin.getEmail()));
             try {
-                content = String.format(
-                        HELLO + admin.getName() + LOGIN_MSG +
-                                ADMIN_USERNAME + admin.getUsername() + ADMIN_PASSWORD,
+                content = String.format(HELLO + admin.getName() + LOGIN_MSG + ADMIN_USERNAME + admin.getUsername() + ADMIN_PASSWORD,
                         URLEncoder.encode(token, ENC));
             } catch (UnsupportedEncodingException e) {
                 return;

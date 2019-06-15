@@ -24,7 +24,7 @@ public class Rate implements Serializable {
     private RateType type;
 
     @Column(nullable = false)
-    private Integer rate;
+    private Integer rateValue;
 
     public Rate() { /* empty constructor */}
 
@@ -52,11 +52,11 @@ public class Rate implements Serializable {
         this.type = type;
     }
 
-    public Integer getRate() {
-        return rate;
+    public Integer getRateValue() {
+        return rateValue;
     }
 
-    public void setRate(Integer rate) {
-        this.rate = rate;
+    public void setRateValue(Integer rate) {
+        this.rateValue = rate;
     }
 }

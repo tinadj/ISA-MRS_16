@@ -92,7 +92,7 @@ public class HotelController {
             hotel = service.create(hotel);
             return new ResponseEntity<>(hotel, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 

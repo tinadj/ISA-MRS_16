@@ -137,10 +137,8 @@ public class VehicleController {
     public HttpStatus isReserved(@PathVariable Integer id) {
         try
         {
-            Vehicle vehicle = vehicleService.findOne(id);
-
             for (RentACarReservation reservation: reservationService.findAll()) {
-                if (reservation.getVehicle().getId() == id)
+                if (reservation.getVehicle().getId().equals(id))
                     return HttpStatus.FORBIDDEN;
             }
             return HttpStatus.OK;
@@ -250,7 +248,7 @@ public class VehicleController {
      */
     private boolean isReserved(Vehicle vehicle, Date pickUp, Date dropOff) {
         for (RentACarReservation reservation: reservationService.findAll()) {
-            if (reservation.getVehicle().getId() == vehicle.getId()) {
+            if (reservation.getVehicle().getId().equals(vehicle.getId())) {
                 Date returnDate = calculateReturnDate(reservation);
 
                 if (reservation.getPickUpDate().before(dropOff) && returnDate.after(pickUp)) {
@@ -276,7 +274,7 @@ public class VehicleController {
      */
     private List<Vehicle> searchByPickUpLocation(List<Vehicle> vehicles, List<Vehicle> result, Integer pickUpLocation) {
         for (Vehicle vehicle: vehicles) {
-            if (vehicle.getCurrentlyIn().getId() != pickUpLocation)
+            if (!vehicle.getCurrentlyIn().getId().equals(pickUpLocation))
                 result.remove(vehicle);
         }
         return result;

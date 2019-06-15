@@ -111,9 +111,8 @@ public class RacReservationController {
             while (!start.after(end)) {
                 vehicleCnt = 0;
                 for (RentACarReservation reservation : racReservationService.findAll()) {
-                    if (reservation.getVehicle().getRentACar().getId() == rac) {
-                        if (checkIfSameDay(reservation.getPickUpDate(), start))
-                            vehicleCnt++;
+                    if (reservation.getVehicle().getRentACar().getId().equals(rac) && checkIfSameDay(reservation.getPickUpDate(), start)) {
+                        vehicleCnt++;
                     }
                 }
                 result.add(vehicleCnt);
@@ -217,9 +216,8 @@ public class RacReservationController {
         while (!start.after(end)) {
             income = 0f;
             for (RentACarReservation reservation : racReservationService.findAll()) {
-                if (reservation.getVehicle().getRentACar().getId() == rac) {
-                    if (checkIfSameDay(reservation.getPickUpDate(), start))
-                        income += reservation.getTotalPrice();
+                if (reservation.getVehicle().getRentACar().getId().equals(rac) && checkIfSameDay(reservation.getPickUpDate(), start)) {
+                    income += reservation.getTotalPrice();
                 }
             }
             result.add(income);
@@ -260,9 +258,8 @@ public class RacReservationController {
 
         while (!start.after(end)) {
             for (RentACarReservation reservation : racReservationService.findAll()) {
-                if (reservation.getVehicle().getRentACar().getId() == rac) {
-                    if (checkIfSameDay(reservation.getPickUpDate(), start))
-                        vehicleCnt++;
+                if (reservation.getVehicle().getRentACar().getId().equals(rac) && checkIfSameDay(reservation.getPickUpDate(), start)) {
+                    vehicleCnt++;
                 }
             }
             start = addDays(start, 1);
@@ -291,11 +288,6 @@ public class RacReservationController {
     Racuna broj meseci izmedju dva datuma
      */
     private int getMonths(Date date1, Date date2) {
-        /*
-        long monthsBetween = ChronoUnit.MONTHS.between(
-                LocalDate.parse(date1).withDayOfMonth(1),
-                LocalDate.parse(date2).withDayOfMonth(1));
-                */
         Calendar cal = Calendar.getInstance();
         cal.setTime(date1);
         int month1 = cal.get(Calendar.MONTH);
