@@ -21,7 +21,7 @@ public class FlightReservation {
 
     private Float totalPrice;
 
-    public FlightReservation() {}
+    public FlightReservation() { /* empty constructor */}
 
     public Integer getId() {
         return id;

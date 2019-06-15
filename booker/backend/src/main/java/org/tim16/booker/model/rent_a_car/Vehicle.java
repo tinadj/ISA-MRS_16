@@ -53,7 +53,7 @@ public class Vehicle {
     @Version
     private Long version;
 
-    public Vehicle() {}
+    public Vehicle() { /* empty constructor */}
 
     public Integer getId() {
         return id;

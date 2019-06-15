@@ -24,7 +24,7 @@ public class Seat {
     @Column(nullable = false)
     private TravelClass travelClass;
 
-    public Seat() {}
+    public Seat() { /* empty constructor */}
 
     public Integer getId() {
         return id;

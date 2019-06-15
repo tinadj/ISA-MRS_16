@@ -21,6 +21,11 @@ import java.util.List;
 @RequestMapping(value = "/api/discounts")
 public class DiscountsController {
 
+    private static final String REGULAR = "REGULAR";
+    private static final String BRONZE = "BRONZE";
+    private static final String SILVER = "SILVER";
+    private static final String GOLD = "GOLD";
+
     @Autowired
     UserDiscountsService discountsService;
 
@@ -29,10 +34,10 @@ public class DiscountsController {
     public ResponseEntity<List<UserDiscounts>> getAll() {
         List<UserDiscounts> result = new ArrayList<>();
 
-        UserDiscounts regularUser = discountsService.findByUserType("REGULAR");
-        UserDiscounts bronzeUser = discountsService.findByUserType("BRONZE");
-        UserDiscounts silverUser = discountsService.findByUserType("SILVER");
-        UserDiscounts goldUser = discountsService.findByUserType("GOLD");
+        UserDiscounts regularUser = discountsService.findByUserType(REGULAR);
+        UserDiscounts bronzeUser = discountsService.findByUserType(BRONZE);
+        UserDiscounts silverUser = discountsService.findByUserType(SILVER);
+        UserDiscounts goldUser = discountsService.findByUserType(GOLD);
 
         result.add(regularUser);
         result.add(bronzeUser);
@@ -45,21 +50,21 @@ public class DiscountsController {
     @RequestMapping(value = "/get-regular", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<UserDiscounts> getRegular() {
-        UserDiscounts discount = discountsService.findByUserType("REGULAR");
+        UserDiscounts discount = discountsService.findByUserType(REGULAR);
         return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/get-bronze", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<UserDiscounts> getBronze() {
-        UserDiscounts discount = discountsService.findByUserType("BRONZE");
+        UserDiscounts discount = discountsService.findByUserType(BRONZE);
         return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/get-silver", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<UserDiscounts> getSilver() {
-        UserDiscounts discount = discountsService.findByUserType("SILVER");
+        UserDiscounts discount = discountsService.findByUserType(SILVER);
         return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
     }
 
@@ -67,17 +72,17 @@ public class DiscountsController {
     @RequestMapping(value = "/get-gold", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<UserDiscounts> getGold() {
-        UserDiscounts discount = discountsService.findByUserType("GOLD");
+        UserDiscounts discount = discountsService.findByUserType(GOLD);
         return new ResponseEntity<UserDiscounts>(discount, HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseEntity<HttpStatus> create() {
-        UserDiscounts regularUser = discountsService.findByUserType("REGULAR");
-        UserDiscounts bronzeUser = discountsService.findByUserType("BRONZE");
-        UserDiscounts silverUser = discountsService.findByUserType("SILVER");
-        UserDiscounts goldUser = discountsService.findByUserType("GOLD");
+        UserDiscounts regularUser = discountsService.findByUserType(REGULAR);
+        UserDiscounts bronzeUser = discountsService.findByUserType(BRONZE);
+        UserDiscounts silverUser = discountsService.findByUserType(SILVER);
+        UserDiscounts goldUser = discountsService.findByUserType(GOLD);
 
         if (regularUser == null || bronzeUser == null || silverUser == null || goldUser == null) {
             regularUser = new UserDiscounts(UserType.REGULAR, 0, 0);
@@ -99,10 +104,10 @@ public class DiscountsController {
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<UserDiscounts>> update(@RequestBody DiscountsDTO dto) {
-        UserDiscounts regularUser = discountsService.findByUserType("REGULAR");
-        UserDiscounts bronzeUser = discountsService.findByUserType("BRONZE");
-        UserDiscounts silverUser = discountsService.findByUserType("SILVER");
-        UserDiscounts goldUser = discountsService.findByUserType("GOLD");
+        UserDiscounts regularUser = discountsService.findByUserType(REGULAR);
+        UserDiscounts bronzeUser = discountsService.findByUserType(BRONZE);
+        UserDiscounts silverUser = discountsService.findByUserType(SILVER);
+        UserDiscounts goldUser = discountsService.findByUserType(GOLD);
 
         regularUser.setDiscount(dto.getRegularDiscount());
         bronzeUser.setMinPts(dto.getBronzeMinPts());

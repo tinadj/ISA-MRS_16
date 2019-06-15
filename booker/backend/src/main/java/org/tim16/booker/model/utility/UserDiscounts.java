@@ -20,7 +20,7 @@ public class UserDiscounts {
 
     private Integer discount;
 
-    public UserDiscounts() {}
+    public UserDiscounts() { /* empty constructor */}
 
     public UserDiscounts(UserType userType, Integer minPts, Integer discount) {
         this.userType = userType;

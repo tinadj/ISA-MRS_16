@@ -28,7 +28,7 @@ public class Ticket {
 
     private Boolean reserved;
 
-    public Ticket() {}
+    public Ticket() { /* empty constructor */}
 
     public Integer getId() {
         return id;

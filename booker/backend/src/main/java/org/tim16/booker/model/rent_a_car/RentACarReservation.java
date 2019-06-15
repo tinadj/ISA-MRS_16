@@ -35,7 +35,7 @@ public class RentACarReservation {
 
     private Float totalPrice;
 
-    public RentACarReservation() {}
+    public RentACarReservation() { /* empty constructor */}
 
     public Integer getId() {
         return id;

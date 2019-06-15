@@ -18,7 +18,7 @@ public class Destination {
 
 
 
-    public Destination() {}
+    public Destination() { /* empty constructor */}
 
     public Integer getId() {
         return id;

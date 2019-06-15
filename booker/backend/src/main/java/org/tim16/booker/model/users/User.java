@@ -44,7 +44,7 @@ public abstract class User implements UserDetails {
 
     private Timestamp lastPasswordResetDate;
 
-    public User() {}
+    public User() { /* empty constructor */}
 
     public User(String username, String password) {
         this.username = username;

@@ -18,7 +18,7 @@ public class RoomReservation {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<ExtraServicePrice> extraServices = new HashSet<ExtraServicePrice>();
 
-    public RoomReservation() {}
+    public RoomReservation() { /* empty constructor */}
 
     public Integer getId() {
         return id;

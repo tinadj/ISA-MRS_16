@@ -15,7 +15,7 @@ public class LuggagePrice {
 
     private Float price;
 
-    public LuggagePrice() {}
+    public LuggagePrice() { /* empty constructor */}
 
     public Integer getId() {
         return id;

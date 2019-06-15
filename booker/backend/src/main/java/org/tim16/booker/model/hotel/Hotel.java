@@ -8,6 +8,7 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "hotels")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Hotel {
+public class Hotel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,7 +58,7 @@ public class Hotel {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="hotel")
     private Set<HotelAdmin> admins = new HashSet<HotelAdmin>();
 
-    public Hotel() {}
+    public Hotel() { /* empty constructor */}
 
     /* Zadovoljava obostranu vezu izmedju sobe i hotela (ovde se vezuje soba za hotel) */
     public void add(Room p) {

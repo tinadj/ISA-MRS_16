@@ -7,6 +7,7 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "airlines")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Airline {
+public class Airline implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,7 +61,7 @@ public class Airline {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="airline")
     private Set<AirlineAdmin> admins = new HashSet<AirlineAdmin>();
 
-    public Airline() {}
+    public Airline() { /* empty constructor */}
 
     public void addAdmin(AirlineAdmin admin) {
         if (admin.getAirline() != null)

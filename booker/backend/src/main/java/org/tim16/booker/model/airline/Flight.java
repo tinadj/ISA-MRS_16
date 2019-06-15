@@ -58,7 +58,7 @@ public class Flight {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<Rate>();
 
-    public Flight() {}
+    public Flight() { /* empty constructor */}
 
     public Integer getId() {
         return id;

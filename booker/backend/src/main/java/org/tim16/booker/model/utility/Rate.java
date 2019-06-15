@@ -4,10 +4,11 @@ package org.tim16.booker.model.utility;
 import org.tim16.booker.model.users.User;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "rates")
-public class Rate {
+public class Rate implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +26,7 @@ public class Rate {
     @Column(nullable = false)
     private Integer rate;
 
-    public Rate() {}
+    public Rate() { /* empty constructor */}
 
     public Integer getId() {
         return id;

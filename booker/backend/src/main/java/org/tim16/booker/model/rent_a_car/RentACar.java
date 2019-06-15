@@ -8,6 +8,7 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.Set;
 @Entity
 @Table(name = "rent_a_cars")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class RentACar {
+public class RentACar implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +56,7 @@ public class RentACar {
     private Set<RentACarAdmin> admins = new HashSet<RentACarAdmin>();
 
 
-    public RentACar() {}
+    public RentACar() { /* empty constructor */ }
 
     public void addVehicle(Vehicle v)
     {

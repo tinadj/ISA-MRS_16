@@ -30,7 +30,7 @@ public class HotelReservation {
 
     private Float totalPrice;
 
-    public HotelReservation() {}
+    public HotelReservation() { /* empty constructor */}
 
     public Integer getId() {
         return id;

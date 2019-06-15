@@ -17,6 +17,10 @@
 		<version>2.1.3.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
+	<properties>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
 	
 	<modules>
         <module>frontend</module>

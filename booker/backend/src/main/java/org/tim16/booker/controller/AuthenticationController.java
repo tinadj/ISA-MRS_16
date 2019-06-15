@@ -156,7 +156,7 @@ public class AuthenticationController {
     }
 
     @RequestMapping(value = "/refresh", method = RequestMethod.POST)
-    public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request) {
+    public ResponseEntity<UserTokenState> refreshAuthenticationToken(HttpServletRequest request) {
 
         String token = tokenUtils.getToken(request);
         String username = this.tokenUtils.getUsernameFromToken(token);
@@ -166,21 +166,21 @@ public class AuthenticationController {
             String refreshedToken = tokenUtils.refreshToken(token);
             int expiresIn = tokenUtils.getExpiredIn();
 
-            return ResponseEntity.ok(new UserTokenState(refreshedToken, expiresIn));
+            return new ResponseEntity(new UserTokenState(refreshedToken, expiresIn), HttpStatus.OK);
         } else {
             UserTokenState userTokenState = new UserTokenState();
-            return ResponseEntity.badRequest().body(userTokenState);
+            return new ResponseEntity(userTokenState, HttpStatus.BAD_REQUEST);
         }
     }
 
 
     @RequestMapping(value = "/change-password", method = RequestMethod.POST)
-    public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
+    public ResponseEntity<HashMap> changePassword(@RequestBody PasswordChanger passwordChanger) {
         userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
 
         Map<String, String> result = new HashMap<>();
         result.put("result", "success");
-        return ResponseEntity.accepted().body(result);
+        return new ResponseEntity(result, HttpStatus.ACCEPTED);
     }
 
     static class PasswordChanger {

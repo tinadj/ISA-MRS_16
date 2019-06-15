@@ -34,7 +34,7 @@ public class BranchOffice {
 
     private BigDecimal longitude;
 
-    public BranchOffice() {}
+    public BranchOffice() { /* empty constructor */}
 
     public Integer getId() {
         return id;

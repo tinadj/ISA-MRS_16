@@ -45,6 +45,8 @@ public class RacReservationController {
     @Autowired
     private UserService userService;
 
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+
     @RequestMapping(value = "reserve-vehicle", method = RequestMethod.POST, consumes="application/json")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<HttpStatus> reserveVehicle(@RequestBody RacReservationDTO dto) {
@@ -102,8 +104,8 @@ public class RacReservationController {
         List<Integer> result = new ArrayList<>();
 
         try {
-            Date start = new SimpleDateFormat("yyyy-MM-dd").parse(strStartDate);
-            Date end = new SimpleDateFormat("yyyy-MM-dd").parse(strEndDate);
+            Date start = new SimpleDateFormat(DATE_FORMAT).parse(strStartDate);
+            Date end = new SimpleDateFormat(DATE_FORMAT).parse(strEndDate);
             Integer vehicleCnt;
 
             while (!start.after(end)) {
@@ -130,8 +132,8 @@ public class RacReservationController {
         List<Integer> result = new ArrayList<>();
 
         try {
-            Date start = new SimpleDateFormat("yyyy-MM-dd").parse(strStartDate);
-            Date end = new SimpleDateFormat("yyyy-MM-dd").parse(strEndDate);
+            Date start = new SimpleDateFormat(DATE_FORMAT).parse(strStartDate);
+            Date end = new SimpleDateFormat(DATE_FORMAT).parse(strEndDate);
             int weeks = getFullWeeks(start, end);
 
             Date d2 = addDays(start, 7);
@@ -163,8 +165,8 @@ public class RacReservationController {
         Calendar cal = Calendar.getInstance();
 
         try {
-            Date start = new SimpleDateFormat("yyyy-MM-dd").parse(strStartDate);
-            Date end = new SimpleDateFormat("yyyy-MM-dd").parse(strEndDate);
+            Date start = new SimpleDateFormat(DATE_FORMAT).parse(strStartDate);
+            Date end = new SimpleDateFormat(DATE_FORMAT).parse(strEndDate);
             int months = getMonths(start, end);
 
             cal.setTime(start);
