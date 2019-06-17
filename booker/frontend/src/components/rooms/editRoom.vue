@@ -165,15 +165,15 @@ export default {
           this.breakfast = true
         else if(response.data.extraServices[i] == 'POOL')
           this.pool = true
-        else if(response.data.extraServices[i] == 'wellnessSpa')
+        else if(response.data.extraServices[i] == 'WELLNESS_SPA')
           this.wellnessSpa = true
         else if(response.data.extraServices[i] == 'TV')
           this.tv = true
         else if(response.data.extraServices[i] == 'MINIBAR')
           this.minibar = true
-        else if(response.data.extraServices[i] == 'hotelRestaurant')
+        else if(response.data.extraServices[i] == 'HOTEL_RESTAURANT')
           this.hotelRestaurant = true
-        else if(response.data.extraServices[i] == 'airportTransfer')
+        else if(response.data.extraServices[i] == 'AIRPORT_TRANSFER')
           this.airportTransfer = true
         else if(response.data.extraServices[i] == 'PARKING')
           this.parking = true

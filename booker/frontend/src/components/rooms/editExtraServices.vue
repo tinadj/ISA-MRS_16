@@ -113,6 +113,7 @@ export default {
     let api = '/hotels/' + this.$route.params.id + '/extraprices';
     AXIOS.get(api)
     .then(response => {
+      console.log(response.data)
       this.id = response.data.id;
       this.breakfast = response.data.breakfast;
       this.hotelRestaurant = response.data.hotelRestaurant;
