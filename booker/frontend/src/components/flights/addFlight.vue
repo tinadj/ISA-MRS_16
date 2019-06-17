@@ -15,29 +15,47 @@
 
             <b-form-group>
                Departure Date
-               <v-date-picker mode="range" v-model="departureDate"/>
+               <b-form-input v-model="departureDate" type="datetime-local"></b-form-input>
              </b-form-group>
 
             <b-form-group>
               Arrival Date
-              <v-date-picker mode="range" v-model="arrivalDate"/>
+               <b-form-input v-model="arrivalDate" type="datetime-local"></b-form-input>
             </b-form-group>
 
             <b-form-group>
               <b-form-input v-model="number" placeholder="Transfer Number" type="number" step="1"></b-form-input>
             </b-form-group>
 
-            <b-form-group>
-              <b-form-input v-model="firstClass" placeholder="Number of seats in First Class" type="number" step="1"></b-form-input>
-            </b-form-group>
 
-            <b-form-group>
-              <b-form-input v-model="businessClass" placeholder="Number of seats in Business Class" type="number" step="1"></b-form-input>
-            </b-form-group>
+            <div class="row">
+              <b-form-group class="col-xs-12 col-sm-6" >
+                <b-form-input v-model="firstClass" placeholder="Number of seats in First Class" type="number" step="1"></b-form-input>
+              </b-form-group>
 
-            <b-form-group>
-              <b-form-input v-model="economyClass" placeholder="Number of seats in Economy Class" type="number" step="1"></b-form-input>
-            </b-form-group>
+
+              <b-form-group  class="col-xs-12 col-sm-6" >
+                <b-form-input v-model="firstClassPrice" placeholder="Price for First Class" type="number" step="0.0001"></b-form-input>
+              </b-form-group>
+            </div>
+
+            <div class="row">
+              <b-form-group class="col-xs-12 col-sm-6">
+                <b-form-input v-model="businessClass" placeholder="Number of seats in Business Class" type="number" step="1"></b-form-input>
+              </b-form-group>
+               <b-form-group  class="col-xs-12 col-sm-6" >
+                <b-form-input v-model="businessClassPrice" placeholder="Price for Business Class" type="number" step="0.0001"></b-form-input>
+              </b-form-group>
+            </div>
+
+            <div class="row">
+              <b-form-group class="col-xs-12 col-sm-6">
+                <b-form-input v-model="economyClass" placeholder="Number of seats in Economy Class" type="number" step="1"></b-form-input>
+              </b-form-group>
+              <b-form-group  class="col-xs-12 col-sm-6" >
+                <b-form-input v-model="economyClassPrice" placeholder="Price for Economy Class" type="number" step="0.0001"></b-form-input>
+              </b-form-group>
+            </div>
 
           <b-button variant="outline-primary" type="submit" class="mr-1">Add</b-button>
         </form><br>
@@ -62,8 +80,11 @@ export default {
       destinations: [],
       number: null,
       firstClass: null,
+      firstClassPrice: null,
       businessClass: null,
+      businessClassPrice: null,
       economyClass: null,
+      economyClassPrice: null,
       success: false,
       error: false
     }
