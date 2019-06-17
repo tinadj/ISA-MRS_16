@@ -3,10 +3,11 @@ package org.tim16.booker.model.airline;
 import org.tim16.booker.model.users.Reservation;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "flight_reservations")
-public class FlightReservation {
+public class FlightReservation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +22,7 @@ public class FlightReservation {
 
     private Float totalPrice;
 
-    public FlightReservation() {}
+    public FlightReservation() { /* empty constructor */}
 
     public Integer getId() {
         return id;
@@ -31,7 +32,7 @@ public class FlightReservation {
         this.id = id;
     }
 
-    /*
+
     public Flight getFlight() {
         return flight;
     }
@@ -39,7 +40,6 @@ public class FlightReservation {
     public void setFlight(Flight flight) {
         this.flight = flight;
     }
-    */
 
     public Float getTotalPrice() {
         return totalPrice;

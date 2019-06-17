@@ -26,7 +26,7 @@ public class RoomPrice {
 
     private Float pricePerNight;
 
-    public RoomPrice() {}
+    public RoomPrice() { /* empty constructor */}
 
     public Integer getId() {
         return id;

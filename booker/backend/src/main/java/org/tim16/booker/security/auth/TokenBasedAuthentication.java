@@ -15,10 +15,6 @@ public class TokenBasedAuthentication extends AbstractAuthenticationToken {
         this.principle = principle;
     }
 
-    public String getToken() {
-        return token;
-    }
-
     public void setToken(String token) {
         this.token = token;
     }
@@ -38,4 +34,13 @@ public class TokenBasedAuthentication extends AbstractAuthenticationToken {
         return principle;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

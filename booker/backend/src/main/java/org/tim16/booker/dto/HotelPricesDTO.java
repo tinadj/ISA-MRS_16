@@ -4,11 +4,11 @@ public class HotelPricesDTO
 {
     private Integer id;
     private float breakfast;
-    private float hotel_restaurant;
-    private float airport_transfer;
+    private float hotelRestaurant;
+    private float airportTransfer;
     private float parking;
     private float pool;
-    private float wellness_spa;
+    private float wellnessSpa;
     private float wifi;
     private float tv;
     private float minibar;
@@ -17,14 +17,14 @@ public class HotelPricesDTO
     {}
 
 
-    public HotelPricesDTO(Integer id, float breakfast, float hotel_restaurant, float airport_transfer, float parking, float pool, float wellness_spa, float wifi, float tv, float minibar) {
+    public HotelPricesDTO(Integer id, float breakfast, float hotelRestaurant, float airportTransfer, float parking, float pool, float wellnessSpa, float wifi, float tv, float minibar) {
         this.id = id;
         this.breakfast = breakfast;
-        this.hotel_restaurant = hotel_restaurant;
-        this.airport_transfer = airport_transfer;
+        this.hotelRestaurant = hotelRestaurant;
+        this.airportTransfer = airportTransfer;
         this.parking = parking;
         this.pool = pool;
-        this.wellness_spa = wellness_spa;
+        this.wellnessSpa = wellnessSpa;
         this.wifi = wifi;
         this.tv = tv;
         this.minibar = minibar;
@@ -46,20 +46,20 @@ public class HotelPricesDTO
         this.breakfast = breakfast;
     }
 
-    public float getHotel_restaurant() {
-        return hotel_restaurant;
+    public float getHotelRestaurant() {
+        return hotelRestaurant;
     }
 
-    public void setHotel_restaurant(float hotel_restaurant) {
-        this.hotel_restaurant = hotel_restaurant;
+    public void setHotelRestaurant(float hotelRestaurant) {
+        this.hotelRestaurant = hotelRestaurant;
     }
 
-    public float getAirport_transfer() {
-        return airport_transfer;
+    public float getAirportTransfer() {
+        return airportTransfer;
     }
 
-    public void setAirport_transfer(float airport_transfer) {
-        this.airport_transfer = airport_transfer;
+    public void setAirportTransfer(float airportTransfer) {
+        this.airportTransfer = airportTransfer;
     }
 
     public float getParking() {
@@ -78,12 +78,12 @@ public class HotelPricesDTO
         this.pool = pool;
     }
 
-    public float getWellness_spa() {
-        return wellness_spa;
+    public float getWellnessSpa() {
+        return wellnessSpa;
     }
 
-    public void setWellness_spa(float wellness_spa) {
-        this.wellness_spa = wellness_spa;
+    public void setWellnessSpa(float wellnessSpa) {
+        this.wellnessSpa = wellnessSpa;
     }
 
     public float getWifi() {

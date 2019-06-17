@@ -2,17 +2,17 @@ package org.tim16.booker.model.hotel;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "rooms")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Room {
+public class Room implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,16 +33,16 @@ public class Room {
 
     @JsonBackReference("room-price")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="room")
-    private Set<RoomPrice> roomPrice = new HashSet<RoomPrice>();
+    private Set<RoomPrice> roomPrice = new HashSet<>();
 
     @ElementCollection(targetClass = ExtraService.class)
     @Enumerated(EnumType.STRING)
-    private Set<ExtraService> extraservices = new HashSet<ExtraService>();
+    private Set<ExtraService> extraservices = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rating = new HashSet<Rate>();
+    private Set<Rate> rating = new HashSet<>();
 
-    public Room() {}
+    public Room() { /* empty constructor */}
 
     public Integer getId() {
         return id;

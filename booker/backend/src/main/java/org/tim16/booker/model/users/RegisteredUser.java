@@ -16,15 +16,15 @@ public class RegisteredUser extends User {
     private UserType type;
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Friendship> friends = new HashSet<Friendship>();
+    private Set<Friendship> friends = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
-    private Set<Reservation> reservations = new HashSet<Reservation>();
+    private Set<Reservation> reservations = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rates = new HashSet<Rate>();
+    private Set<Rate> rates = new HashSet<>();
 
-    public RegisteredUser() {}
+    public RegisteredUser() {  /* empty constructor */}
 
     public RegisteredUser(String username, String password, String name, String lastname, String email, String city, Integer phoneNum) {
         super(username, password, name, lastname, email, city, phoneNum);
