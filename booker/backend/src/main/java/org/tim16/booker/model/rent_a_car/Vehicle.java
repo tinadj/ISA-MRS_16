@@ -2,17 +2,17 @@ package org.tim16.booker.model.rent_a_car;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "vehicles")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Vehicle {
+public class Vehicle implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +35,8 @@ public class Vehicle {
 
     private Float price;
 
+    private Integer discount;
+
     private String description;
 
     @JsonBackReference("rent_a_car-vehicles")
@@ -46,9 +48,12 @@ public class Vehicle {
     private BranchOffice currentlyIn;
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rating = new HashSet<Rate>();
+    private Set<Rate> rating = new HashSet<>();
 
-    public Vehicle() {}
+    @Version
+    private Long version;
+
+    public Vehicle() { /* empty constructor */}
 
     public Integer getId() {
         return id;
@@ -144,5 +149,21 @@ public class Vehicle {
 
     public void setCurrentlyIn(BranchOffice currentlyIn) {
         this.currentlyIn = currentlyIn;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

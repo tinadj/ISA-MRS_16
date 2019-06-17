@@ -1,10 +1,11 @@
 package org.tim16.booker.model.hotel;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "extra_service_prices")
-public class ExtraServicePrice {
+public class ExtraServicePrice implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

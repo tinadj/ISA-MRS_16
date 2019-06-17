@@ -3,11 +3,12 @@ package org.tim16.booker.model.rent_a_car;
 import org.tim16.booker.model.users.Reservation;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "rent_a_car_reservations")
-public class RentACarReservation {
+public class RentACarReservation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +16,7 @@ public class RentACarReservation {
 
     @OneToOne
     private Reservation reservation;
+
 
     @ManyToOne
     private Vehicle vehicle;
@@ -24,11 +26,17 @@ public class RentACarReservation {
 
     private Integer days;
 
+    @ManyToOne
+    private BranchOffice pickUpLocation;
+
+    @ManyToOne
+    private BranchOffice dropOffLocation;
+
     private Integer passangerNum;
 
     private Float totalPrice;
 
-    public RentACarReservation() {}
+    public RentACarReservation() { /* empty constructor */}
 
     public Integer getId() {
         return id;
@@ -85,4 +93,21 @@ public class RentACarReservation {
     public void setReservation(Reservation reservation) {
         this.reservation = reservation;
     }
+
+    public BranchOffice getPickUpLocation() {
+        return pickUpLocation;
+    }
+
+    public void setPickUpLocation(BranchOffice pickUpLocation) {
+        this.pickUpLocation = pickUpLocation;
+    }
+
+    public BranchOffice getDropOffLocation() {
+        return dropOffLocation;
+    }
+
+    public void setDropOffLocation(BranchOffice dropOffLocation) {
+        this.dropOffLocation = dropOffLocation;
+    }
+
 }

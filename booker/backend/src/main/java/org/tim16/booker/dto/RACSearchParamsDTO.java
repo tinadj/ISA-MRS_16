@@ -68,4 +68,5 @@ public class RACSearchParamsDTO {
     public void setCriteria(Integer criteria) {
         this.criteria = criteria;
     }
+
 }

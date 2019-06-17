@@ -17,12 +17,14 @@ public class RacReservationService {
 
     public List<RentACarReservation> findAll() { return repository.findAll(); }
 
-    public RentACarReservation create(RentACarReservation rentACar) {
-        return repository.save(rentACar);
+
+    public RentACarReservation create(RentACarReservation reservation) {
+        return repository.save(reservation);
     }
 
-    public RentACarReservation update(RentACarReservation rentACar) {
-        return repository.save(rentACar);
+
+    public RentACarReservation update(RentACarReservation reservation) {
+        return repository.save(reservation);
     }
 
     public void remove(Integer id) {

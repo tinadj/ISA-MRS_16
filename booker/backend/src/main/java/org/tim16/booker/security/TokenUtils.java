@@ -17,35 +17,34 @@ import javax.servlet.http.HttpServletRequest;
 public class TokenUtils {
 
     @Value("backend")
-    public String APP_NAME;
+    public String appName;
 
     @Value("somesecret")
-    public String SECRET;
+    public String secret;
 
     @Value("300")
-    private int EXPIRES_IN;
+    private int expiresIn;
 
     @Value("Authorization")
-    private String AUTH_HEADER;
+    private String authHeader;
 
-    static final String AUDIENCE_UNKNOWN = "unknown";
     static final String AUDIENCE_WEB = "web";
 
     @Autowired
     TimeProvider timeProvider;
 
-    private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
+    private SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 
     // Functions for generating new JWT token
 
     public String generateToken(String username) {
         return Jwts.builder()
-                .setIssuer(APP_NAME)
+                .setIssuer(appName)
                 .setSubject(username)
                 .setAudience(generateAudience())
                 .setIssuedAt(timeProvider.now())
                 .setExpiration(generateExpirationDate())
-                .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
+                .signWith(signatureAlgorithm, secret).compact();
     }
 
     private String generateAudience() {
@@ -54,23 +53,20 @@ public class TokenUtils {
     }
 
     private Date generateExpirationDate() {
-        long expiresIn = EXPIRES_IN;
         return new Date(timeProvider.now().getTime() + expiresIn * 1000);
     }
 
     // Functions for refreshing JWT token
 
     public String refreshToken(String token) {
-        String refreshedToken;
-        try {
-            final Claims claims = this.getAllClaimsFromToken(token);
+        String refreshedToken = null;
+        final Claims claims = this.getAllClaimsFromToken(token);
+        if (claims != null) {
             claims.setIssuedAt(timeProvider.now());
             refreshedToken = Jwts.builder()
                     .setClaims(claims)
                     .setExpiration(generateExpirationDate())
-                    .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
-        } catch (Exception e) {
-            refreshedToken = null;
+                    .signWith(signatureAlgorithm, secret).compact();
         }
         return refreshedToken;
     }
@@ -78,7 +74,7 @@ public class TokenUtils {
     public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
         final Date created = this.getIssuedAtDateFromToken(token);
         return (!(this.isCreatedBeforeLastPasswordReset(created, lastPasswordReset))
-                && (!(this.isTokenExpired(token)) || this.ignoreTokenExpiration(token)));
+                && (!(this.isTokenExpired(token)) || this.ignoreTokenExpiration()));
     }
 
     // Functions for validating JWT token data
@@ -102,9 +98,8 @@ public class TokenUtils {
         return expiration.before(timeProvider.now());
     }
 
-    private Boolean ignoreTokenExpiration(String token) {
-        String audience = this.getAudienceFromToken(token);
-        return false;
+    private Boolean ignoreTokenExpiration() {
+        return true;
     }
 
     // Functions for getting data from token
@@ -113,7 +108,7 @@ public class TokenUtils {
         Claims claims;
         try {
             claims = Jwts.parser()
-                    .setSigningKey(SECRET)
+                    .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
@@ -123,66 +118,54 @@ public class TokenUtils {
     }
 
     public String getUsernameFromToken(String token) {
-        String username;
-        try {
-            final Claims claims = this.getAllClaimsFromToken(token);
+        String username = null;
+        final Claims claims = this.getAllClaimsFromToken(token);
+        if (claims != null)
             username = claims.getSubject();
-        } catch (Exception e) {
-            username = null;
-        }
         return username;
     }
 
     public Date getIssuedAtDateFromToken(String token) {
-        Date issueAt;
-        try {
-            final Claims claims = this.getAllClaimsFromToken(token);
+        Date issueAt = null;
+        final Claims claims = this.getAllClaimsFromToken(token);
+        if (claims != null)
             issueAt = claims.getIssuedAt();
-        } catch (Exception e) {
-            issueAt = null;
-        }
         return issueAt;
     }
 
     public String getAudienceFromToken(String token) {
-        String audience;
-        try {
-            final Claims claims = this.getAllClaimsFromToken(token);
+        String audience = null;
+        final Claims claims = this.getAllClaimsFromToken(token);
+        if (claims != null)
             audience = claims.getAudience();
-        } catch (Exception e) {
-            audience = null;
-        }
         return audience;
     }
 
     public Date getExpirationDateFromToken(String token) {
-        Date expiration;
-        try {
-            final Claims claims = this.getAllClaimsFromToken(token);
+        Date expiration = null;
+        final Claims claims = this.getAllClaimsFromToken(token);
+        if (claims != null)
             expiration = claims.getExpiration();
-        } catch (Exception e) {
-            expiration = null;
-        }
         return expiration;
     }
 
     public int getExpiredIn() {
-        return EXPIRES_IN;
+        return expiresIn;
     }
 
     // Functions for getting JWT token out of HTTP request
 
     public String getToken(HttpServletRequest request) {
-        String authHeader = getAuthHeaderFromHeader(request);
+        String header = getAuthHeaderFromHeader(request);
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
         }
 
         return null;
     }
 
     public String getAuthHeaderFromHeader(HttpServletRequest request) {
-        return request.getHeader(AUTH_HEADER);
+        return request.getHeader(authHeader);
     }
 }

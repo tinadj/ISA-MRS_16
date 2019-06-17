@@ -1,7 +1,6 @@
 package org.tim16.booker.dto;
 
 public class DestinationDTO {
-    private Integer id;
     private String city;
     private String state;
 

@@ -31,6 +31,14 @@ public class MailService {
     @Autowired
     private VerificationTokenService service;
 
+    // Mail content
+    private static final String HELLO = "Hello ";
+    private static final String LOGIN_MSG = "!\nTo finish your registration, click on link below and sign in:\nhttp://localhost:8080/login/%s";
+    private static final String ADMIN_USERNAME  = "\n\tusername: ";
+    private static final String ADMIN_PASS = "\n\tpassword: 123";
+
+    private static final String ENC = "UTF-8";
+
     @Async
     public void sendActivationLink(User user) {
         String token = UUID.randomUUID().toString();
@@ -50,9 +58,8 @@ public class MailService {
             RegisteredUser registeredUser = (RegisteredUser)user;
             message.setTo(registeredUser.getEmail());
             try {
-                content = String.format(
-                        "Hello " + registeredUser.getName() + "!\nTo finish your registration, click on link below:\nhttp://localhost:8080/login/%s",
-                        URLEncoder.encode(token, "UTF-8"));
+                content = String.format(HELLO + "%s" + LOGIN_MSG,
+                        registeredUser.getName(), URLEncoder.encode(token, ENC));
             } catch (UnsupportedEncodingException e) {
                 return;
             }
@@ -60,10 +67,8 @@ public class MailService {
             AirlineAdmin admin = (AirlineAdmin) user;
             message.setTo((admin.getEmail()));
             try {
-                content = String.format(
-                        "Hello " + admin.getName() + "!\nTo finish your registration, click on link below and sign in:\nhttp://localhost:8080/login/%s" +
-                                "\n\tusername: " + admin.getUsername() + "\n\tpassword: 123",
-                        URLEncoder.encode(token, "UTF-8"));
+                content = String.format(HELLO + "%s" + LOGIN_MSG + ADMIN_USERNAME + "%s" + ADMIN_PASS,
+                        admin.getName(),  URLEncoder.encode(token, ENC), admin.getUsername());
             } catch (UnsupportedEncodingException e) {
                 return;
             }
@@ -71,10 +76,8 @@ public class MailService {
             HotelAdmin admin = (HotelAdmin) user;
             message.setTo((admin.getEmail()));
             try {
-                content = String.format(
-                        "Hello " + admin.getName() + "!\nTo finish your registration, click on link below and sign in:\nhttp://localhost:8080/login/%s" +
-                                "\n\tusername: " + admin.getUsername() + "\n\tpassword: 123",
-                        URLEncoder.encode(token, "UTF-8"));
+                content = String.format(HELLO + "%s" + LOGIN_MSG + ADMIN_USERNAME + "%s" + ADMIN_PASS,
+                        admin.getName(),  URLEncoder.encode(token, ENC), admin.getUsername());
             } catch (UnsupportedEncodingException e) {
                 return;
             }
@@ -82,10 +85,8 @@ public class MailService {
             RentACarAdmin admin = (RentACarAdmin) user;
             message.setTo((admin.getEmail()));
             try {
-                content = String.format(
-                        "Hello " + admin.getName() + "!\nTo finish your registration, click on link below and sign in:\nhttp://localhost:8080/login/%s" +
-                                "\n\tusername: " + admin.getUsername() + "\n\tpassword: 123",
-                        URLEncoder.encode(token, "UTF-8"));
+                content = String.format(HELLO + "%s" + LOGIN_MSG + ADMIN_USERNAME + "%s" + ADMIN_PASS,
+                        admin.getName(),  URLEncoder.encode(token, ENC), admin.getUsername());
             } catch (UnsupportedEncodingException e) {
                 return;
             }
@@ -93,10 +94,8 @@ public class MailService {
             SysAdmin admin = (SysAdmin) user;
             message.setTo((admin.getEmail()));
             try {
-                content = String.format(
-                        "Hello " + admin.getName() + "!\nTo finish your registration, click on link below and sign in:\nhttp://localhost:8080/login/%s" +
-                                "\n\tusername: " + admin.getUsername() + "\n\tpassword: 123",
-                        URLEncoder.encode(token, "UTF-8"));
+                content = String.format(HELLO + "%s" + LOGIN_MSG + ADMIN_USERNAME + "%s" + ADMIN_PASS,
+                        admin.getName(),  URLEncoder.encode(token, ENC), admin.getUsername());
             } catch (UnsupportedEncodingException e) {
                 return;
             }

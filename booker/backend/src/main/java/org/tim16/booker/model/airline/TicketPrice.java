@@ -15,7 +15,7 @@ public class TicketPrice {
 
     private Float price;
 
-    public TicketPrice() {}
+    public TicketPrice() { /* empty constructor */}
 
     public Integer getId() {
         return id;

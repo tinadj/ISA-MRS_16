@@ -8,6 +8,7 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.Set;
 @Entity
 @Table(name = "rent_a_cars")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class RentACar {
+public class RentACar implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,24 +39,31 @@ public class RentACar {
 
     @JsonManagedReference("rent_a_car-branch_office")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="rentACar")
-    private Set<BranchOffice> branchOffices = new HashSet<BranchOffice>();
+    private Set<BranchOffice> branchOffices = new HashSet<>();
 
     @JsonManagedReference("rent_a_car-vehicles")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Vehicle> vehicles = new HashSet<Vehicle>();
+    private Set<Vehicle> vehicles = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rating = new HashSet<Rate>();
+    private Set<Rate> rating = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<RentACarReservation> reservations = new HashSet<RentACarReservation>();
+    private Set<RentACarReservation> reservations = new HashSet<>();
 
     @JsonBackReference("rent_a_car-admin")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy = "rentACar")
-    private Set<RentACarAdmin> admins = new HashSet<RentACarAdmin>();
+    private Set<RentACarAdmin> admins = new HashSet<>();
 
 
-    public RentACar() {}
+    public RentACar() { /* empty constructor */ }
+
+    public RentACar(String name, String description, BigDecimal latitude, BigDecimal longitude) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+    }
 
     public void addVehicle(Vehicle v)
     {
@@ -72,7 +80,7 @@ public class RentACar {
 
         for (Vehicle v: getVehicles())
         {
-            if (v.getId() == id)
+            if (v.getId().equals(id))
             {
                 this.getVehicles().remove(v);
                 return;
@@ -94,7 +102,7 @@ public class RentACar {
     {
         for (BranchOffice bv : getBranchOffices())
         {
-            if (bv.getId() == id)
+            if (bv.getId().equals(id))
             {
                 this.getBranchOffices().remove(bv);
                 return;
