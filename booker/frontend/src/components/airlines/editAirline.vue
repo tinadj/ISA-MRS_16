@@ -88,7 +88,8 @@ export default {
     let api = '/airlines/' + this.$route.params.id;
 
     AXIOS.get(api)
-    .then(response => { 
+    .then(response => {
+    console.log(response.data)
       this.id = response.data.id
       this.name = response.data.name
       this.city = response.data.address.city
@@ -102,7 +103,6 @@ export default {
   methods: {
     edit (e) {
       e.preventDefault()
-
       const airline = {
         'id': this.$route.params.id,
         'name': this.name,

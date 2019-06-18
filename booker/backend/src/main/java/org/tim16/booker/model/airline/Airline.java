@@ -71,6 +71,19 @@ public class Airline implements Serializable {
         this.getAdmins().add(admin);
     }
 
+    public void removeDestination(Integer id)
+    {
+
+        for (Destination d: getDestinations())
+        {
+            if (d.getId() == id)
+            {
+                this.getDestinations().remove(d);
+                return;
+            }
+        }
+    }
+
     public Integer getId() {
         return id;
     }
