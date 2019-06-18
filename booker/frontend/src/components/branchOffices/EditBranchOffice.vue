@@ -28,8 +28,8 @@
             <b-form-input id="input-3" v-model="state" placeholder="State"></b-form-input>
         </b-form-group>
 
-        <b-button variant="outline-primary" type="submit" class="mr-1">Save</b-button>
-        <b-button @click="onCancel">Cancel</b-button>
+        <b-button variant="outline-primary" type="submit" class="mr-1" v-on:click="edit">Save</b-button>
+        <b-button v-on:click="onCancel">Cancel</b-button>
       </form><br>
 
       <b-alert variant="success" v-model="success">Successfully saved!</b-alert>
@@ -77,13 +77,14 @@ export default {
         .then(response => {
           this.success = true;
           this.error = false;
+          this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/branch-offices")
         })
         .catch(err => {
           this.errorMessage = "Something went wrong!"
           this.success = false;
           this.error = true
         })
-        this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/branch-offices")
+        
       } else {
         this.errorMessage = "Some fields are empty!"
         this.error = true
@@ -94,10 +95,9 @@ export default {
         this.$router.push("/" + this.$route.params.id + "/rent-a-car-admin/branch-offices")
     },
       noEmptyFiedls() {
-        if (this.name.length == 0 || this.city.length == 0 || this.state.length == 0 ||
-              this.latitude.length == 0 || this.longitude.length == 0) {
-                  this.errorMessage = "Some fields are empty!"
-                  return false 
+        if (this.name.length == 0 || this.city.length == 0 || this.state.length == 0) {
+          this.errorMessage = "Some fields are empty!"
+          return false 
         }
         return true
     }
