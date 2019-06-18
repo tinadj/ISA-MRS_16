@@ -1,7 +1,6 @@
 package org.tim16.booker.model.rent_a_car;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.tim16.booker.model.utility.Rate;
 
@@ -48,7 +47,6 @@ public class Vehicle implements Serializable {
     @ManyToOne()
     private BranchOffice currentlyIn;
 
-    @JsonIgnore
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<>();
 

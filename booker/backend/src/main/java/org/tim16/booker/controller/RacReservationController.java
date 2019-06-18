@@ -51,13 +51,13 @@ public class RacReservationController {
     public ResponseEntity<HttpStatus> reserveVehicle(@RequestBody RacReservationDTO dto) {
         Reservation reservation = new Reservation();
         RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        reservation.setUser(user);
 
         RentACarReservation rentACarReservation = setUpRACReservation(dto);
         if (rentACarReservation == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        user.getReservations().add(reservation);
-        reservation.setUser(user);
+        user.addReservations(reservation);
 
         racReservationService.create(rentACarReservation);
         rentACarReservation.setReservation(reservation);
@@ -87,7 +87,6 @@ public class RacReservationController {
         rentACarReservation.setPassangerNum(dto.getPassangerNum());
         rentACarReservation.setPickUpLocation(pickUp);
         rentACarReservation.setDropOffLocation(dropOff);
-        rentACarReservation.setRentACar(vehicle.getRentACar().getName());
 
         Float price = vehicle.getPrice() * dto.getDays();
         if (vehicle.getDiscount() != 0) {

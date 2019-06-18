@@ -253,7 +253,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  body{margin-top:20px;}
 
   .align-center, .center {
       text-align: center!important;

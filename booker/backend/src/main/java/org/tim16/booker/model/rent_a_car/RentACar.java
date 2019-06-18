@@ -1,7 +1,6 @@
 package org.tim16.booker.model.rent_a_car;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.admins.RentACarAdmin;
@@ -46,9 +45,11 @@ public class RentACar implements Serializable {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Vehicle> vehicles = new HashSet<>();
 
-    @JsonIgnore
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<>();
+
+    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
+    private Set<RentACarReservation> reservations = new HashSet<>();
 
     @JsonBackReference("rent_a_car-admin")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy = "rentACar")
@@ -164,6 +165,14 @@ public class RentACar implements Serializable {
 
     public void setRating(Set<Rate> rating) {
         this.rating = rating;
+    }
+
+    public Set<RentACarReservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(Set<RentACarReservation> reservations) {
+        this.reservations = reservations;
     }
 
     public Set<RentACarAdmin> getAdmins() {
