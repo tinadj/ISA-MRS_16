@@ -1,12 +1,16 @@
 package org.tim16.booker.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tim16.booker.model.airline.Seat;
 import org.tim16.booker.repository.SeatRepository;
+import org.tim16.booker.service.interfaces.ISeatService;
 
 import java.util.List;
 
-public class SeatService {
+@Service
+
+public class SeatService implements ISeatService {
 
     @Autowired
     private SeatRepository repository;
