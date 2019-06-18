@@ -32,8 +32,6 @@ public class FlightController {
     @Autowired
     private AirlineService airlineService;
 
-    @Autowired
-    private SeatService seatService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<Flight>> getAll() {
@@ -69,6 +67,7 @@ public class FlightController {
         flight.setTransferNum(dto.getTransferNumber());
 
         Seat seat;
+        Ticket ticket;
         int rowNum = 1;
 
         for(int i = 0; i <dto.getFirstClass(); i++){
@@ -81,7 +80,15 @@ public class FlightController {
             seat.setSeatLetter(String.valueOf(letter));
             seat.setType(TravelClass.FIRST);
             flight.getSeats().add(seat);
-            seat = seatService.create(seat);
+
+            ticket = new Ticket();
+            ticket.setFlight(flight);
+            ticket.setDiscount(0);
+            ticket.setPrice(dto.getFirstClassPrice());
+            ticket.setReserved(false);
+            ticket.setSeat(seat);
+
+            flight.getTickets().add(ticket);
 
         }
 
@@ -95,8 +102,15 @@ public class FlightController {
             seat.setSeatLetter(String.valueOf(letter));
             seat.setType(TravelClass.BUSINESS);
             flight.getSeats().add(seat);
-            seat = seatService.create(seat);
 
+            ticket = new Ticket();
+            ticket.setFlight(flight);
+            ticket.setDiscount(0);
+            ticket.setPrice(dto.getBusinessClassPrice());
+            ticket.setReserved(false);
+            ticket.setSeat(seat);
+
+            flight.getTickets().add(ticket);
         }
 
         for(int i = 0; i <dto.getEconomyClass(); i++){
@@ -109,7 +123,15 @@ public class FlightController {
             seat.setSeatLetter(String.valueOf(letter));
             seat.setType(TravelClass.ECONOMY);
             flight.getSeats().add(seat);
-            seat = seatService.create(seat);
+
+            ticket = new Ticket();
+            ticket.setFlight(flight);
+            ticket.setDiscount(0);
+            ticket.setPrice(dto.getEconomyClassPrice());
+            ticket.setReserved(false);
+            ticket.setSeat(seat);
+
+            flight.getTickets().add(ticket);
 
         }
 
