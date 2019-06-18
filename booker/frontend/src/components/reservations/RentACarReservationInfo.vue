@@ -21,7 +21,7 @@
 									<div class="profile-info-value">
 										<span>
                                             <h5>{{reservation.rentACar}} &nbsp
-                                                <star-rating v-model="racRating" :inline="true" :star-size="17" :show-rating="false" :read-only="!returnedVehicle" :round-start-rating="false"></star-rating>
+                                                <star-rating v-model="racRating" :inline="true" :star-size="17" :show-rating="false" :read-only="!returnedVehicle" :round-start-rating="false" v-on:rating-selected ="rateRAC"></star-rating>
                                             </h5>
                                         </span> 
 									</div>
@@ -32,7 +32,7 @@
 									<div class="profile-info-value">
 										<span>
                                             <h6>{{reservation.vehicle.brand}}, {{reservation.vehicle.model}}, {{reservation.vehicle.productionYear}} &nbsp
-                                                <star-rating v-model="vehicleRating" :inline="true" :star-size="17" :show-rating="false" :read-only="!returnedVehicle" :round-start-rating="false" v-on:rating-selected ="rate"></star-rating>
+                                                <star-rating v-model="vehicleRating" :inline="true" :star-size="17" :show-rating="false" :read-only="!returnedVehicle" :round-start-rating="false" v-on:rating-selected ="rateVehicle"></star-rating>
                                             </h6>
                                         </span> 
 									</div>
@@ -148,9 +148,15 @@
                 })
             },
             // Ocenjivanje vozila
-            rate: async function() {
+            rateVehicle: async function() {
                 await AXIOS.post('vehicles/rate/' + this.reservation.vehicle.id + '/' + this.vehicleRating)
                 .then(response => this.vehicleRating = response.data)
+                .catch(err => console.log(err))
+            },
+            // Ocenjivanje rent a car-a
+            rateRAC: async function() {
+                await AXIOS.post('rent-a-cars/rate/' + this.reservation.rentACar + '/' + this.racRating)
+                .then(response => this.racRating = response.data)
                 .catch(err => console.log(err))
             },
             // Konvertuje datum u string format dd.MM.yyyy
@@ -165,10 +171,18 @@
                 return result;
             },
             // Racunanje prosecne ocene vozila
-            getRating: async function() {
+            getVehicleRating: async function() {
                 await AXIOS.get('/vehicles/rating/' + this.reservation.vehicle.id)
                 .then(response => {
                     this.vehicleRating = response.data
+                })
+                .catch(err => console.log(err))
+            },
+            // Racunanje prosecne ocene rent a car servisa
+            getRACRating: async function() {
+                await AXIOS.get('/rent-a-cars/rating/' + this.reservation.rentACar)
+                .then(response => {
+                    this.racRating = response.data
                 })
                 .catch(err => console.log(err))
             }
@@ -181,7 +195,9 @@
             this.returnedVehicle = new Date(this.returnDate.toDateString()) < new Date(new Date().toDateString())
         
             // Ocena vozila
-            this.getRating()
+            this.getVehicleRating()
+            // Ocena rent a car-a
+            this.getRACRating()
         }
     }
 </script>

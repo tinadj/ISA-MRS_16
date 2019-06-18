@@ -231,7 +231,7 @@ public class VehicleController {
         if (vehicle == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        // Ako je korisnik vec oceni, promeni vrednost te ocene
+        // Ako je korisnik vec ocenio, promeni vrednost te ocene
         boolean rated = false;
         for (Rate rate : vehicle.getRating()) {
             if (rate.getUser().getId().equals(user.getId())) {

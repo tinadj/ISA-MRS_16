@@ -17,6 +17,8 @@ public class RentACarService implements IRentACarService {
 
     public RentACar findOne(Integer id) { return repository.getOne(id); }
 
+    public RentACar findByName(String name) { return repository.findByName(name); }
+
     public List<RentACar> findAll() { return repository.findAll(); }
 
     public RentACar create(RentACar rentACar) {
