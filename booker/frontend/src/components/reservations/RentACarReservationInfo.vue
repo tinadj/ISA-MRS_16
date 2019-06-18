@@ -21,7 +21,7 @@
 									<div class="profile-info-value">
 										<span>
                                             <h5>{{reservation.rentACar}} &nbsp
-                                                <star-rating v-model="racRating" :inline="true" :star-size="17" :show-rating="false" :read-only="true" :round-start-rating="false"></star-rating>
+                                                <star-rating v-model="racRating" :inline="true" :star-size="17" :show-rating="false" :read-only="!returnedVehicle" :round-start-rating="false"></star-rating>
                                             </h5>
                                         </span> 
 									</div>
@@ -32,26 +32,44 @@
 									<div class="profile-info-value">
 										<span>
                                             <h6>{{reservation.vehicle.brand}}, {{reservation.vehicle.model}}, {{reservation.vehicle.productionYear}} &nbsp
-                                                <star-rating :inline="true" :star-size="17" :show-rating="false" :read-only="true" :round-start-rating="false"></star-rating>
+                                                <star-rating :inline="true" :star-size="17" :show-rating="false" :read-only="!returnedVehicle" :round-start-rating="false"></star-rating>
                                             </h6>
                                         </span> 
 									</div>
 								</div>
 
                                 <div class="profile-info-row">
-                                    <div class="profile-info-name"> Pick up: </div>
+                                    <div class="profile-info-name"> Pick up date: </div>
 									<div class="profile-info-value">
 										<span>
-                                           {{reservation.pickUpLocation.address.city}}, {{reservation.pickUpLocation.address.state}} date
+                                           {{dateToStr(this.reservation.pickUpDate)}}
                                         </span> 
 									</div>
 								</div>
 
                                 <div class="profile-info-row">
-                                    <div class="profile-info-name"> Drop off: </div>
+                                    <div class="profile-info-name"> Return date: </div>
 									<div class="profile-info-value">
 										<span>
-                                             {{reservation.dropOffLocation.address.city}}, {{reservation.dropOffLocation.address.state}}, date
+                                           {{dateToStr(this.returnDate)}}
+                                        </span> 
+									</div>
+								</div>
+
+                                <div class="profile-info-row">
+                                    <div class="profile-info-name"> Pick up location: </div>
+									<div class="profile-info-value">
+										<span>
+                                           {{reservation.pickUpLocation.address.city}}, {{reservation.pickUpLocation.address.state}}
+                                        </span> 
+									</div>
+								</div>
+
+                                <div class="profile-info-row">
+                                    <div class="profile-info-name"> Drop off location: </div>
+									<div class="profile-info-value">
+										<span>
+                                             {{reservation.dropOffLocation.address.city}}, {{reservation.dropOffLocation.address.state}}
                                         </span> 
 									</div>
 								</div>
@@ -68,7 +86,14 @@
                                 <div class="profile-info-row">
                                     <div class="profile-info-name"></div>
                                      <div class="profile-info-value">
-                                        <button class="btn btn-outline-secondary" v-on:click="cancel">Cancel reservation</button>
+                                        <button class="btn btn-outline-secondary" v-if="!returnedVehicle" v-on:click="cancel">Cancel reservation</button>
+                                    </div>
+							    </div>
+                                <br>
+                                <div class="profile-info-row">
+                                    <div class="profile-info-name"></div>
+                                     <div class="profile-info-value">
+                                        <b-alert variant="danger" v-model="error" dismissible>{{errorMessage}}</b-alert>
                                     </div>
 							    </div>
 
@@ -92,6 +117,11 @@
             return {
                 details: false,
                 racRating: 0,
+                vehicleRating: 0,
+                returnDate: '',
+                returnedVehicle: false,
+                error: false,
+                errorMessage: '',
 
                 // Ikonice
                 euroIcon: faEuroSign
@@ -100,11 +130,38 @@
         },
         methods: {
             cancel: function(e) {
+                this.error = false
+                AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
 
+                AXIOS.post('/rac-reservations/cancel/' + this.reservation.id)
+                .then( response => {
+                    if (response.data) {
+                        this.$router.push("/" + this.$route.params.id + "/home/reservations")
+                    } else {
+                        this.errorMessage = "It is not possible to cancel this reservation!"
+                        this.error = true
+                    }
+                }).
+                catch(err => {
+                    this.errorMessage = "Something went wrong!"
+                    this.error = true
+                })
+            },
+            dateToStr: function(date) {
+                let converted = new Date(date)
+                return converted.getDate() + "." + (converted.getMonth() + 1) + "." + converted.getFullYear()
+            },
+            addDays: function(date, days) {
+                var result = new Date(date);
+                result.setDate(result.getDate() + days);
+                return result;
             }
         },
         mounted() {
+            let pickUpDate = new Date(this.reservation.pickUpDate)
+            this.returnDate = this.addDays(pickUpDate, this.reservation.days)
             
+            this.returnedVehicle = new Date(this.returnDate.toDateString()) < new Date(new Date().toDateString())
         }
     }
 </script>

@@ -70,6 +70,31 @@ public class RacReservationController {
 
     }
 
+    @PostMapping(path = "cancel/{id}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Boolean> reserveVehicle(@PathVariable Integer id) {
+        RentACarReservation reservation = racReservationService.findOne(id);
+
+        if (reservation == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Reservation globalReservation = reservationService.findOne(reservation.getReservation().getId());
+
+        if (globalReservation == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Date todayPlus2 = addDays(new Date(), 2);
+        if (!todayPlus2.before(reservation.getPickUpDate()))
+            return new ResponseEntity<>(false, HttpStatus.OK);
+
+        globalReservation.setRentACarReservation(null);
+        reservationService.update(globalReservation);
+
+        racReservationService.remove(id);
+        return new ResponseEntity<>(true, HttpStatus.OK);
+
+    }
+
     // Incijalizacija rent a car rezervacije
     private RentACarReservation setUpRACReservation(RacReservationDTO dto) {
         RentACarReservation rentACarReservation = new RentACarReservation();

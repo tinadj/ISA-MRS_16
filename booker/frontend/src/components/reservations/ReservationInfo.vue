@@ -7,8 +7,8 @@
                 </b-col>
                 <b-col lg="8">
                     <button v-b-toggle="flightToggle" class="m-1 btn btn-info">Flight</button>
-                    <button v-b-toggle="hotelToggle" class="m-1 btn btn-info">Hotel</button>
-                    <button v-b-toggle="racToggle" class="m-1 btn btn-info">Rent a Car</button>
+                    <button v-if="hotelExists" v-b-toggle="hotelToggle" class="m-1 btn btn-info">Hotel</button>
+                    <button v-if="racExists" v-b-toggle="racToggle" class="m-1 btn btn-info">Rent a Car</button>
                 </b-col>
             </b-row>
         </b-container>
@@ -44,14 +44,20 @@
                 hotelToggle: 'hotel' + this.reservation.id,
                 racToggle: 'rent-a-car' + this.reservation.id,
 
+                hotelExists: true,
+                racExists: true
+
             }
         },
         methods: {
-            
         },
         mounted() {
-          AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
-          
+            /*
+            if (this.reservation.hotelReservation == null)
+                this.hotelExists = false
+            */
+            if (this.reservation.rentACarReservation == null)
+                this.racExists = false
         }
     }
 </script>
