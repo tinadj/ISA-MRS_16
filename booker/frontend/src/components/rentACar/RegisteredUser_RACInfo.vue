@@ -116,6 +116,7 @@
 </template>
 
 <script>
+import {AXIOS} from '../../http-common'
 import { faMapMarkerAlt, faInfoCircle, faAlignLeft, faBriefcase } from '@fortawesome/free-solid-svg-icons'
 
 export default {
@@ -138,18 +139,18 @@ export default {
         updateMap(latitude, longitude) {
             this.officeLatitude = latitude
             this.officeLongitude = longitude
+        },
+        // Racunanje prosecne ocene rent a car servisa
+        getRACRating: async function() {
+            await AXIOS.get('/rent-a-cars/rating/' + this.item.name)
+            .then(response => {
+                this.rating = response.data
+            })
+            .catch(err => console.log(err))
         }
     },
     mounted() {
-        // Racunannje prosecne ocene Rent a Car servisa
-        if (this.item.rating.length > 0) {
-            for (var i = 0; i < this.item.rating.length; i++) {
-                this.rating += this.item.rating.rate[i]
-            }
-            this.rating = this.rating / this.item.rating.length
-        } else {
-            this.rating = 0
-        }
+        this.getRACRating()
     }
 }
 </script>

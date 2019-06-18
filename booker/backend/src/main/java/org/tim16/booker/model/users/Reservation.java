@@ -17,7 +17,7 @@ public class Reservation implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
-    @JsonBackReference("user-reservation")
+    @JsonBackReference("user-reservations")
     @ManyToOne
     @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
     private RegisteredUser user;

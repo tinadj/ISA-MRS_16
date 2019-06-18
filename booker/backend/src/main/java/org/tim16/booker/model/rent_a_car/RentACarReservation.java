@@ -1,5 +1,6 @@
 package org.tim16.booker.model.rent_a_car;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.tim16.booker.model.users.Reservation;
 
 import javax.persistence.*;
@@ -14,9 +15,11 @@ public class RentACarReservation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonIgnore
     @OneToOne
     private Reservation reservation;
 
+    private String rentACar;
 
     @ManyToOne
     private Vehicle vehicle;
@@ -110,4 +113,11 @@ public class RentACarReservation implements Serializable {
         this.dropOffLocation = dropOffLocation;
     }
 
+    public String getRentACar() {
+        return rentACar;
+    }
+
+    public void setRentACar(String rentACar) {
+        this.rentACar = rentACar;
+    }
 }
