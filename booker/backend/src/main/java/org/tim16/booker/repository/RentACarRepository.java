@@ -6,4 +6,6 @@ import org.tim16.booker.model.rent_a_car.RentACar;
 
 @Repository
 public interface RentACarRepository extends JpaRepository<RentACar, Integer> {
+
+    RentACar findByName(String name);
 }

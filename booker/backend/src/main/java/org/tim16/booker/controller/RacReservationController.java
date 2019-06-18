@@ -51,13 +51,13 @@ public class RacReservationController {
     public ResponseEntity<HttpStatus> reserveVehicle(@RequestBody RacReservationDTO dto) {
         Reservation reservation = new Reservation();
         RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        reservation.setUser(user);
 
         RentACarReservation rentACarReservation = setUpRACReservation(dto);
         if (rentACarReservation == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        user.addReservations(reservation);
+        user.getReservations().add(reservation);
+        reservation.setUser(user);
 
         racReservationService.create(rentACarReservation);
         rentACarReservation.setReservation(reservation);
@@ -67,6 +67,31 @@ public class RacReservationController {
         userService.save(user);
 
         return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @PostMapping(path = "cancel/{id}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Boolean> reserveVehicle(@PathVariable Integer id) {
+        RentACarReservation reservation = racReservationService.findOne(id);
+
+        if (reservation == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Reservation globalReservation = reservationService.findOne(reservation.getReservation().getId());
+
+        if (globalReservation == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Date todayPlus2 = addDays(new Date(), 2);
+        if (!todayPlus2.before(reservation.getPickUpDate()))
+            return new ResponseEntity<>(false, HttpStatus.OK);
+
+        globalReservation.setRentACarReservation(null);
+        reservationService.update(globalReservation);
+
+        racReservationService.remove(id);
+        return new ResponseEntity<>(true, HttpStatus.OK);
 
     }
 
@@ -87,6 +112,7 @@ public class RacReservationController {
         rentACarReservation.setPassangerNum(dto.getPassangerNum());
         rentACarReservation.setPickUpLocation(pickUp);
         rentACarReservation.setDropOffLocation(dropOff);
+        rentACarReservation.setRentACar(vehicle.getRentACar().getName());
 
         Float price = vehicle.getPrice() * dto.getDays();
         if (vehicle.getDiscount() != 0) {

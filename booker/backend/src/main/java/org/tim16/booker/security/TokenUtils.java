@@ -99,7 +99,7 @@ public class TokenUtils {
     }
 
     private Boolean ignoreTokenExpiration() {
-        return true;
+        return false;
     }
 
     // Functions for getting data from token

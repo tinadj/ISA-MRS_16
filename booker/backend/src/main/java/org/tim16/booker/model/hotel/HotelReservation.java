@@ -1,5 +1,6 @@
 package org.tim16.booker.model.hotel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.tim16.booker.model.users.Reservation;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ public class HotelReservation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonIgnore
     @OneToOne
     private Reservation reservation;
 

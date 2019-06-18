@@ -17,7 +17,7 @@
 
                             <h4 align="left">
                                 <span class="name">{{item.name}}</span><br>
-                                <span class="name"><star-rating v-model="this.rating" :inline="true" :star-size="22" :show-rating="false" :read-only="true" :round-start-rating="false"></star-rating><br></span>
+                                <span class="name"><star-rating v-model="rating" :inline="true" :star-size="22" :show-rating="false" :read-only="true" :round-start-rating="false"></star-rating><br></span>
 							</h4>
 
 							<div class="profile-user-info">
@@ -45,28 +45,24 @@
 </template>
 
 <script>
+import {AXIOS} from '../../http-common'
 import { faMapMarkerAlt, faInfoCircle, faAlignLeft, faBriefcase, faCar } from '@fortawesome/free-solid-svg-icons'
 
 export default {
     name: 'AdminRACInfo',
-    props: ["item"],
+    props: ["item", "rating"],
     data() {
         return {
-            rating: 0,
             descriptionIcon: faAlignLeft,
             locationIcon: faMapMarkerAlt
         } 
     },
+    methods: {
+        
+        
+    },
     mounted() {
-        // Racunannje prosecne ocene Rent a Car servisa
-        if (this.item.rating.length > 0) {
-            for (var i = 0; i < this.item.rating.length; i++) {
-                this.rating += this.item.rating.rate[i]
-            }
-            this.rating = this.rating / this.item.rating.length
-        } else {
-            this.rating = 0
-        }
+        
     }
 }
 </script>

@@ -1,6 +1,7 @@
 package org.tim16.booker.model.utility;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.tim16.booker.model.users.User;
 
 import javax.persistence.*;
@@ -15,18 +16,20 @@ public class Rate implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
+    @JsonBackReference("user-rates")
     @ManyToOne
     @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
     private User user;
-
-    @Enumerated
-    @Column(nullable = false)
-    private RateType type;
 
     @Column(nullable = false)
     private Integer rateValue;
 
     public Rate() { /* empty constructor */}
+
+    public Rate(User user, Integer rateValue) {
+        this.user = user;
+        this.rateValue = rateValue;
+    }
 
     public Integer getId() {
         return id;
@@ -42,14 +45,6 @@ public class Rate implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public RateType getType() {
-        return type;
-    }
-
-    public void setType(RateType type) {
-        this.type = type;
     }
 
     public Integer getRateValue() {

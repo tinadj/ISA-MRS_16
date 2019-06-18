@@ -28,10 +28,10 @@
           <b-form-checkbox id="breakfast_cb" v-model="breakfast" name="breakfast_cb" value="true" unchecked-value="false">
             Breakfast 
           </b-form-checkbox>
-          <b-form-checkbox id="hotelRestaurant_cb" v-model="hotelRestaurant" name="hotelRestaurant_cb" value="true" unchecked-value="false">
+          <b-form-checkbox id="hotel_restaurant_cb" v-model="hotel_restaurant" name="hotel_restaurant_cb" value="true" unchecked-value="false">
             Hotel Restaurant
           </b-form-checkbox>
-          <b-form-checkbox id="airportTransfer_cb" v-model="airportTransfer" name="airportTransfer_cb" value="true" unchecked-value="false">
+          <b-form-checkbox id="airport_transfer_cb" v-model="airport_transfer" name="airport_transfer_cb" value="true" unchecked-value="false">
             Airport Transfer
           </b-form-checkbox>
           <b-form-checkbox id="parking_cb" v-model="parking" name="parking_cb" value="true" unchecked-value="false">
@@ -40,7 +40,7 @@
           <b-form-checkbox id="pool_cb" v-model="pool" name="pool_cb" value="true" unchecked-value="false">
             Pool Access
           </b-form-checkbox>
-          <b-form-checkbox id="wellnessSpa_cb" v-model="wellnessSpa" name="wellnessSpa_cb" value="true" unchecked-value="false">
+          <b-form-checkbox id="wellness_spa_cb" v-model="wellness_spa" name="wellness_spa_cb" value="true" unchecked-value="false">
             Wellness and Spa
           </b-form-checkbox>
           <b-form-checkbox id="wifi_cb" v-model="wifi" name="wifi_cb" value="true" unchecked-value="false">
@@ -77,11 +77,11 @@ export default {
       beds: '',
       balcony_status: 'false',
       breakfast : 'false',
-      hotelRestaurant : 'false',
-      airportTransfer : 'false',
+      hotel_restaurant : 'false',
+      airport_transfer : 'false',
       parking : 'false',
       pool : 'false',
-      wellnessSpa : 'false',
+      wellness_spa : 'false',
       wifi : 'false',
       tv : 'false',
       minibar : 'false',
@@ -101,11 +101,11 @@ export default {
         'beds': this.beds,
         'balcony': this.balcony_status,
         'breakfast' : this.breakfast,
-        'hotelRestaurant' : this.hotelRestaurant,
-        'airportTransfer' : this.airportTransfer,
+        'hotel_restaurant' : this.hotel_restaurant,
+        'airport_transfer' : this.airport_transfer,
         'parking' : this.parking,
         'pool' : this.pool,
-        'wellnessSpa' : this.wellnessSpa,
+        'wellness_spa' : this.wellness_spa,
         'wifi' : this.wifi,
         'tv' : this.tv,
         'minibar' : this.minibar,

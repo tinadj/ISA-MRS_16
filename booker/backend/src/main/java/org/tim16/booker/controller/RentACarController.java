@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.comparator.RentACarCity;
 import org.tim16.booker.comparator.RentACarName;
@@ -16,9 +17,12 @@ import org.tim16.booker.model.rent_a_car.BranchOffice;
 import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.rent_a_car.RentACarReservation;
 import org.tim16.booker.model.rent_a_car.Vehicle;
+import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.utility.Destination;
+import org.tim16.booker.model.utility.Rate;
 import org.tim16.booker.service.DestinationService;
 import org.tim16.booker.service.RacReservationService;
+import org.tim16.booker.service.RateService;
 import org.tim16.booker.service.RentACarService;
 
 import javax.persistence.EntityNotFoundException;
@@ -34,6 +38,9 @@ public class RentACarController {
     private DestinationService destinationService;
     @Autowired
     private RacReservationService reservationService;
+    @Autowired
+    private RateService rateService;
+
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<RentACar>> getAll() {
@@ -149,6 +156,47 @@ public class RentACarController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping(path = "rating/{name}")
+    public ResponseEntity<Float> getRating(@PathVariable String name) {
+        RentACar rentACar = rentACarService.findByName(name);
+
+        if (rentACar == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(getAverageRating(rentACar.getRating()), HttpStatus.OK);
+    }
+
+    @PostMapping(path = "rate/{name}/{rateValue}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Float> rateVehicle(@PathVariable String name, @PathVariable Integer rateValue) {
+        RentACar rentACar = rentACarService.findByName(name);
+        RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (rentACar == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        // Ako je korisnik vec ocenio, promeni vrednost te ocene
+        boolean rated = false;
+        for (Rate rate : rentACar.getRating()) {
+            if (rate.getUser().getId().equals(user.getId())) {
+                rate.setRateValue(rateValue);
+                rateService.update(rate);
+                rated = true;
+                break;
+            }
+        }
+
+        // Ako nije ocenio, dodaj novu ocenu
+        if (!rated) {
+            Rate rate = new Rate(user, rateValue);
+            rentACar.getRating().add(rate);
+            rateService.create(rate);
+            rentACarService.update(rentACar);
+        }
+
+        return new ResponseEntity<>(getAverageRating(rentACar.getRating()), HttpStatus.OK);
+    }
+
     /*
     Pretraga po imenu
      */
@@ -255,5 +303,19 @@ public class RentACarController {
         return destination;
     }
 
+    /*
+    Racuna prosecnu ocenu
+    */
+    private Float getAverageRating(Set<Rate> rates) {
+        Float sum = 0f;
+        for (Rate rate : rates) {
+            sum += rate.getRateValue();
+        }
+
+        if (rates.size() != 0)
+            sum = sum / rates.size();
+
+        return sum;
+    }
 
 }

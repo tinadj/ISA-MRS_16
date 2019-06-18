@@ -239,19 +239,20 @@ export default {
                     console.log(response)
             })
             .catch(err => console.log(err))
-        }
+        },
+        // Racunanje prosecne ocene vozila
+        getRating: async function() {
+            await AXIOS.get('/vehicles/rating/' + this.item.id)
+            .then(response => {
+                this.rating = response.data
+            })
+            .catch(err => console.log(err))
+        },
        
     },
     mounted() {
-        // Racunannje prosecne ocene vozila
-        if (this.item.rating.length > 0) {
-            for (var i = 0; i < this.item.rating.length; i++) {
-                this.rating += this.item.rating.rate[i]
-            }
-            this.rating = this.rating / this.item.rating.length
-        } else {
-            this.rating = 0
-        }
+        this.getRating()
+        
         this.vehicleType = this.getVehicleType()
     }
 }
