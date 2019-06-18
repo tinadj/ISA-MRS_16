@@ -93,6 +93,30 @@ export default {
     add (e) {
       e.preventDefault()
 
+        const flight = {
+          'departure': this.selectedDeparture,
+          'arrival': this.selectedArrivalDeparture,
+          'departureTime': this.departureDate,
+          'arrivalTime': this.arrivalDate,
+          'transferNumber': this.transferNumber,
+          'firstClass': this.firstClass,
+          'firstClassPrice': this.firstClassPrice,
+          'businessClass': this.businessClass,
+          'businessClassPrice': this.businessClassPrice,
+          'economyClass': this.economyClass,
+          'economyClassPrice': this.economyClassPrice,
+          'airlineID': this.$route.params.id
+        }
+
+        AXIOS.post('/flights/add', flight)
+        .then(response => {
+          this.success = true;
+          this.error = false;
+        })
+        .catch(err => {
+          this.success = false;
+          this.error = true
+        })
     }
   },
    mounted () {

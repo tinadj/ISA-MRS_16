@@ -6,6 +6,7 @@ import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -30,13 +31,11 @@ public class Flight implements Serializable {
     @JoinColumn(name = "arrivalDestination", referencedColumnName = "id", nullable = false)
     private Destination arrivalDestination;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private Date departure;
+    private LocalDateTime departure;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private Date arrival;
+    private LocalDateTime arrival;
 
     @Column(nullable = false)
     private int duration;
@@ -93,19 +92,19 @@ public class Flight implements Serializable {
         this.arrivalDestination = to;
     }
 
-    public Date getDeparture() {
+    public LocalDateTime getDeparture() {
         return departure;
     }
 
-    public void setDeparture(Date departure) {
+    public void setDeparture(LocalDateTime departure) {
         this.departure = departure;
     }
 
-    public Date getArrival() {
+    public LocalDateTime getArrival() {
         return arrival;
     }
 
-    public void setArrival(Date arrival) {
+    public void setArrival(LocalDateTime arrival) {
         this.arrival = arrival;
     }
 
