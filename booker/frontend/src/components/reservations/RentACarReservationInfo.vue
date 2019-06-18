@@ -42,16 +42,16 @@
                                     <div class="profile-info-name"> Pick up date: </div>
 									<div class="profile-info-value">
 										<span>
-                                           {{dateToStr(this.reservation.pickUpDate)}}
+                                           {{dateToStr(reservation.pickUpDate)}}
                                         </span> 
 									</div>
 								</div>
 
                                 <div class="profile-info-row">
-                                    <div class="profile-info-name"> Return date: </div>
+                                    <div class="profile-info-name"> Number of days: </div>
 									<div class="profile-info-value">
 										<span>
-                                           {{dateToStr(this.returnDate)}}
+                                           {{reservation.days}}
                                         </span> 
 									</div>
 								</div>

@@ -48,6 +48,10 @@
         methods: {
             sort: function(e) {
                 e.preventDefault()
+
+                AXIOS.get('reservations/sort/' + this.criteria)
+                .then(response => this.reservations = response.data)
+                .catch(err => console.log(err))
             }
         },
         mounted() {
