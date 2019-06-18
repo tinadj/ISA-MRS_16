@@ -19,6 +19,7 @@ public class RentACarDTO {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.description = description;
     }
 
     public Integer getId() {

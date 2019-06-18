@@ -17,6 +17,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -73,7 +74,7 @@ public class AuthenticationController {
     * Ukoliko su uneti ispravni usernmae i password vraca http status OK i token, a u suprotnom
      * vraca http status BAD REQUEST.
      */
-    @PostMapping(path = "/login")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<UserTokenState> createAuthenticationToken(@RequestBody UserDTO dto) {
         try {
             final Authentication authentication = authenticationManagerUser
@@ -111,8 +112,8 @@ public class AuthenticationController {
     * cije polje enable je postavljeno na false. Korisnik se sacuva u bazi podataka i poziva se funkacija za slanje
     * aktivacionog mail-a.
      */
-    @PostMapping(path = "/register")
-    public HttpStatus register(@RequestBody UserDTO dto) {
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public HttpStatus Register(@RequestBody UserDTO dto) throws AuthenticationException {
 
         User u = userService.findByUsername(dto.getUsername());
         if(u != null) {
@@ -128,7 +129,7 @@ public class AuthenticationController {
         authority.setName(UserAuthorities.USER.toString());
         authorityList.add(authority);
 
-        user.setAuthorities(authorityList);
+        user.setAuthority(authorityList);
 
         userDetailsService.create(user);
         mailService.sendActivationLink(user);
@@ -140,7 +141,7 @@ public class AuthenticationController {
     * Funkcija koja se realziuje nakon sto se klikne na aktivacioni mail.
     * Ukoliko postoji korisnik sa odredjenim tokenom, njegovo polje enable se postavi na true.
      */
-    @GetMapping(path = "/user-confirm/{token}")
+    @RequestMapping(value = "/user-confirm/{token}", method = RequestMethod.GET)
     public HttpStatus confirmRegistration(@PathVariable String token) {
         User user = userService.findByToken(token);
 
@@ -154,8 +155,8 @@ public class AuthenticationController {
         return HttpStatus.OK;
     }
 
-    @PostMapping(path = "/refresh")
-    public ResponseEntity<UserTokenState> refreshAuthenticationToken(HttpServletRequest request) {
+    @RequestMapping(value = "/refresh", method = RequestMethod.POST)
+    public ResponseEntity<?> refreshAuthenticationToken(HttpServletRequest request) {
 
         String token = tokenUtils.getToken(request);
         String username = this.tokenUtils.getUsernameFromToken(token);
@@ -165,20 +166,21 @@ public class AuthenticationController {
             String refreshedToken = tokenUtils.refreshToken(token);
             int expiresIn = tokenUtils.getExpiredIn();
 
-            return new ResponseEntity(new UserTokenState(refreshedToken, expiresIn), HttpStatus.OK);
+            return ResponseEntity.ok(new UserTokenState(refreshedToken, expiresIn));
         } else {
             UserTokenState userTokenState = new UserTokenState();
-            return new ResponseEntity(userTokenState, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(userTokenState);
         }
     }
 
-    @PostMapping(path = "/change-password")
-    public ResponseEntity<HashMap> changePassword(@RequestBody PasswordChanger passwordChanger) {
+
+    @RequestMapping(value = "/change-password", method = RequestMethod.POST)
+    public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
         userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
 
         Map<String, String> result = new HashMap<>();
         result.put("result", "success");
-        return new ResponseEntity(result, HttpStatus.ACCEPTED);
+        return ResponseEntity.accepted().body(result);
     }
 
     static class PasswordChanger {
@@ -190,7 +192,7 @@ public class AuthenticationController {
     * Registrovanje sistemskog admina ukoliko ne postoji u bazi podataka.
     * Poziva se prilikom ucitavanje pocetne stranice aplikacije.
      */
-    @PostMapping(path = "/default-sys-admin")
+    @RequestMapping(value = "/default-sys-admin", method = RequestMethod.POST)
     public HttpStatus registerDefaultSysAdmin()  {
 
         if (userService.findByUsername("sys") == null) {
@@ -214,7 +216,7 @@ public class AuthenticationController {
     /*
     * Registrovanje admina aviokompanije, hotela ili rent a car servisa.
      */
-    @PostMapping(path = "/register-admin")
+    @RequestMapping(value = "/register-admin", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public HttpStatus registerAdmin(@RequestBody AdminInfoDTO dto) {
 
@@ -248,7 +250,7 @@ public class AuthenticationController {
         authority.setName(UserAuthorities.AIRLINE_ADMIN.toString());
         authorityList.add(authority);
 
-        admin.setAuthorities(authorityList);
+        admin.setAuthority(authorityList);
 
         Airline airline = airlineService.findOne(dto.getItemID());
         if (airline == null)
@@ -278,7 +280,7 @@ public class AuthenticationController {
         authority.setName(UserAuthorities.HOTEL_ADMIN.toString());
         authorityList.add(authority);
 
-        admin.setAuthorities(authorityList);
+        admin.setAuthority(authorityList);
 
         Hotel hotel = hotelService.findOne(dto.getItemID());
         if (hotel == null)
@@ -308,7 +310,7 @@ public class AuthenticationController {
         authority.setName(UserAuthorities.RAC_ADMIN.toString());
         authorityList.add(authority);
 
-        admin.setAuthorities(authorityList);
+        admin.setAuthority(authorityList);
 
         RentACar rentACar = rentACarService.findOne(dto.getItemID());
         if (rentACar == null)
@@ -327,7 +329,7 @@ public class AuthenticationController {
     /*
      * Registrovanje sys admina.
      */
-    @PostMapping(path = "/register-sys-admin")
+    @RequestMapping(value = "/register-sys-admin", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public HttpStatus registerSysAdmin(@RequestBody AdminInfoDTO dto) {
 
@@ -346,7 +348,7 @@ public class AuthenticationController {
         authority.setName(UserAuthorities.SYS_ADMIN.toString());
         authorityList.add(authority);
 
-        admin.setAuthorities(authorityList);
+        admin.setAuthority(authorityList);
 
         userDetailsService.create(admin);
         mailService.sendActivationLink(admin);
@@ -357,7 +359,7 @@ public class AuthenticationController {
     /*
     * Provera da li korisnik sa odredjenom email adresom postoji.
      */
-    @GetMapping(path = "/check-mail/{email}")
+    @RequestMapping(value = "/check-mail/{email}", method = RequestMethod.GET)
     public HttpStatus isEmailExist(@PathVariable String email) {
         User user = userService.findByEmail(email);
         if(user != null)

@@ -1,11 +1,10 @@
 package org.tim16.booker.model.users;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "friendships")
-public class Friendship implements Serializable {
+public class Friendship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +23,7 @@ public class Friendship implements Serializable {
     @Column( nullable = false)
     private FriendshipStatus status;
 
-    public Friendship() { /* empty constructor */}
+    public Friendship() {}
 
     public Integer getId() {
         return id;

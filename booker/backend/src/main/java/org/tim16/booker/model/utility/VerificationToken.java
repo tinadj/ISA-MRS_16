@@ -26,7 +26,8 @@ public class VerificationToken {
     @JoinColumn(nullable = false, name = "user")
     private User user;
 
-    public VerificationToken() {  /* empty constructor */ }
+    public VerificationToken() {
+    }
 
     public Integer getId() {
         return id;

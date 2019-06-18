@@ -8,7 +8,6 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "hotels")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Hotel implements Serializable {
+public class Hotel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +34,7 @@ public class Hotel implements Serializable {
     private BigDecimal longitude;
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<ExtraServicePrice> extraServicePrices = new HashSet<>();
+    private Set<ExtraServicePrice> extraServicePrices = new HashSet<ExtraServicePrice>();
 
     @Column(name = "description")
     private String description;
@@ -46,19 +45,19 @@ public class Hotel implements Serializable {
 
     @JsonManagedReference("hotel-room")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="hotel")
-    private Set<Room> rooms = new HashSet<>();
+    private Set<Room> rooms = new HashSet<Room>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rating = new HashSet<>();
+    private Set<Rate> rating = new HashSet<Rate>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<HotelReservation> reservations = new HashSet<>();
+    private Set<HotelReservation> reservations = new HashSet<HotelReservation>();
 
     @JsonBackReference("hotel-admin")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="hotel")
-    private Set<HotelAdmin> admins = new HashSet<>();
+    private Set<HotelAdmin> admins = new HashSet<HotelAdmin>();
 
-    public Hotel() { /* empty constructor */}
+    public Hotel() {}
 
     /* Zadovoljava obostranu vezu izmedju sobe i hotela (ovde se vezuje soba za hotel) */
     public void add(Room p) {
@@ -73,7 +72,7 @@ public class Hotel implements Serializable {
 
     public void removeRoom(Integer id) {
         for (Room r : getRooms()) {
-            if (r.getId().equals(id)) {
+            if (r.getId() == id) {
                 this.getRooms().remove(r);
                 return;
             }

@@ -7,7 +7,6 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "airlines")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Airline implements Serializable {
+public class Airline {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,29 +38,29 @@ public class Airline implements Serializable {
     @JoinTable(name = "airline_destinations",
             joinColumns = @JoinColumn(name = "airline_id"),
             inverseJoinColumns = @JoinColumn(name = "destination_id"))
-    private Set<Destination> destinations = new HashSet<>();
+    private Set<Destination> destinations = new HashSet<Destination>();
 
     @JsonBackReference("airline-flight")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Flight> flights = new HashSet<>();
+    private Set<Flight> flights = new HashSet<Flight>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Ticket> discountTickets = new HashSet<>();
+    private Set<Ticket> discountTickets = new HashSet<Ticket>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<LuggagePrice> luggagePrices = new HashSet<>();
+    private Set<LuggagePrice> luggagePrices = new HashSet<LuggagePrice>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rating = new HashSet<>();
+    private Set<Rate> rating = new HashSet<Rate>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<FlightReservation> reservations = new HashSet<>();
+    private Set<FlightReservation> reservations = new HashSet<FlightReservation>();
 
     @JsonBackReference("airline-admin")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="airline")
-    private Set<AirlineAdmin> admins = new HashSet<>();
+    private Set<AirlineAdmin> admins = new HashSet<AirlineAdmin>();
 
-    public Airline() { /* empty constructor */}
+    public Airline() {}
 
     public void addAdmin(AirlineAdmin admin) {
         if (admin.getAirline() != null)

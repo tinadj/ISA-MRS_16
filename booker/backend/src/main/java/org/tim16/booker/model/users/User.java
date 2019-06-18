@@ -44,7 +44,7 @@ public abstract class User implements UserDetails {
 
     private Timestamp lastPasswordResetDate;
 
-    public User() { /* empty constructor */}
+    public User() {}
 
     public User(String username, String password) {
         this.username = username;
@@ -129,9 +129,10 @@ public abstract class User implements UserDetails {
         return authorities;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
+    public void setAuthority(List<Authority> authorities) {
         this.authorities = authorities;
     }
+
 
     @JsonIgnore
     @Override
@@ -160,7 +161,9 @@ public abstract class User implements UserDetails {
         this.enabled = enabled;
     }
 
-
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
+    }
 
     public Timestamp getLastPasswordResetDate() {
         return lastPasswordResetDate;

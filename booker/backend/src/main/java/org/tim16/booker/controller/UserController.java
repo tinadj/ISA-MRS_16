@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.tim16.booker.dto.RoleIdDTO;
 import org.tim16.booker.dto.UserDTO;
 import org.tim16.booker.model.admins.AirlineAdmin;
@@ -33,7 +34,7 @@ public class UserController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    @GetMapping(path = "/get-role-and-id")
+    @RequestMapping(value = "/get-role-and-id", method = RequestMethod.GET)
     public ResponseEntity<RoleIdDTO> getRoleAndID() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -62,7 +63,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping(path = "/{id}")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<User> getUser(@PathVariable Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -76,7 +77,7 @@ public class UserController {
 
     }
 
-    @PutMapping(path = "/update")
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<User> update(@RequestBody UserDTO dto) {
         User user = userService.findByUsername(dto.getUsername());
 
@@ -90,7 +91,20 @@ public class UserController {
         return new ResponseEntity<>(userDetailsService.update(user), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/get-admins")
+    @RequestMapping(value = "/update-profile-pic", method = RequestMethod.PUT, consumes ="multipart/form-data")
+    public ResponseEntity<User> updateProfilePic(MultipartFile file) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String username = authentication.getName();
+            User user = userService.findByUsername(username);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/get-admins", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<User>> getAdmins( ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

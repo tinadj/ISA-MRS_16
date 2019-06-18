@@ -23,12 +23,12 @@ public class AirlinesController {
     @Autowired
     private DestinationService destinationService;
 
-    @GetMapping(path = "/all")
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<Airline>> getAll() {
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/add", consumes = "application/json")
+    @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<Airline> add(@RequestBody AirlineDTO dto) {
         Airline airline = new Airline();
@@ -52,11 +52,11 @@ public class AirlinesController {
             return new ResponseEntity<>(airline, HttpStatus.CREATED);
         } catch(Exception e)
         {   // catches duplicate name
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping(path = "/{id}")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Airline> getAirline(@PathVariable Integer id) {
         Airline airline = service.findOne(id);
 
@@ -67,7 +67,7 @@ public class AirlinesController {
         return new ResponseEntity<>(airline, HttpStatus.OK);
     }
 
-    @PutMapping(path = "/update")
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<Airline> update(@RequestBody AirlineDTO dto) {
 
         try {

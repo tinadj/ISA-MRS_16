@@ -3,12 +3,11 @@ package org.tim16.booker.model.rent_a_car;
 import org.tim16.booker.model.users.Reservation;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "rent_a_car_reservations")
-public class RentACarReservation implements Serializable {
+public class RentACarReservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +35,7 @@ public class RentACarReservation implements Serializable {
 
     private Float totalPrice;
 
-    public RentACarReservation() { /* empty constructor */}
+    public RentACarReservation() {}
 
     public Integer getId() {
         return id;

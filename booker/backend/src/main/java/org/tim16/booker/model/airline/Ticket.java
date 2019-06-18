@@ -3,11 +3,10 @@ package org.tim16.booker.model.airline;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "tickets")
-public class Ticket implements Serializable {
+public class Ticket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +28,7 @@ public class Ticket implements Serializable {
 
     private Boolean reserved;
 
-    public Ticket() { /* empty constructor */}
+    public Ticket() {}
 
     public Integer getId() {
         return id;

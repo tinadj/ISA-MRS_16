@@ -3,14 +3,13 @@ package org.tim16.booker.model.hotel;
 import org.tim16.booker.model.users.Reservation;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "hotel_reservations")
-public class HotelReservation implements Serializable {
+public class HotelReservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +19,7 @@ public class HotelReservation implements Serializable {
     private Reservation reservation;
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<RoomReservation> rooms = new HashSet<>();
+    private Set<RoomReservation> rooms = new HashSet<RoomReservation>();
 
     @Temporal(TemporalType.DATE)
     private Date checkInDate;
@@ -31,7 +30,7 @@ public class HotelReservation implements Serializable {
 
     private Float totalPrice;
 
-    public HotelReservation() { /* empty constructor */}
+    public HotelReservation() {}
 
     public Integer getId() {
         return id;

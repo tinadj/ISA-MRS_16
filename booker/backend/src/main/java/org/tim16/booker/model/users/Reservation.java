@@ -6,11 +6,10 @@ import org.tim16.booker.model.hotel.HotelReservation;
 import org.tim16.booker.model.rent_a_car.RentACarReservation;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "reservations")
-public class Reservation implements Serializable {
+public class Reservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +30,7 @@ public class Reservation implements Serializable {
     @OneToOne
     private RentACarReservation rentACarReservation;
 
-    public Reservation() { /* empty constructor */}
+    public Reservation() {}
 
     public Integer getId() {
         return id;

@@ -2,7 +2,8 @@ package org.tim16.booker.dto;
 
 import java.util.Date;
 
-public class HotelsSearchParamsDTO {
+public class HotelsSearchParamsDTO
+{
     private String name;
     private String city;
     private String state;
@@ -10,7 +11,10 @@ public class HotelsSearchParamsDTO {
     private Date checkout;
     private Integer criteria;
 
-    public HotelsSearchParamsDTO() {}
+
+    public HotelsSearchParamsDTO()
+    {}
+
 
     public HotelsSearchParamsDTO(String name, String city, String state, Date checkin, Date checkout, Integer criteria) {
         this.name = name;

@@ -1,5 +1,8 @@
 package org.tim16.booker.model.airline;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -21,7 +24,7 @@ public class Seat {
     @Column(nullable = false)
     private TravelClass travelClass;
 
-    public Seat() { /* empty constructor */}
+    public Seat() {}
 
     public Integer getId() {
         return id;

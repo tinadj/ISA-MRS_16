@@ -1,11 +1,10 @@
 package org.tim16.booker.model.airline;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "luggage_prices")
-public class LuggagePrice implements Serializable {
+public class LuggagePrice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +15,7 @@ public class LuggagePrice implements Serializable {
 
     private Float price;
 
-    public LuggagePrice() { /* empty constructor */}
+    public LuggagePrice() {}
 
     public Integer getId() {
         return id;

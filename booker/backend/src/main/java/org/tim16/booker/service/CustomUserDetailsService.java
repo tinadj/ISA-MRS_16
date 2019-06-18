@@ -23,7 +23,7 @@ import org.tim16.booker.repository.*;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    protected final Log logger = LogFactory.getLog(getClass());
+    protected final Log LOGGER = LogFactory.getLog(getClass());
 
     @Autowired
     private UserRepository userRepository;
@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     // Funkcija koja na osnovu username-a iz baze vraca objekat User-a
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userRepository.findByUsername(username);
         if (user != null) {
@@ -53,16 +53,16 @@ public class CustomUserDetailsService implements UserDetailsService {
         String username = currentUser.getName();
 
         if (authenticationManager != null) {
-            logger.debug("Re-authenticating user '" + username + "' for password change request.");
+            LOGGER.debug("Re-authenticating user '" + username + "' for password change request.");
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));
         } else {
-            logger.debug("No authentication manager set. can't change Password!");
+            LOGGER.debug("No authentication manager set. can't change Password!");
 
             return;
         }
 
-        logger.debug("Changing password for user '" + username + "'");
+        LOGGER.debug("Changing password for user '" + username + "'");
 
         User user = (User) loadUserByUsername(username);
 
