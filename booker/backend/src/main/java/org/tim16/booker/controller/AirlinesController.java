@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.AirlineDTO;
+import org.tim16.booker.dto.LuggageDTO;
 import org.tim16.booker.model.airline.Airline;
 import org.tim16.booker.model.airline.Flight;
 
@@ -102,6 +103,28 @@ public class AirlinesController {
                 destinationService.create(destination);
             }
             airline.setAddress(destination);
+
+            return new ResponseEntity<>(service.update(airline), HttpStatus.OK);
+        }
+        catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping(path = "/edit-prices")
+    public ResponseEntity<Airline> update(@RequestBody LuggageDTO dto) {
+
+        try {
+            Airline airline = service.findOne(dto.getAirlineId());
+
+            for (LuggagePrice lp : airline.getLuggagePrices()
+                 ) {
+                if(lp.getType() == LuggageType.CARRY_ON) {
+                    lp.setPrice(dto.getCarryOnPrice());
+                }else {
+                    lp.setPrice(dto.getCheckedPrice());
+                }
+            }
 
             return new ResponseEntity<>(service.update(airline), HttpStatus.OK);
         }

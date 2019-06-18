@@ -17,8 +17,8 @@
       				label="Checked: "
       				label-cols="4"
       				label-cols-lg="2"
-      				label-for="input-1">
-      				<b-form-input id="input-1" v-model="checked" placeholder="Checked Price" type=number step=0.01></b-form-input>
+      				label-for="input-2">
+      				<b-form-input id="input-2" v-model="checked" placeholder="Checked Price" type=number step=0.01></b-form-input>
       			</b-form-group>
 
 			<b-button variant="outline-primary" type="submit" class="mr-1">Save</b-button>
@@ -71,7 +71,20 @@ export default {
   methods: {
     edit (e) {
       e.preventDefault()
-      
+      const airline = {
+        'airlineId': this.$route.params.id,
+        'carryOnPrice': this.carryOn,
+        'checkedPrice': this.checked
+      }
+      AXIOS.put('/airlines/edit-prices', airline)
+      .then(response => {
+        this.success = true;
+        this.error = false;
+      })
+      .catch(err => {
+        this.success = false;
+        this.error = true
+      })
     }
   }
 }
