@@ -14,6 +14,7 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.AirlineService;
 import org.tim16.booker.service.DestinationService;
 import org.tim16.booker.service.FlightService;
+import org.tim16.booker.service.SeatService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
@@ -31,6 +32,9 @@ public class FlightController {
     @Autowired
     private AirlineService airlineService;
 
+    @Autowired
+    private SeatService seatService;
+
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public ResponseEntity<List<Flight>> getAll() {
         return new ResponseEntity<>(flightService.findAll(), HttpStatus.OK);
@@ -39,8 +43,6 @@ public class FlightController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
     @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<Flight> add(@RequestBody FlightDTO dto) {
-        // a new destination must have airline defined
-
         Airline airline = airlineService.findOne(dto.getAirlineId());
         if (airline == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -79,6 +81,8 @@ public class FlightController {
             seat.setSeatLetter(String.valueOf(letter));
             seat.setType(TravelClass.FIRST);
             flight.getSeats().add(seat);
+            seat = seatService.create(seat);
+
         }
 
         for(int i = 0; i <dto.getBusinessClass(); i++){
@@ -91,6 +95,8 @@ public class FlightController {
             seat.setSeatLetter(String.valueOf(letter));
             seat.setType(TravelClass.BUSINESS);
             flight.getSeats().add(seat);
+            seat = seatService.create(seat);
+
         }
 
         for(int i = 0; i <dto.getEconomyClass(); i++){
@@ -103,6 +109,8 @@ public class FlightController {
             seat.setSeatLetter(String.valueOf(letter));
             seat.setType(TravelClass.ECONOMY);
             flight.getSeats().add(seat);
+            seat = seatService.create(seat);
+
         }
 
         TicketPrice tpF = new TicketPrice();
