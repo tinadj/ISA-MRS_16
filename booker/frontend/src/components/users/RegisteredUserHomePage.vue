@@ -6,7 +6,7 @@
         <b-nav-item :to="{ path: 'hotels'}"><font-awesome-icon :icon="bedIcon"/> Hotels</b-nav-item>
         <b-nav-item :to="{ path: 'rent-a-cars'}"><font-awesome-icon :icon="carIcon"/> Rent a car Services</b-nav-item>
         <b-nav-item><font-awesome-icon :icon="friendsIcon"/> Friends</b-nav-item>
-        <b-nav-item><font-awesome-icon :icon="reservationsIcon"/> My reservations</b-nav-item>
+        <b-nav-item :to="{ path: 'reservations'}"><font-awesome-icon :icon="reservationsIcon"/> My reservations</b-nav-item>
         <b-nav-item :to="{ path: 'profile-page'}"><font-awesome-icon :icon="profileIcon"/> Profile</b-nav-item>
         <b-nav-item :to="{ path: 'sign-out'}"><font-awesome-icon :icon="signOutIcon"/> Sign out</b-nav-item>
       </b-nav>

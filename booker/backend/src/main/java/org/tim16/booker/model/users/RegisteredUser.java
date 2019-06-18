@@ -1,5 +1,7 @@
 package org.tim16.booker.model.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
@@ -15,14 +17,18 @@ public class RegisteredUser extends User {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
+    @JsonManagedReference("user-friendships")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Friendship> friends = new HashSet<>();
 
+    @JsonManagedReference("user-reservations")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
     private Set<Reservation> reservations = new HashSet<>();
 
+    @JsonManagedReference("user-rates")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rates = new HashSet<>();
+
 
     public RegisteredUser() {  /* empty constructor */}
 
@@ -36,15 +42,6 @@ public class RegisteredUser extends User {
         super.setEnabled(false);
     }
 
-    public void addReservations(Reservation r)
-    {
-        if (r.getUser() != null)
-        {
-            r.getUser().getReservations().remove(r);
-        }
-        r.setUser(this);
-        this.getReservations().add(r);
-    }
 
     public Integer getBonusPts() {
         return bonusPts;
@@ -62,6 +59,7 @@ public class RegisteredUser extends User {
         this.type = type;
     }
 
+
     public Set<Friendship> getFriends() {
         return friends;
     }
@@ -77,6 +75,7 @@ public class RegisteredUser extends User {
     public void setReservations(Set<Reservation> reservations) {
         this.reservations = reservations;
     }
+
 
     public Set<Rate> getRates() {
         return rates;

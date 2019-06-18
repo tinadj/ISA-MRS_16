@@ -80,6 +80,9 @@ import RoomsTable from '@/components/rooms/RoomsTable'
 import editRoom from '@/components/rooms/editRoom'
 import editExtraServices from '@/components/rooms/editExtraServices'
 
+// Reservations
+import ReservationList from '@/components/reservations/ReservationList'
+
 
 Vue.use(Router)
 
@@ -140,6 +143,10 @@ export default new Router({
         {
           path: 'rent-a-cars',
           component: RegisteredUserSearchRAC
+        },
+        {
+          path: 'reservations',
+          component: ReservationList
         },
         {
           path: 'profile-page',

@@ -21,14 +21,14 @@
 									<div class="profile-info-value">
 										<span>
                                             {{item.brand}} {{item.model}}, {{item.productionYear}}<br>
-                                            <star-rating v-model="this.rating" :inline="true" :star-size="17" :show-rating="false" :read-only="true" :round-start-rating="false"></star-rating>
+                                            <star-rating v-model="this.getRating()" :inline="true" :star-size="17" :show-rating="false" :read-only="true" :round-start-rating="false"></star-rating>
                                         </span> 
 									</div>
 								</div>
 
 								<div class="profile-info-row">
 									<div class="profile-info-value">
-										<span>{{item.seatsNum}} <font-awesome-icon :icon="personIcon"/> <b> | </b> Vehicle type: {{vehicleType}}</span>
+										<span>{{item.seatsNum}} <font-awesome-icon :icon="personIcon"/> <b> | </b> Vehicle type: {{getVehicleType()}}</span>
 									</div>
 								</div>
 
@@ -70,8 +70,8 @@
                                             <b-container>
                                                 <b-row>
                                                     <b-col>
-                                                        <b>{{totalPrice}} </b><font-awesome-icon :icon="euroIcon"/><br>
-                                                        (price for {{days}} days)<br>
+                                                        <b>{{getTotalPrice()}} </b><font-awesome-icon :icon="euroIcon"/><br>
+                                                        (price for {{countDays()}} days)<br>
                                                     </b-col>
                                                     <b-col>
                                                         <b-button v-if="buttonShow" v-on:click="book" variant="outline-secondary">Book</b-button>
@@ -108,21 +108,19 @@ export default {
     props: ["item", "params"],
     data() {
         return {
-            rating: this.getRating(),
-            vehicleType: this.getVehicleType(),
             details: false,
-            days: this.countDays(),
-            totalPrice: this.getTotalPrice(),
+            success: false,
+            error: false,
+            errorMessage: '',
+            buttonShow: true,
+
+            // ikonice
             locationIcon: faMapMarkerAlt,
             euroIcon: faEuroSign,
             personIcon: faUser,
             discountIcon: faTag,
             infoIcon: faInfoCircle,
-            descriptionIcon: faAlignLeft,
-            success: false,
-            error: false,
-            errorMessage: '',
-            buttonShow: true
+            descriptionIcon: faAlignLeft
         } 
     },
     methods: {
@@ -170,13 +168,14 @@ export default {
         // Racunanje prosecne ocene vozila
         getRating() {
             let rating = 0
+            /*
             if (this.item.rating.length > 0) {
                 for (var i = 0; i < this.item.rating.length; i++) 
                     rating += this.item.rating.rate[i]
                 rating = rating / this.item.rating.length
             } else {
                 rating = 0
-            }
+            }*/
             return rating
         },
         // Racunanje ukupne cene za trazeni broj dana
@@ -186,6 +185,7 @@ export default {
         },
     },
     mounted() {
+        console.log(this.item)
     }
 }
 </script>
