@@ -7,11 +7,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.AirlineDTO;
 import org.tim16.booker.model.airline.Airline;
+import org.tim16.booker.model.airline.Flight;
+
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.AirlineService;
 import org.tim16.booker.service.DestinationService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -94,5 +98,36 @@ public class AirlinesController {
         }
     }
 
+    @RequestMapping(value = "/{id}/destinations", method = RequestMethod.GET)
+    public ResponseEntity<List<Destination>> getDestinations(@PathVariable Integer id) {
+        Airline airline = service.findOne(id);
+
+        if (airline == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<Destination> destinations = new ArrayList<>();
+        for (Destination d: airline.getDestinations()) {
+            destinations.add(d);
+        }
+
+        return new ResponseEntity<>(destinations, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}/flights", method = RequestMethod.GET)
+    public ResponseEntity<List<Flight>> getFlights(@PathVariable Integer id) {
+        Airline airline = service.findOne(id);
+
+        if (airline == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<Flight> flights = new ArrayList<>();
+        for (Flight f: airline.getFlights()) {
+            flights.add(f);
+        }
+
+        return new ResponseEntity<>(flights, HttpStatus.OK);
+    }
 
 }
