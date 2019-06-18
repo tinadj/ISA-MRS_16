@@ -4,15 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.comparator.*;
 import org.tim16.booker.dto.VehicleDTO;
 import org.tim16.booker.dto.VehicleSearchParamsDTO;
 import org.tim16.booker.model.rent_a_car.*;
-import org.tim16.booker.service.BranchOfficeService;
-import org.tim16.booker.service.RacReservationService;
-import org.tim16.booker.service.RentACarService;
-import org.tim16.booker.service.VehicleService;
+import org.tim16.booker.model.users.RegisteredUser;
+import org.tim16.booker.model.utility.Rate;
+import org.tim16.booker.service.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
@@ -32,6 +32,9 @@ public class VehicleController {
 
     @Autowired
     private BranchOfficeService branchOfficeService;
+
+    @Autowired
+    private RateService rateService;
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<Vehicle>> getAll() {
@@ -149,7 +152,7 @@ public class VehicleController {
     }
 
     @PutMapping(path = "/discount/{id}/{discount}")
-    @PreAuthorize("hasAnyAuthority('RAC_ADMIN')")
+    @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<HttpStatus> setDiscount(@PathVariable Integer id, @PathVariable Integer discount) {
         Vehicle vehicle = vehicleService.findOne(id);
 
@@ -207,6 +210,62 @@ public class VehicleController {
         result = sort(result, dto.getCriteria());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "rating/{id}")
+    public ResponseEntity<Float> getRating(@PathVariable Integer id) {
+        Vehicle vehicle = vehicleService.findOne(id);
+
+        if (vehicle == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(getAverageRating(vehicle.getRating()), HttpStatus.OK);
+    }
+
+    @PostMapping(path = "rate/{id}/{rateValue}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Float> rateVehicle(@PathVariable Integer id, @PathVariable Integer rateValue) {
+        Vehicle vehicle = vehicleService.findOne(id);
+        RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (vehicle == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        // Ako je korisnik vec oceni, promeni vrednost te ocene
+        boolean rated = false;
+        for (Rate rate : vehicle.getRating()) {
+            if (rate.getUser().getId().equals(user.getId())) {
+                rate.setRateValue(rateValue);
+                rateService.update(rate);
+                rated = true;
+                break;
+            }
+        }
+
+        // Ako nije ocenio, dodaj novu ocenu
+        if (!rated) {
+            Rate rate = new Rate(user, rateValue);
+            vehicle.getRating().add(rate);
+            rateService.create(rate);
+            vehicleService.update(vehicle);
+        }
+
+        return new ResponseEntity<>(getAverageRating(vehicle.getRating()), HttpStatus.OK);
+    }
+
+    /*
+    Racuna prosecnu ocenu
+     */
+    private Float getAverageRating(Set<Rate> rates) {
+        Float sum = 0f;
+        for (Rate rate : rates) {
+            sum += rate.getRateValue();
+        }
+
+        if (rates.size() != 0)
+            sum = sum / rates.size();
+
+        return sum;
     }
 
     /*

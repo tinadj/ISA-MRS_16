@@ -22,8 +22,8 @@
             <b-card>Hotel reservation!</b-card>
         </b-collapse>
 
-        <b-collapse v-bind:id="racToggle">
-            <RentACarReservationInfo v-bind:reservation="reservation.rentACarReservation"></RentACarReservationInfo>
+        <b-collapse  v-bind:id="racToggle">
+            <RentACarReservationInfo v-if="racExists" v-bind:reservation="reservation.rentACarReservation"></RentACarReservationInfo>
         </b-collapse>
     </div>
 </template>

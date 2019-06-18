@@ -21,14 +21,15 @@ public class Rate implements Serializable {
     @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
     private User user;
 
-    @Enumerated
-    @Column(nullable = false)
-    private RateType type;
-
     @Column(nullable = false)
     private Integer rateValue;
 
     public Rate() { /* empty constructor */}
+
+    public Rate(User user, Integer rateValue) {
+        this.user = user;
+        this.rateValue = rateValue;
+    }
 
     public Integer getId() {
         return id;
@@ -44,14 +45,6 @@ public class Rate implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public RateType getType() {
-        return type;
-    }
-
-    public void setType(RateType type) {
-        this.type = type;
     }
 
     public Integer getRateValue() {

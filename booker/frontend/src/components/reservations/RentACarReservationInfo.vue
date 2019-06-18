@@ -32,7 +32,7 @@
 									<div class="profile-info-value">
 										<span>
                                             <h6>{{reservation.vehicle.brand}}, {{reservation.vehicle.model}}, {{reservation.vehicle.productionYear}} &nbsp
-                                                <star-rating :inline="true" :star-size="17" :show-rating="false" :read-only="!returnedVehicle" :round-start-rating="false"></star-rating>
+                                                <star-rating v-model="vehicleRating" :inline="true" :star-size="17" :show-rating="false" :read-only="!returnedVehicle" :round-start-rating="false" v-on:rating-selected ="rate"></star-rating>
                                             </h6>
                                         </span> 
 									</div>
@@ -147,21 +147,41 @@
                     this.error = true
                 })
             },
+            // Ocenjivanje vozila
+            rate: async function() {
+                await AXIOS.post('vehicles/rate/' + this.reservation.vehicle.id + '/' + this.vehicleRating)
+                .then(response => this.vehicleRating = response.data)
+                .catch(err => console.log(err))
+            },
+            // Konvertuje datum u string format dd.MM.yyyy
             dateToStr: function(date) {
                 let converted = new Date(date)
                 return converted.getDate() + "." + (converted.getMonth() + 1) + "." + converted.getFullYear()
             },
+            // 'Sabira' datum i broj dana
             addDays: function(date, days) {
                 var result = new Date(date);
                 result.setDate(result.getDate() + days);
                 return result;
+            },
+            // Racunanje prosecne ocene vozila
+            getRating: async function() {
+                await AXIOS.get('/vehicles/rating/' + this.reservation.vehicle.id)
+                .then(response => {
+                    this.vehicleRating = response.data
+                })
+                .catch(err => console.log(err))
             }
         },
         mounted() {
+            // Provera da li je rezervacija prola
             let pickUpDate = new Date(this.reservation.pickUpDate)
             this.returnDate = this.addDays(pickUpDate, this.reservation.days)
             
             this.returnedVehicle = new Date(this.returnDate.toDateString()) < new Date(new Date().toDateString())
+        
+            // Ocena vozila
+            this.getRating()
         }
     }
 </script>

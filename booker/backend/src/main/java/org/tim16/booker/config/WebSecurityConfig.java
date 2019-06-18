@@ -72,6 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/users/**").permitAll()
+                .antMatchers("/api/vehicles/rating/**").permitAll()
 
                 // svaki zahtev mora biti autorizovan
                 .anyRequest().authenticated().and()

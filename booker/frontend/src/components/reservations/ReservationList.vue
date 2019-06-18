@@ -55,7 +55,6 @@
             
             AXIOS.get('/reservations/logged-in-user')
             .then(response => {
-                console.log(response.data)
                 this.reservations = response.data
             })
             .catch(err => console.log(err))

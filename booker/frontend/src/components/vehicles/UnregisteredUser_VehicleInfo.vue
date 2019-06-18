@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import {AXIOS} from '../../http-common'
 import { faEuroSign, faUser, faAlignLeft, faInfoCircle, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
 
 export default {
@@ -84,10 +85,13 @@ export default {
     props: ["item"],
     data() {
         return {
-            rating: '',
+            rating: 0,
             details: false,
             days: 10,
             totalPrice: 0,
+            vehicleType: '',
+
+            // ikonice
             locationIcon: faMapMarkerAlt,
             euroIcon: faEuroSign,
             personIcon: faUser,
@@ -99,19 +103,18 @@ export default {
         getVehicleType() {
             this.item.type = this.item.type.replace(/_/g,' ')
             return this.item.type.charAt(0).toUpperCase() + this.item.type.slice(1).toLowerCase()
+        },
+        // Racunanje prosecne ocene vozila
+        getRating: async function() {
+            await AXIOS.get('/vehicles/rating/' + this.item.id)
+            .then(response => {
+                this.rating = response.data
+            })
+            .catch(err => console.log(err))
         }
-       
     },
     mounted() {
-        // Racunannje prosecne ocene vozila
-        if (this.item.rating.length > 0) {
-            for (var i = 0; i < this.item.rating.length; i++) {
-                this.rating += this.item.rating.rate[i]
-            }
-            this.rating = this.rating / this.item.rating.length
-        } else {
-            this.rating = 0
-        }
+        this.getRating()        
 
         this.totalPrice = 10 * this.item.price
         this.vehicleType = this.getVehicleType()

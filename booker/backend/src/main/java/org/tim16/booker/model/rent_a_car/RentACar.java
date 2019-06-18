@@ -46,7 +46,7 @@ public class RentACar implements Serializable {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Vehicle> vehicles = new HashSet<>();
 
-    @JsonIgnore
+
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<>();
 
