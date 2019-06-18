@@ -9,6 +9,8 @@ import org.tim16.booker.dto.AirlineDTO;
 import org.tim16.booker.model.airline.Airline;
 import org.tim16.booker.model.airline.Flight;
 
+import org.tim16.booker.model.airline.LuggagePrice;
+import org.tim16.booker.model.airline.LuggageType;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.AirlineService;
 import org.tim16.booker.service.DestinationService;
@@ -50,6 +52,16 @@ public class AirlinesController {
             destinationService.create(destination);
         }
         airline.setAddress(destination);
+
+        LuggagePrice co = new LuggagePrice();
+        co.setType(LuggageType.CARRY_ON);
+        co.setPrice((float)0);
+        airline.getLuggagePrices().add(co);
+
+        LuggagePrice c = new LuggagePrice();
+        c.setType(LuggageType.CHECKED);
+        c.setPrice((float)0);
+        airline.getLuggagePrices().add(c);
 
         try {
             airline = service.create(airline);

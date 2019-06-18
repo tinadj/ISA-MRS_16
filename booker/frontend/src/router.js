@@ -3,6 +3,8 @@ import Router from 'vue-router'
 
 import addAirline from '@/components/airlines/addAirline'
 
+import editLuggage from '@/components/airlines/editLuggage'
+
 import editAirline from '@/components/airlines/editAirline'
 import SysAdminAirlineTable from '@/components/airlines/SysAdmin_AirlineTable'
 import editProfile from '@/components/account/editProfile'
@@ -269,6 +271,10 @@ export default new Router({
         {
           path: 'edit',
           component: editAirline
+        },
+        {
+          path: 'edit-luggage',
+          component: editLuggage
         },
         {
           path: 'profile-page',
