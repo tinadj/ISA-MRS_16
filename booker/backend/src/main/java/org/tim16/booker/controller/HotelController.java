@@ -31,7 +31,7 @@ public class HotelController {
     @Autowired
     private DestinationService destinationService;
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @GetMapping(path = "/all")
     public ResponseEntity<List<Hotel>> getAll()
     {
         List<Hotel> hotels = service.findAll();
@@ -39,7 +39,7 @@ public class HotelController {
         return new ResponseEntity<>(hotels, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
+    @PostMapping(path = "/add", consumes="application/json")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<Hotel> add(@RequestBody HotelDTO dto) {
         Hotel hotel = new Hotel();
@@ -54,22 +54,22 @@ public class HotelController {
 
         ExtraServicePrice breakfast = new ExtraServicePrice(ExtraService.BREAKFAST, 0.0f);
         ExtraServicePrice restaurant = new ExtraServicePrice(ExtraService.HOTEL_RESTAURANT, 0.0f);
-        ExtraServicePrice airport_transfer = new ExtraServicePrice(ExtraService.AIRPORT_TRANSFER, 0.0f);
+        ExtraServicePrice airportTransfer = new ExtraServicePrice(ExtraService.AIRPORT_TRANSFER, 0.0f);
         ExtraServicePrice parking = new ExtraServicePrice(ExtraService.PARKING, 0.0f);
         ExtraServicePrice pool = new ExtraServicePrice(ExtraService.POOL, 0.0f);
-        ExtraServicePrice wellness_spa = new ExtraServicePrice(ExtraService.WELLNESS_SPA, 0.0f);
+        ExtraServicePrice wellnessSpa = new ExtraServicePrice(ExtraService.WELLNESS_SPA, 0.0f);
         ExtraServicePrice wifi = new ExtraServicePrice(ExtraService.WIFI, 0.0f);
         ExtraServicePrice tv = new ExtraServicePrice(ExtraService.TV, 0.0f);
         ExtraServicePrice minibar = new ExtraServicePrice(ExtraService.MINIBAR, 0.0f);
 
-        HashSet<ExtraServicePrice> extraprices = new HashSet<ExtraServicePrice>();
+        HashSet<ExtraServicePrice> extraprices = new HashSet<>();
 
         extraprices.add(breakfast);
         extraprices.add(restaurant);
-        extraprices.add(airport_transfer);
+        extraprices.add(airportTransfer);
         extraprices.add(parking);
         extraprices.add(pool);
-        extraprices.add(wellness_spa);
+        extraprices.add(wellnessSpa);
         extraprices.add(wifi);
         extraprices.add(tv);
         extraprices.add(minibar);
@@ -92,11 +92,11 @@ public class HotelController {
             hotel = service.create(hotel);
             return new ResponseEntity<>(hotel, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(path =  "/{id}")
     public ResponseEntity<Hotel> getHotel(@PathVariable Integer id) {
         Hotel hotel = service.findOne(id);
 
@@ -107,7 +107,7 @@ public class HotelController {
         return new ResponseEntity<>(hotel, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}/extraprices", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}/extraprices")
     public ResponseEntity<HotelPricesDTO> getHotelPrices(@PathVariable Integer id)
     {
         Hotel hotel = service.findOne(id);
@@ -129,11 +129,11 @@ public class HotelController {
             }
             else if(es.getType().equals(ExtraService.HOTEL_RESTAURANT))
             {
-                dto.setHotel_restaurant(es.getPrice());
+                dto.setHotelRestaurant(es.getPrice());
             }
             else if(es.getType().equals(ExtraService.AIRPORT_TRANSFER))
             {
-                dto.setAirport_transfer(es.getPrice());
+                dto.setAirportTransfer(es.getPrice());
             }
             else if(es.getType().equals(ExtraService.PARKING))
             {
@@ -145,7 +145,7 @@ public class HotelController {
             }
             else if(es.getType().equals(ExtraService.WELLNESS_SPA))
             {
-                dto.setWellness_spa(es.getPrice());
+                dto.setWellnessSpa(es.getPrice());
             }
             else if(es.getType().equals(ExtraService.WIFI))
             {
@@ -164,7 +164,7 @@ public class HotelController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}/rooms", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}/rooms")
     public ResponseEntity<List<Room>> getRooms(@PathVariable Integer id) {
         Hotel hotel = service.findOne(id);
 
@@ -181,7 +181,7 @@ public class HotelController {
     }
 
 
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PutMapping(path = "/update")
     public ResponseEntity<Hotel> update(@RequestBody HotelDTO dto) {
 
         try {
@@ -209,7 +209,7 @@ public class HotelController {
         }
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @PostMapping(path = "/search")
     public ResponseEntity<List<Hotel>> searchHotels(@RequestBody HotelsSearchParamsDTO dto)
     {
 
@@ -281,13 +281,13 @@ public class HotelController {
         return new ResponseEntity<>(hotels, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/updateExtraServices", method = RequestMethod.PUT)
+    @PutMapping(path = "/updateExtraServices")
     public ResponseEntity<Hotel> updateExtraServices(@RequestBody HotelPricesDTO dto) {
 
         try {
             Hotel hotel = service.findOne(dto.getId());
 
-            HashSet<ExtraServicePrice> extraprices = new HashSet<ExtraServicePrice>();
+            HashSet<ExtraServicePrice> extraprices = new HashSet<>();
 
             for(ExtraServicePrice es : hotel.getExtraServicePrices())
             {
@@ -301,14 +301,14 @@ public class HotelController {
                 }
                 else if(es.getType().equals(ExtraService.HOTEL_RESTAURANT))
                 {
-                    es.setPrice(dto.getHotel_restaurant());
+                    es.setPrice(dto.getHotelRestaurant());
                     es.setType(ExtraService.HOTEL_RESTAURANT);
 
                     extraprices.add(es);
                 }
                 else if(es.getType().equals(ExtraService.AIRPORT_TRANSFER))
                 {
-                    es.setPrice(dto.getAirport_transfer());
+                    es.setPrice(dto.getAirportTransfer());
                     es.setType(ExtraService.AIRPORT_TRANSFER);
 
                     extraprices.add(es);
@@ -329,7 +329,7 @@ public class HotelController {
                 }
                 else if(es.getType().equals(ExtraService.WELLNESS_SPA))
                 {
-                    es.setPrice(dto.getWellness_spa());
+                    es.setPrice(dto.getWellnessSpa());
                     es.setType(ExtraService.WELLNESS_SPA);
 
                     extraprices.add(es);

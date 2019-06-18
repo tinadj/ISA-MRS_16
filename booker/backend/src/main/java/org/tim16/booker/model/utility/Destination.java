@@ -1,11 +1,11 @@
 package org.tim16.booker.model.utility;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "destinations")
-public class Destination {
+public class Destination implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,7 @@ public class Destination {
 
 
 
-    public Destination() {}
+    public Destination() { /* empty constructor */}
 
     public Integer getId() {
         return id;

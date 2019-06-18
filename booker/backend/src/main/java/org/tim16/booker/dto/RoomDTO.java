@@ -8,11 +8,11 @@ public class RoomDTO {
     private Integer beds;
     private Boolean balcony;
     private Boolean breakfast;
-    private Boolean hotel_restaurant;
-    private Boolean airport_transfer;
+    private Boolean hotelRestaurant;
+    private Boolean airportTransfer;
     private Boolean parking;
     private Boolean pool;
-    private Boolean wellness_spa;
+    private Boolean wellnessSpa;
     private Boolean wifi;
     private Boolean tv;
     private Boolean minibar;
@@ -22,18 +22,18 @@ public class RoomDTO {
     public RoomDTO() {
     }
 
-    public RoomDTO(Integer id, Integer floor, Integer roomNum, Integer beds, Boolean balcony, Boolean breakfast, Boolean hotel_restaurant, Boolean airport_transfer, Boolean parking, Boolean pool, Boolean wellnes_spa, Boolean wifi, Boolean tv, Boolean minibar, Integer discount, Integer hotelId) {
+    public RoomDTO(Integer id, Integer floor, Integer roomNum, Integer beds, Boolean balcony, Boolean breakfast, Boolean hotelRestaurant, Boolean airportTransfer, Boolean parking, Boolean pool, Boolean wellnessSpa, Boolean wifi, Boolean tv, Boolean minibar, Integer discount, Integer hotelId) {
         this.id = id;
         this.floor = floor;
         this.roomNum = roomNum;
         this.beds = beds;
         this.balcony = balcony;
         this.breakfast = breakfast;
-        this.hotel_restaurant = hotel_restaurant;
-        this.airport_transfer = airport_transfer;
+        this.hotelRestaurant = hotelRestaurant;
+        this.airportTransfer = airportTransfer;
         this.parking = parking;
         this.pool = pool;
-        this.wellness_spa = wellnes_spa;
+        this.wellnessSpa = wellnessSpa;
         this.wifi = wifi;
         this.tv = tv;
         this.minibar = minibar;
@@ -105,20 +105,20 @@ public class RoomDTO {
         this.breakfast = breakfast;
     }
 
-    public Boolean getHotel_restaurant() {
-        return hotel_restaurant;
+    public Boolean getHotelRestaurant() {
+        return hotelRestaurant;
     }
 
-    public void setHotel_restaurant(Boolean hotel_restaurant) {
-        this.hotel_restaurant = hotel_restaurant;
+    public void setHotelRestaurant(Boolean hotelRestaurant) {
+        this.hotelRestaurant = hotelRestaurant;
     }
 
-    public Boolean getAirport_transfer() {
-        return airport_transfer;
+    public Boolean getAirportTransfer() {
+        return airportTransfer;
     }
 
-    public void setAirport_transfer(Boolean airport_transfer) {
-        this.airport_transfer = airport_transfer;
+    public void setAirportTransfer(Boolean airportTransfer) {
+        this.airportTransfer = airportTransfer;
     }
 
     public Boolean getParking() {
@@ -137,12 +137,12 @@ public class RoomDTO {
         this.pool = pool;
     }
 
-    public Boolean getWellness_spa() {
-        return wellness_spa;
+    public Boolean getWellnessSpa() {
+        return wellnessSpa;
     }
 
-    public void setWellness_spa(Boolean wellness_spa) {
-        this.wellness_spa = wellness_spa;
+    public void setWellnessSpa(Boolean wellnessSpa) {
+        this.wellnessSpa = wellnessSpa;
     }
 
     public Boolean getWifi() {

@@ -6,17 +6,18 @@ import org.tim16.booker.model.hotel.HotelReservation;
 import org.tim16.booker.model.rent_a_car.RentACarReservation;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "reservations")
-public class Reservation {
+public class Reservation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
-    @JsonBackReference("user-reservation")
+    @JsonBackReference("user-reservations")
     @ManyToOne
     @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
     private RegisteredUser user;
@@ -30,7 +31,7 @@ public class Reservation {
     @OneToOne
     private RentACarReservation rentACarReservation;
 
-    public Reservation() {}
+    public Reservation() { /* empty constructor */}
 
     public Integer getId() {
         return id;

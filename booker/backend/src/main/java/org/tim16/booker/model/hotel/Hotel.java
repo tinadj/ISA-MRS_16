@@ -8,6 +8,7 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "hotels")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Hotel {
+public class Hotel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +35,7 @@ public class Hotel {
     private BigDecimal longitude;
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<ExtraServicePrice> extraServicePrices = new HashSet<ExtraServicePrice>();
+    private Set<ExtraServicePrice> extraServicePrices = new HashSet<>();
 
     @Column(name = "description")
     private String description;
@@ -45,19 +46,19 @@ public class Hotel {
 
     @JsonManagedReference("hotel-room")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="hotel")
-    private Set<Room> rooms = new HashSet<Room>();
+    private Set<Room> rooms = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rating = new HashSet<Rate>();
+    private Set<Rate> rating = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<HotelReservation> reservations = new HashSet<HotelReservation>();
+    private Set<HotelReservation> reservations = new HashSet<>();
 
     @JsonBackReference("hotel-admin")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="hotel")
-    private Set<HotelAdmin> admins = new HashSet<HotelAdmin>();
+    private Set<HotelAdmin> admins = new HashSet<>();
 
-    public Hotel() {}
+    public Hotel() { /* empty constructor */}
 
     /* Zadovoljava obostranu vezu izmedju sobe i hotela (ovde se vezuje soba za hotel) */
     public void add(Room p) {
@@ -72,7 +73,7 @@ public class Hotel {
 
     public void removeRoom(Integer id) {
         for (Room r : getRooms()) {
-            if (r.getId() == id) {
+            if (r.getId().equals(id)) {
                 this.getRooms().remove(r);
                 return;
             }

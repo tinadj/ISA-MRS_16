@@ -3,7 +3,6 @@ package org.tim16.booker.dto;
 import java.math.BigDecimal;
 
 public class BranchOfficeDTO {
-
     private Integer id;
     private RentACarDTO rentACar;
     private String name;
