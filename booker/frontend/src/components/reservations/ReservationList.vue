@@ -15,7 +15,7 @@
             <b-alert variant="light">Reservation history is empty!</b-alert>
             <ul>
                 <li v-for="item in reservations">
-                    <ReservationInfo v-bind:reservation="item"></ReservationInfo>
+                    <ReservationInfo v-bind:reservation="item" :key="componentKey"></ReservationInfo>
                     <br>
                 </li>
             </ul>
@@ -37,12 +37,13 @@
         {
             return {
                 reservations: [],
-                criteria: 0,
+                criteria: 1,
                 criteriaOptions: 
                 [
-                    {value: 0, text: "Latest"},
-                    {value: 1, text: "Oldest"},
-                ]
+                    {value: 0, text: "Oldest"},
+                    {value: 1, text: "Latest"},
+                ],
+                componentKey: 0
             }
         },
         methods: {
@@ -50,7 +51,10 @@
                 e.preventDefault()
 
                 AXIOS.get('reservations/sort/' + this.criteria)
-                .then(response => this.reservations = response.data)
+                .then(response => {
+                    this.reservations = response.data
+                    this.componentKey += 1
+                })
                 .catch(err => console.log(err))
             }
         },

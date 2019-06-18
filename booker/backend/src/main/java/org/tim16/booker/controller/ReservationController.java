@@ -27,7 +27,8 @@ public class ReservationController {
         RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Reservation> reservations = new ArrayList<>(user.getReservations());
         Collections.sort(reservations, new ReservationsOldest());
-
+        Collections.reverse(reservations);
+        
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 

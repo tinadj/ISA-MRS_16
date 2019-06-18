@@ -48,10 +48,10 @@
 								</div>
 
                                 <div class="profile-info-row">
-                                    <div class="profile-info-name"> Number of days: </div>
+                                    <div class="profile-info-name"> Drop off date: </div>
 									<div class="profile-info-value">
 										<span>
-                                           {{reservation.days}}
+                                           {{dateToStr(this.returnDate)}}
                                         </span> 
 									</div>
 								</div>
@@ -188,7 +188,7 @@
             }
         },
         mounted() {
-            // Provera da li je rezervacija prola
+            // Provera da li je rezervacija prosla
             let pickUpDate = new Date(this.reservation.pickUpDate)
             this.returnDate = this.addDays(pickUpDate, this.reservation.days)
             
