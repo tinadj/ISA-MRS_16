@@ -135,8 +135,9 @@
 
                 AXIOS.post('/rac-reservations/cancel/' + this.reservation.id)
                 .then( response => {
-                    if (response.data) {
-                        this.$router.push("/" + this.$route.params.id + "/home/reservations")
+                    console.log(response.data)
+                    if (response.data == true) {
+                        this.$router.go()
                     } else {
                         this.errorMessage = "It is not possible to cancel this reservation!"
                         this.error = true

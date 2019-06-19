@@ -6,20 +6,37 @@
         </b-form-group>
         
         <b-form-group>
-            <v-date-picker v-model="searchParams.pickUpDate"/>
+            <v-date-picker v-model="searchParams.pickUpDate" 
+            :min-date='new Date()' 
+            :first-day-of-week="2" 
+            locale="en_US"
+            :input-props='{
+                placeholder: "Pick up date",
+                readonly: true
+            }'/>
         </b-form-group>
-        
 
         <b-form-group>          
             <b-form-select v-model="searchParams.dropOffLocation" :options="branchOfficesDropOff"></b-form-select>
         </b-form-group>
         
         <b-form-group>
-            <v-date-picker v-model="searchParams.dropOffDate"/>
+            <v-date-picker  v-model="searchParams.dropOffDate" 
+            :min-date='new Date()' 
+            :first-day-of-week="2" 
+            locale="en_US"
+            :input-props='{
+                placeholder: "Drop off date",
+                readonly: true
+            }'/>
         </b-form-group>
 
         <b-form-group>
             <b-form-select v-model="searchParams.vehicleType" :options="typeOptions" :state="typeValid"></b-form-select>
+        </b-form-group>
+
+        <b-form-group>
+            <b-form-input v-model="searchParams.passangerNum" placeholder="Number of passanger"></b-form-input>
         </b-form-group>
 
         <b-form-group>
@@ -39,7 +56,7 @@
         <b-alert v-model="noResultMsg" variant="light">{{message}}</b-alert>
         <ul>
             <li v-for="item in vehicles">
-                <UnregisteredUserVehicleInfo v-bind:item="item"></UnregisteredUserVehicleInfo>
+                <UnregisteredUserVehicleInfo v-bind:item="item" v-bind:params="searchParams" :key="componentKey"></UnregisteredUserVehicleInfo>
             </li>
         </ul>
     </b-card>
@@ -76,8 +93,9 @@
                     dropOffDate: '',
                     vehicleType: '',
                     vehicleType: null,
-                    priceRange: [0, 0],
-                    criteria: 0
+                    priceRange: [0, 100],
+                    criteria: 0,
+                    passangerNum: null
                 },
                 typeOptions: [
                     {value: null, text: "Choose vehicle type"},
@@ -105,6 +123,7 @@
                 branchOfficesDropOff: [
                     {value: null, text: "Choose drop off location"}
                 ],
+                componentKey: 0
             }
         },
         methods: {
@@ -113,52 +132,46 @@
 
                 this.noResultMsg = false
 
-                if (this.dates == null) {
+                if (this.valid()) {
                     const searchParams = {
-                    'racID': this.racID,
-                    'pickUpLocation': this.searchParams.pickUpLocation,
-                    'dropOffLocation': this.searchParams.dropOffLocation,
-                    'vehicleType': this.searchParams.vehicleType,
-                    'minPrice': this.searchParams.priceRange[0],
-                    'maxPrice': this.searchParams.priceRange[1],
-                    'criteria': this.searchParams.criteria
-                    } 
-
-                    console.log(searchParams)
-                   
+                        'racID': this.racID,
+                        'pickUpLocation': this.searchParams.pickUpLocation,
+                        'pickUpDate': this.searchParams.pickUpDate,
+                        'dropOffDate': this.searchParams.dropOffDate,
+                        'dropOffLocation': this.searchParams.dropOffLocation,
+                        'vehicleType': this.searchParams.vehicleType,
+                        'minPrice': this.searchParams.priceRange[0],
+                        'maxPrice': this.searchParams.priceRange[1],
+                        'criteria': this.searchParams.criteria,
+                        'passangerNum': this.searchParams.passangerNum
+                        } 
+                        
                     AXIOS.post('/vehicles/search', searchParams)
                     .then(response => { 
                         this.vehicles = response.data
+                        console.log(response.data)
                         if (this.vehicles.length == 0) {
                             this.message = "There are no results that match your search!"
                             this.noResultMsg = true
                         }
                     })
                     .catch(err => console.log(err))
-
+                    this.componentKey += 1
                 } else {
-                    const searchParams = {
-                    'racID': this.racID,
-                    'pickUpLocation': this.searchParams.pickUpLocation,
-                    'pickUpDate': this.searchParams.pickUpDate,
-                    'dropOffDate': this.searchParams.dropOffDate,
-                    'dropOffLocation': this.searchParams.dropOffLocation,
-                    'vehicleType': this.searchParams.vehicleType,
-                    'minPrice': this.searchParams.priceRange[0],
-                    'maxPrice': this.searchParams.priceRange[1],
-                    'criteria': this.searchParams.criteria
-                    } 
-                    
-                    AXIOS.post('/vehicles/search', searchParams)
-                    .then(response => { 
-                        this.vehicles = response.data
-                        if (this.vehicles.length == 0) {
-                            this.message = "There are no results that match your search!"
-                            this.noResultMsg = true
-                        }
-                    })
-                    .catch(err => console.log(err))
+                    this.noResultMsg = true
                 }
+            },
+            valid() {
+                console.log(this.searchParams.pickUpDate == this.searchParams.dropOffDate)
+                if (this.searchParams.pickUpDate == null || this.searchParams.dropOffDate == null) {
+                    this.message = "You have to choose dates!"
+                    return false
+                }
+                if (this.searchParams.pickUpDate.getTime() == this.searchParams.dropOffDate.getTime()) {
+                    this.message = "Dates must be different!"
+                    return false
+                }
+                return true
             },
             getVehicleMaxPrice() {
                 maxPrice = 0

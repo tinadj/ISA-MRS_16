@@ -13,7 +13,7 @@
             <b-alert v-model="noResult" variant="light">There are no vehicles!</b-alert>
             <ul>
               <li v-for="item in vehicles">
-                <AdminVehicleInfo v-bind:item="item"></AdminVehicleInfo>
+                <AdminVehicleInfo v-bind:item="item" :key="componentKey"></AdminVehicleInfo>
               </li>
             </ul>        
           </b-card>
@@ -34,22 +34,24 @@ export default {
   data () {
     return {
       vehicles: [],
-      noResult: false
+      noResult: false,
+      componentKey: 0
     }
   },
   mounted () {
-    AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
-    
-    let api = 'rent-a-cars/' +  this.$route.params.id + '/vehicles'
-      AXIOS.get(api)
-      .then(response => { 
-        this.vehicles = response.data
+      AXIOS.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
+      
+      let api = 'rent-a-cars/' +  this.$route.params.id + '/vehicles'
+        AXIOS.get(api)
+        .then(response => { 
+          this.vehicles = response.data
 
-        if (this.vehicles.length == 0) {
-          this.noResult = true
-        }
-      })
-      .catch(err => console.log(err))
+          if (this.vehicles.length == 0) {
+            this.noResult = true
+          }
+        })
+        .catch(err => console.log(err))
+        this.componentKey += 1
   }
 }
 </script>

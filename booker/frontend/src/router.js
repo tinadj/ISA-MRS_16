@@ -103,9 +103,6 @@ export default new Router({
           component: UnregisteredUserSearchAirline
         },
         {
-          path: 'search-hotels'
-        },
-        {
           path: 'search-rent-a-cars',
           component: UnregisteredUserSearchRAC
         },

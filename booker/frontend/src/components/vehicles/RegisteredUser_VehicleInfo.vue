@@ -157,7 +157,7 @@ export default {
         // Razlika izmedju pickUpDate i dropOffDate
         countDays() {
             let days = 10
-            if (this.params.pickUpDate != null && this.params.dropOffDate != null)
+            if (this.params != null && this.params.dropOffDate != null)
                 days = this.date_diff_indays(this.params.pickUpDate, this.params.dropOffDate)
             return days
         },

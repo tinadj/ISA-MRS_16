@@ -85,54 +85,14 @@ public class BranchOfficeController {
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<BranchOffice>> removeBranchOffice(@PathVariable Integer id)
     {
-        BranchOffice vehicle = branchOfficeService.findOne(id);
-
-        if (vehicle == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        RentACar rentACar = rentACarService.findOne(vehicle.getRentACar().getId());
-        rentACar.removeBranchOffice(vehicle.getId());
-
-        rentACarService.update(rentACar);
-        branchOfficeService.remove(id);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        HttpStatus status = branchOfficeService.remove(id);
+        return new ResponseEntity<>(branchOfficeService.findAll(), status);
     }
 
     @PutMapping(path = "/update", consumes = "application/json")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<BranchOffice> updateBranchOffice(@RequestBody BranchOfficeDTO dto)
     {
-        try
-        {
-            BranchOffice branchOffice = branchOfficeService.findOne(dto.getId());
-
-            branchOffice.setName(dto.getName());
-            branchOffice.setLatitude(dto.getLatitude());
-            branchOffice.setLongitude(dto.getLongitude());
-
-            RentACar rentACar = rentACarService.findOne(dto.getRentACar().getId());
-            branchOffice.setRentACar(rentACar);
-
-            Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
-
-            if (destination == null) {
-                destination = new Destination();
-                destination.setCity(dto.getAddress().getCity());
-                destination.setState(dto.getAddress().getState());
-                destinationService.create(destination);
-            }
-            branchOffice.setAddress(destination);
-
-            rentACar.removeBranchOffice(dto.getId());
-            rentACar.addBranchOffice(branchOffice);
-            rentACarService.update(rentACar);
-
-            return new ResponseEntity<>(branchOfficeService.update(branchOffice), HttpStatus.OK);
-
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return branchOfficeService.editInfo(dto);
     }
 }

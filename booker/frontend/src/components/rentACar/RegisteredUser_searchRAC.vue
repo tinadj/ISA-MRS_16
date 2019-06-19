@@ -20,11 +20,17 @@
         </b-col>
 
         <b-col lg="2">
-            <v-date-picker mode="range" v-model="dates"/>
+            <v-date-picker mode="range" 
+            v-model="dates" 
+            :first-day-of-week="2" 
+            :input-props='{
+                placeholder: "Date range",
+                readonly: true
+            }'/>
         </b-col>
 
         <b-col lg="2.5">
-            <b-form-select v-model="criteria" :options="criteriaOptions" ></b-form-select>
+            <b-form-select v-model="criteria" :min-date='new Date()' :options="criteriaOptions" ></b-form-select>
         </b-col>
 
         <b-col lg="1">
@@ -39,7 +45,7 @@
                     <b-alert v-model="noResultMsg" variant="light">There are no results that match your search!</b-alert>
                     <ul>
                         <li v-for="item in rentACars">
-                            <RegisteredUserRACInfo v-bind:item="item"></RegisteredUserRACInfo>
+                            <RegisteredUserRACInfo v-bind:item="item" :key="componentKey"></RegisteredUserRACInfo>
                         </li>
                     </ul>
                 </b-card>
@@ -75,7 +81,8 @@
                     {value: 3, text: "City Descending"},
                     {value: 4, text: "State Ascending"},
                     {value: 5, text: "State Descending"}
-                ]
+                ],
+                componentKey: 0
             }
         },
         methods: {
@@ -100,6 +107,7 @@
                         if (this.rentACars.length == 0) {
                             this.noResultMsg = true
                         }
+                        
                     })
                     .catch(err => console.log(err))
 
@@ -122,6 +130,7 @@
                     })
                     .catch(err => console.log(err))
                 }
+                this.this.componentKey += 1
             }
         },
         mounted() {

@@ -26,8 +26,8 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> getLoggedInUserReservations() {
         RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Reservation> reservations = new ArrayList<>(user.getReservations());
-        Collections.sort(reservations, new ReservationsOldest());
-        Collections.reverse(reservations);
+        //Collections.sort(reservations, new ReservationsOldest());
+        //Collections.reverse(reservations);
         
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
@@ -37,7 +37,7 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> sort(@PathVariable Integer criteria) {
         RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Reservation> reservations = new ArrayList<>(user.getReservations());
-
+        /*
         if (criteria == 0) {
             Collections.sort(reservations, new ReservationsOldest());
         } else if (criteria == 1) {
@@ -46,6 +46,7 @@ public class ReservationController {
         } else {
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        */
 
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }

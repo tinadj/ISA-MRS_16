@@ -7,7 +7,14 @@
                 label-cols-lg="4"
                 label="Choose dates: "
                 >
-                <v-date-picker mode="range" v-model="dates"/>
+                <v-date-picker mode="range" 
+                v-model="dates" 
+                :first-day-of-week="2" 
+                locale="en_US"
+                :input-props='{
+                    placeholder: "Date range",
+                    readonly: true
+                }'/>
             </b-form-group>
         </b-col>
 
