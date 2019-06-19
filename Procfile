@@ -1,1 +1,0 @@
-web: java -Dserver.port=$PORT -jar booker/backend/target/backend-0.0.1-SNAPSHOT.jar
