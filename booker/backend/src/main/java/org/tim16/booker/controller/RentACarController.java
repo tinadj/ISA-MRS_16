@@ -79,21 +79,7 @@ public class RentACarController {
     @PutMapping(path = "/update")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<RentACar> update(@RequestBody RentACarDTO dto) {
-
-        try {
-            RentACar rentACar = rentACarService.findOne(dto.getId());
-
-            rentACar.setName(dto.getName());
-            rentACar.setDescription(dto.getDescription());
-            rentACar.setLatitude(dto.getLatitude());
-            rentACar.setLongitude(dto.getLongitude());
-            rentACar.setAddress(generateDestination(dto.getAddress()));
-
-            return new ResponseEntity<>(rentACarService.update(rentACar), HttpStatus.OK);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return rentACarService.editInfo(dto);
     }
 
     @GetMapping(path = "/{id}/vehicles")

@@ -21,7 +21,7 @@
                     <b-alert variant="light">There are no registered Rent a Car Services!</b-alert>
                     <ul>
                         <li v-for="item in rentACars">
-                            <SysAdminRACInfo v-bind:item="item"></SysAdminRACInfo>
+                            <SysAdminRACInfo v-bind:item="item" :key="componentKey"></SysAdminRACInfo>
                         </li>
                     </ul>
                 </b-card>
@@ -52,7 +52,8 @@
                     {value: 3, text: "City Descending"},
                     {value: 4, text: "State Ascending"},
                     {value: 5, text: "State Descending"}
-                ]
+                ],
+                componentKey: 0
             }
         },
         methods: {
@@ -69,6 +70,7 @@
                   this.rentACars = response.data
                 })
                 .catch(err => console.log(err))
+                this.componentKey += 1
             }
         },
         mounted() {

@@ -29,7 +29,15 @@ Vue.use(YmapPlugin, options)
 
 // Kalendar
 import VCalendar from 'v-calendar';
-Vue.use(VCalendar)
+Vue.use(VCalendar, {
+  formats: {
+    title: 'MMMM YYYY',
+    weekdays: 'W',
+    navMonths: 'MMM',
+    input: ['L', 'YYYY-MM-DD', 'YYYY/MM/DD'],
+    dayPopover: 'L',
+  }
+})
 
 // Zvezdice
 import StarRating from 'vue-star-rating'

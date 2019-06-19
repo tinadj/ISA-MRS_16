@@ -55,7 +55,6 @@ public class VehicleController {
         }
 
         Vehicle vehicle = new Vehicle();
-        vehicle.setVersion(0l);
         vehicle.setName(dto.getName());
         vehicle.setBrand(dto.getBrand());
         vehicle.setDescription(dto.getDescription());
@@ -91,48 +90,15 @@ public class VehicleController {
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<Vehicle>> removeVehicle(@PathVariable Integer id)
     {
-        Vehicle vehicle = vehicleService.findOne(id);
-
-        if (vehicle == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        RentACar rentACar = rentACarService.findOne(vehicle.getRentACar().getId());
-        rentACar.removeVehicle(vehicle.getId());
-
-        rentACarService.update(rentACar);
         vehicleService.remove(id);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(vehicleService.findAll(), HttpStatus.OK);
     }
 
     @PutMapping(path = "/update", consumes = "application/json")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<Vehicle> updateVehicle(@RequestBody VehicleDTO dto)
     {
-        try
-        {
-            Vehicle vehicle = vehicleService.findOne(dto.getId());
-
-            vehicle.setName(dto.getName());
-            vehicle.setBrand(dto.getBrand());
-            vehicle.setModel(dto.getModel());
-            vehicle.setSeatsNum(dto.getSeatsNum());
-            vehicle.setProductionYear(dto.getProductionYear());
-            vehicle.setDescription(dto.getDescription());
-            vehicle.setType(intToVehicleType(dto.getType()));
-            RentACar rentACar = rentACarService.findOne(dto.getRentACar().getId());
-            vehicle.setRentACar(rentACar);
-
-            rentACar.removeVehicle(dto.getId());
-            rentACar.addVehicle(vehicle);
-            rentACarService.update(rentACar);
-
-            return new ResponseEntity<>(vehicleService.update(vehicle), HttpStatus.OK);
-
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return vehicleService.editInfo(dto);
     }
 
     @GetMapping(path = "/is-reserved/{id}")
@@ -271,7 +237,7 @@ public class VehicleController {
     /*
     Konvertovanje int vrednosti u tip vozila
      */
-    private VehicleType intToVehicleType(Integer i)
+    public static VehicleType intToVehicleType(Integer i)
     {
         switch (i)
         {

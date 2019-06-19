@@ -52,9 +52,6 @@ public class Vehicle implements Serializable {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<>();
 
-    @Version
-    private Long version;
-
     public Vehicle() { /* empty constructor */}
 
     public Integer getId() {
@@ -159,13 +156,5 @@ public class Vehicle implements Serializable {
 
     public void setDiscount(Integer discount) {
         this.discount = discount;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 }

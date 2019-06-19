@@ -53,9 +53,9 @@
                 AXIOS.get('reservations/sort/' + this.criteria)
                 .then(response => {
                     this.reservations = response.data
-                    this.componentKey += 1
                 })
                 .catch(err => console.log(err))
+                this.this.componentKey += 1
             }
         },
         mounted() {

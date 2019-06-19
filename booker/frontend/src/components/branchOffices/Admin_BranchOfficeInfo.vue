@@ -60,6 +60,11 @@
                                                 <b-button class="mt-3" variant="outline-primary" block v-on:click="removeVehicle">Yes</b-button>
                                                 <b-button class="mt-2" block v-on:click="hideModal">Cancel</b-button>
                                             </b-modal>
+                                            <b-modal v-model="vehicles" hide-footer>
+                                                <div class="d-block text-center">
+                                                    <h3>It is not possible to remove, some vehicles are currently here!</h3>
+                                                </div>
+                                            </b-modal>
                                         </span>
 									</div>
 								</div>
@@ -81,7 +86,8 @@ export default {
     data() {
         return {
             locationIcon: faMapMarkerAlt,
-            map: false
+            map: false,
+            vehicles: false
         } 
     },
     methods: {
@@ -90,8 +96,10 @@ export default {
         },
         removeVehicle: function() {
             AXIOS.delete('branch-offices/remove/' + this.item.id)
-            .then(response => this.$router.go())
-            .catch(err => console.log(err))
+            .then(response => {
+                this.$router.go()
+            })
+            .catch(err => this.vehicles = true)
 
             this.$refs['confirmation'].hide()
         },
