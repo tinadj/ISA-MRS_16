@@ -25,6 +25,8 @@
 
             <div class="profile-info-value">
               <span>
+                  <b-button class="marg" variant="outline-primary"  v-on:click="showAddModal">Add seat</b-button>
+
                   <b-button class="marg" variant="outline-primary"  v-on:click="showEditModal">Edit seats</b-button>
                   <b-button variant="outline-danger"  v-on:click="showModal">Remove</b-button>
                   <b-modal ref="confirmation" hide-footer>
@@ -33,6 +35,17 @@
                       </div>
                       <b-button class="mt-3" variant="outline-primary" block v-on:click="removeFlight">Yes</b-button>
                       <b-button class="mt-2" block v-on:click="hideModal">Cancel</b-button>
+                  </b-modal>
+
+                  <b-modal ref="addSeat" hide-footer>
+                      <div class="d-block text-center">
+                          <b-form-input v-model="newSeat.seatRow" ></b-form-input>
+                          <b-form-input v-model="newSeat.seatLetter" ></b-form-input>
+                          <b-form-select v-model="newSeat.type" :options="options"></b-form-select>
+
+                      </div>
+                      <b-button class="mt-3" variant="outline-primary" block v-on:click="addSeat">Add seat</b-button>
+                      <b-button class="mt-2" block v-on:click="hideAddModal">Cancel</b-button>
                   </b-modal>
 
                   <b-modal ref="editSeats" hide-footer>
@@ -81,7 +94,16 @@ export default {
             locationIcon: faMapMarkerAlt,
             map: false,
             diff: '',
-            selectedSeat: ''
+            selectedSeat: '',
+            newSeat: {
+              seatLetter: '',
+              seatRow: '',
+              type: ''
+            },
+            options: [
+             { value: 'BUSINESS', text: 'BUSINESS CLASS' },
+             { value: 'FIRST', text: 'FIRST CLASS' },
+             { value: 'ECONOMY', text: 'ECONOMY CLASS' }]
         }
     },
     mounted() {
@@ -102,19 +124,25 @@ export default {
         showModal: function(id) {
             this.$refs['confirmation'].show()
         },
+        showAddModal: function(id) {
+            this.$refs['addSeat'].show()
+        },
         showEditModal: function(id) {
             this.$refs['editSeats'].show()
         },
         select: function(seat){
-        console.log(seat)
           this.selectedSeat = seat
         },
         hideModal: function() {
             this.$refs['confirmation'].hide()
         },
+        hideAddModal: function() {
+            this.$refs['addSeat'].hide()
+        },
         hideEditModal: function() {
             this.$refs['editSeats'].hide()
             this.selectedSeat = ''
+        },addSeat {
         },
         removeFlight: function() {
           let api = '/flights/remove/' +  this.item.id + "/" +this.$route.params.id;
