@@ -6,29 +6,32 @@ import org.tim16.booker.model.hotel.HotelReservation;
 import org.tim16.booker.model.rent_a_car.RentACarReservation;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "reservations")
-public class Reservation {
+public class Reservation implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
-    @JsonBackReference("user-reservation")
+    @JsonBackReference("user-reservations")
     @ManyToOne
     @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
     private RegisteredUser user;
 
     @OneToOne
-    private FlightReservation flight;
+    private FlightReservation flightReservation;
 
     @OneToOne
-    private HotelReservation hotel;
+    private HotelReservation hotelReservation;
 
     @OneToOne
     private RentACarReservation rentACarReservation;
 
-    public Reservation() {}
+    public Reservation() { /* empty constructor */}
 
     public Integer getId() {
         return id;
@@ -46,20 +49,20 @@ public class Reservation {
         this.user = user;
     }
 
-    public FlightReservation getFlight() {
-        return flight;
+    public FlightReservation getFlightReservation() {
+        return flightReservation;
     }
 
-    public void setFlight(FlightReservation flight) {
-        this.flight = flight;
+    public void setFlightReservation(FlightReservation flightReservation) {
+        this.flightReservation = flightReservation;
     }
 
-    public HotelReservation getHotel() {
-        return hotel;
+    public HotelReservation getHotelReservation() {
+        return hotelReservation;
     }
 
-    public void setHotel(HotelReservation hotel) {
-        this.hotel = hotel;
+    public void setHotelReservation(HotelReservation hotelReservation) {
+        this.hotelReservation = hotelReservation;
     }
 
     public RentACarReservation getRentACarReservation() {

@@ -5,11 +5,13 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
 @Table(name = "flights")
-public class Flight {
+public class Flight implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,13 +31,11 @@ public class Flight {
     @JoinColumn(name = "arrivalDestination", referencedColumnName = "id", nullable = false)
     private Destination arrivalDestination;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private Date departure;
+    private LocalDateTime departure;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private Date arrival;
+    private LocalDateTime arrival;
 
     @Column(nullable = false)
     private int duration;
@@ -46,19 +46,19 @@ public class Flight {
     // lokacije presedanja
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Seat> seats = new HashSet<Seat>();
+    private Set<Seat> seats = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<TicketPrice> ticketPrices = new HashSet<TicketPrice>();
+    private Set<TicketPrice> ticketPrices = new HashSet<>();
 
     @JsonManagedReference("flight-tickets")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Ticket> tickets = new HashSet<Ticket>();
+    private Set<Ticket> tickets = new HashSet<>();
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<Rate> rating = new HashSet<Rate>();
+    private Set<Rate> rating = new HashSet<>();
 
-    public Flight() {}
+    public Flight() { /* empty constructor */}
 
     public Integer getId() {
         return id;
@@ -92,19 +92,19 @@ public class Flight {
         this.arrivalDestination = to;
     }
 
-    public Date getDeparture() {
+    public LocalDateTime getDeparture() {
         return departure;
     }
 
-    public void setDeparture(Date departure) {
+    public void setDeparture(LocalDateTime departure) {
         this.departure = departure;
     }
 
-    public Date getArrival() {
+    public LocalDateTime getArrival() {
         return arrival;
     }
 
-    public void setArrival(Date arrival) {
+    public void setArrival(LocalDateTime arrival) {
         this.arrival = arrival;
     }
 

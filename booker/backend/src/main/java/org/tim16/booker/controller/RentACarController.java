@@ -4,23 +4,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.comparator.RentACarCity;
 import org.tim16.booker.comparator.RentACarName;
 import org.tim16.booker.comparator.RentACarState;
 import org.tim16.booker.comparator.VehiclePrice;
+import org.tim16.booker.dto.DestinationDTO;
 import org.tim16.booker.dto.RACSearchParamsDTO;
 import org.tim16.booker.dto.RentACarDTO;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
 import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.rent_a_car.RentACarReservation;
 import org.tim16.booker.model.rent_a_car.Vehicle;
+import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.utility.Destination;
+import org.tim16.booker.model.utility.Rate;
 import org.tim16.booker.service.DestinationService;
 import org.tim16.booker.service.RacReservationService;
+import org.tim16.booker.service.RateService;
 import org.tim16.booker.service.RentACarService;
-import org.tim16.booker.service.VehicleService;
-import sun.util.resources.CalendarData;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
@@ -34,46 +37,34 @@ public class RentACarController {
     @Autowired
     private DestinationService destinationService;
     @Autowired
-    private VehicleService vehicleService;
-    @Autowired
     private RacReservationService reservationService;
+    @Autowired
+    private RateService rateService;
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+
+    @GetMapping(path = "/all")
     public ResponseEntity<List<RentACar>> getAll() {
         List<RentACar> rentACars = rentACarService.findAll();
         Collections.sort(rentACars, new RentACarName());
         return new ResponseEntity<>(rentACars, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
+    @PostMapping(path = "/add", consumes="application/json")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<RentACar> add(@RequestBody RentACarDTO dto) {
-        RentACar rentACar = new RentACar();
-        rentACar.setName(dto.getName());
-        rentACar.setDescription(dto.getDescription());
-        rentACar.setLatitude(dto.getLatitude());
-        rentACar.setLongitude(dto.getLongitude());
-
-        Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
-
-        if (destination == null) {
-            destination = new Destination();
-            destination.setCity(dto.getAddress().getCity());
-            destination.setState(dto.getAddress().getState());
-            destinationService.create(destination);
-        }
-        rentACar.setAddress(destination);
+        RentACar rentACar = new RentACar(dto.getName(), dto.getDescription(), dto.getLatitude(), dto.getLongitude());
+        rentACar.setAddress(generateDestination(dto.getAddress()));
 
         try {
             rentACar = rentACarService.create(rentACar);
             return new ResponseEntity<>(rentACar, HttpStatus.CREATED);
         } catch(Exception e)
         {   // catches duplicate name
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<RentACar> getRentACar(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
@@ -85,36 +76,13 @@ public class RentACarController {
         return new ResponseEntity<>(rentACar, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PutMapping(path = "/update")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<RentACar> update(@RequestBody RentACarDTO dto) {
-
-        try {
-            RentACar rentACar = rentACarService.findOne(dto.getId());
-
-            rentACar.setName(dto.getName());
-            rentACar.setDescription(dto.getDescription());
-            rentACar.setLatitude(dto.getLatitude());
-            rentACar.setLongitude(dto.getLongitude());
-
-            Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
-
-            if (destination == null) {
-                destination = new Destination();
-                destination.setCity(dto.getAddress().getCity());
-                destination.setState(dto.getAddress().getState());
-                destinationService.create(destination);
-            }
-            rentACar.setAddress(destination);
-
-            return new ResponseEntity<>(rentACarService.update(rentACar), HttpStatus.OK);
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return rentACarService.editInfo(dto);
     }
 
-    @RequestMapping(value = "/{id}/vehicles", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}/vehicles")
     public ResponseEntity<List<Vehicle>> getVehicles(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
 
@@ -131,7 +99,7 @@ public class RentACarController {
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}/branch-offices", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}/branch-offices")
     public ResponseEntity<List<BranchOffice>> getBranchOffices(@PathVariable Integer id) {
         RentACar rentACar = rentACarService.findOne(id);
 
@@ -148,74 +116,157 @@ public class RentACarController {
 
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @PostMapping(path = "/search")
     public ResponseEntity<List<RentACar>> search(@RequestBody RACSearchParamsDTO dto) {
         List<RentACar> rentACars = rentACarService.findAll();
         List<RentACar> result = rentACarService.findAll();
 
         if (!dto.getName().isEmpty()) {
-            for (RentACar rentACar: rentACars) {
-                if (!rentACar.getName().toLowerCase().contains(dto.getName().toLowerCase())) {
-                    result.remove(rentACar);
-                }
-            }
+            result = searchByName(rentACars, result, dto.getName());
         }
 
         if (!dto.getCity().isEmpty()) {
-            for (RentACar rentACar: rentACars) {
-                if (!rentACar.getAddress().getCity().toLowerCase().contains(dto.getCity().toLowerCase())) {
-                    result.remove(rentACar);
-                }
-            }
+            result = searchByCity(rentACars, result, dto.getCity());
         }
 
         if (!dto.getState().isEmpty()) {
-            for (RentACar rentACar: rentACars) {
-                if (!rentACar.getAddress().getState().toLowerCase().contains(dto.getState().toLowerCase())) {
-                    result.remove(rentACar);
-                }
-            }
+            result = searchByState(rentACars, result, dto.getState());
         }
 
         if (dto.getPickUpDate() != null && dto.getReturnDate() != null) {
-            for (RentACarReservation reservation: reservationService.findAll()) {
-                Date returnDate = calculateReturnDate(reservation);
+            result = searchByDates(result, dto.getPickUpDate(), dto.getReturnDate());
+        }
 
-                if (reservation.getPickUpDate().before(dto.getReturnDate()) && returnDate.after(dto.getPickUpDate())) {
-                    result.remove(reservation.getVehicle().getRentACar());
-                }
+        result = sort(dto.getCriteria(), result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "rating/{name}")
+    public ResponseEntity<Float> getRating(@PathVariable String name) {
+        RentACar rentACar = rentACarService.findByName(name);
+
+        if (rentACar == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(getAverageRating(rentACar.getRating()), HttpStatus.OK);
+    }
+
+    @PostMapping(path = "rate/{name}/{rateValue}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Float> rateVehicle(@PathVariable String name, @PathVariable Integer rateValue) {
+        RentACar rentACar = rentACarService.findByName(name);
+        RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (rentACar == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        // Ako je korisnik vec ocenio, promeni vrednost te ocene
+        boolean rated = false;
+        for (Rate rate : rentACar.getRating()) {
+            if (rate.getUser().getId().equals(user.getId())) {
+                rate.setRateValue(rateValue);
+                rateService.update(rate);
+                rated = true;
+                break;
             }
         }
 
-        if (dto.getCriteria() == 0) {
+        // Ako nije ocenio, dodaj novu ocenu
+        if (!rated) {
+            Rate rate = new Rate(user, rateValue);
+            rentACar.getRating().add(rate);
+            rateService.create(rate);
+            rentACarService.update(rentACar);
+        }
+
+        return new ResponseEntity<>(getAverageRating(rentACar.getRating()), HttpStatus.OK);
+    }
+
+    /*
+    Pretraga po imenu
+     */
+    private List<RentACar> searchByName(List<RentACar> rentACars, List<RentACar> result, String name) {
+        for (RentACar rentACar: rentACars) {
+            if (!rentACar.getName().toLowerCase().contains(name.toLowerCase())) {
+                result.remove(rentACar);
+            }
+        }
+        return result;
+    }
+
+    /*
+    Pretraga po gradu
+     */
+    private List<RentACar> searchByCity(List<RentACar> rentACars, List<RentACar> result, String city) {
+        for (RentACar rentACar: rentACars) {
+            if (!rentACar.getAddress().getCity().toLowerCase().contains(city.toLowerCase())) {
+                result.remove(rentACar);
+            }
+        }
+        return result;
+    }
+
+    /*
+    Pretraga po datumu
+     */
+    private List<RentACar> searchByDates(List<RentACar> result, Date pickUpDate, Date returnDate) {
+        for (RentACarReservation reservation: reservationService.findAll()) {
+            Date returnDateCalc = calculateReturnDate(reservation);
+
+            if (reservation.getPickUpDate().before(returnDate) && returnDateCalc.after(pickUpDate)) {
+                result.remove(reservation.getVehicle().getRentACar());
+            }
+        }
+        return result;
+    }
+
+    /*
+    Pretraga po drzavi
+    */
+    private List<RentACar> searchByState(List<RentACar> rentACars, List<RentACar> result, String state) {
+        for (RentACar rentACar: rentACars) {
+            if (!rentACar.getAddress().getState().toLowerCase().contains(state.toLowerCase())) {
+                result.remove(rentACar);
+            }
+        }
+        return result;
+    }
+
+    /*
+    Sortira listu na osnovu zadatog kriterijuma
+     */
+    private List<RentACar> sort(int criteria, List<RentACar> result) {
+        if (criteria == 0) {
             Collections.sort(result, new RentACarName());
         }
-        else if (dto.getCriteria() == 1) {
+        else if (criteria == 1) {
             Collections.sort(result, new RentACarName());
             Collections.reverse(result);
         }
-        else if (dto.getCriteria() == 2) {
+        else if (criteria == 2) {
             Collections.sort(result, new RentACarCity());
         }
-        else if (dto.getCriteria() == 3) {
+        else if (criteria == 3) {
             Collections.sort(result, new RentACarCity());
             Collections.reverse(result);
         }
-        else if (dto.getCriteria() == 4) {
+        else if (criteria == 4) {
             Collections.sort(result, new RentACarState());
         }
-        else if (dto.getCriteria() == 5) {
+        else if (criteria == 5) {
             Collections.sort(result, new RentACarState());
             Collections.reverse(result);
         }
         else {
             Collections.sort(result, new RentACarName());
         }
-
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return result;
     }
 
+    /*
+    Izracunava datum povratka vozila na osnovu datuma preuzimanja i broja dana
+     */
     private Date calculateReturnDate(RentACarReservation reservation) {
         Calendar c = Calendar.getInstance();
         c.setTime(reservation.getPickUpDate());
@@ -223,5 +274,34 @@ public class RentACarController {
         return c.getTime();
     }
 
+    /*
+    Vraca novu ili vec psotojecu destinaciju na kojoj se nalazi rent a ca r servis
+     */
+    private Destination generateDestination(DestinationDTO dto) {
+        Destination destination = destinationService.findByCityAndState(dto.getCity(), dto.getCity());
+
+        if (destination == null) {
+            destination = new Destination();
+            destination.setCity(dto.getCity());
+            destination.setState(dto.getState());
+            destinationService.create(destination);
+        }
+        return destination;
+    }
+
+    /*
+    Racuna prosecnu ocenu
+    */
+    private Float getAverageRating(Set<Rate> rates) {
+        Float sum = 0f;
+        for (Rate rate : rates) {
+            sum += rate.getRateValue();
+        }
+
+        if (rates.size() != 0)
+            sum = sum / rates.size();
+
+        return sum;
+    }
 
 }

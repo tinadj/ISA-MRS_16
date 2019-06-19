@@ -1,25 +1,28 @@
 package org.tim16.booker.model.hotel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.tim16.booker.model.users.Reservation;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "hotel_reservations")
-public class HotelReservation {
+public class HotelReservation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonIgnore
     @OneToOne
     private Reservation reservation;
 
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<RoomReservation> rooms = new HashSet<RoomReservation>();
+    private Set<RoomReservation> rooms = new HashSet<>();
 
     @Temporal(TemporalType.DATE)
     private Date checkInDate;
@@ -30,7 +33,7 @@ public class HotelReservation {
 
     private Float totalPrice;
 
-    public HotelReservation() {}
+    public HotelReservation() { /* empty constructor */}
 
     public Integer getId() {
         return id;

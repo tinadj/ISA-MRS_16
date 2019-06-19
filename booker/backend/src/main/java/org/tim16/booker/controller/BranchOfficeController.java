@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.BranchOfficeDTO;
-import org.tim16.booker.dto.VehicleDTO;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
 import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.utility.Destination;
@@ -30,12 +29,12 @@ public class BranchOfficeController {
     @Autowired
     private DestinationService destinationService;
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @GetMapping(path = "/all")
     public ResponseEntity<List<BranchOffice>> getAll() {
         return new ResponseEntity<>(branchOfficeService.findAll(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
+    @PostMapping(path = "/add", consumes="application/json")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<BranchOffice> add(@RequestBody BranchOfficeDTO dto) {
         // a new branch office must have rent a car defined
@@ -69,7 +68,7 @@ public class BranchOfficeController {
         return new ResponseEntity<>(branchOffice, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<BranchOffice> getBranchOffice(@PathVariable Integer id)
     {
@@ -82,58 +81,18 @@ public class BranchOfficeController {
         return new ResponseEntity<>(branchOffice, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(path = "/remove/{id}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<BranchOffice>> removeBranchOffice(@PathVariable Integer id)
     {
-        BranchOffice vehicle = branchOfficeService.findOne(id);
-
-        if (vehicle == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        RentACar rentACar = rentACarService.findOne(vehicle.getRentACar().getId());
-        rentACar.removeBranchOffice(vehicle.getId());
-
-        rentACarService.update(rentACar);
-        branchOfficeService.remove(id);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        HttpStatus status = branchOfficeService.remove(id);
+        return new ResponseEntity<>(branchOfficeService.findAll(), status);
     }
 
-    @RequestMapping(value = "/update", method =  RequestMethod.PUT, consumes = "application/json")
+    @PutMapping(path = "/update", consumes = "application/json")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<BranchOffice> updateBranchOffice(@RequestBody BranchOfficeDTO dto)
     {
-        try
-        {
-            BranchOffice branchOffice = branchOfficeService.findOne(dto.getId());
-
-            branchOffice.setName(dto.getName());
-            branchOffice.setLatitude(dto.getLatitude());
-            branchOffice.setLongitude(dto.getLongitude());
-
-            RentACar rentACar = rentACarService.findOne(dto.getRentACar().getId());
-            branchOffice.setRentACar(rentACar);
-
-            Destination destination = destinationService.findByCityAndState(dto.getAddress().getCity(), dto.getAddress().getCity());
-
-            if (destination == null) {
-                destination = new Destination();
-                destination.setCity(dto.getAddress().getCity());
-                destination.setState(dto.getAddress().getState());
-                destinationService.create(destination);
-            }
-            branchOffice.setAddress(destination);
-
-            rentACar.removeBranchOffice(dto.getId());
-            rentACar.addBranchOffice(branchOffice);
-            rentACarService.update(rentACar);
-
-            return new ResponseEntity<>(branchOfficeService.update(branchOffice), HttpStatus.OK);
-
-        }
-        catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return branchOfficeService.editInfo(dto);
     }
 }

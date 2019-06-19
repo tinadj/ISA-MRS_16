@@ -21,20 +21,26 @@
 									<div class="profile-info-value">
 										<span>
                                             {{item.brand}} {{item.model}}, {{item.productionYear}}<br>
-                                            <star-rating v-model="this.rating" :inline="true" :star-size="17" :show-rating="false" :read-only="true" :round-start-rating="false"></star-rating>
+                                            <star-rating v-model="rating" :inline="true" :star-size="17" :show-rating="false" :read-only="true" :round-start-rating="false"></star-rating>
                                         </span> 
 									</div>
 								</div>
 
 								<div class="profile-info-row">
 									<div class="profile-info-value">
-										<span>{{item.seatsNum}} <font-awesome-icon :icon="personIcon"/> <b> | </b> Vehicle type: {{vehicleType}}</span>
+										<span>{{item.seatsNum}} <font-awesome-icon :icon="personIcon"/> <b> | </b> Vehicle type: {{getVehicleType()}}</span>
 									</div>
 								</div>
 
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
 										<span><font-awesome-icon :icon="locationIcon"/> Currently in: {{item.currentlyIn.address.city}}, {{item.currentlyIn.address.state}}  </span>
+									</div>
+								</div>
+
+                                <div class="profile-info-row">
+									<div class="profile-info-value">
+										<span><font-awesome-icon :icon="discountIcon"/> Discount: {{item.discount}}% </span>
 									</div>
 								</div>
 
@@ -61,11 +67,25 @@
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
 										<span>
-                                            <b>{{totalPrice}} </b><font-awesome-icon :icon="euroIcon"/><br>
-                                            (price for 10 days)<br>
+                                            <b-container>
+                                                <b-row>
+                                                    <b-col>
+                                                        <b>{{this.price}} </b><font-awesome-icon :icon="euroIcon"/><br>
+                                                        (price for {{this.days}} days)<br>
+                                                    </b-col>
+                                                </b-row>
+                                            </b-container>
                                         </span>
 									</div>
 								</div>
+
+                                <div class="profile-info-row">
+                                        <div class="profile-info-value">
+                                        <b-alert variant="success" v-model="success" dismissible>Successfully booked!</b-alert>
+                                        <b-alert variant="danger" v-model="error" dismissible>{{errorMessage}}</b-alert>
+                                        </div>
+							    </div>
+
 							</div>
 						</div><!-- /.col -->
 					</div><!-- /.row -->				
@@ -77,20 +97,28 @@
 </template>
 
 <script>
-import { faEuroSign, faUser, faAlignLeft, faInfoCircle, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
+import {AXIOS} from '../../http-common'
+import { faEuroSign, faUser, faAlignLeft, faInfoCircle, faMapMarkerAlt, faTag } from '@fortawesome/free-solid-svg-icons'
 
 export default {
-    name: 'UnregisteredUserVehicleInfo',
-    props: ["item"],
+    name: 'UnrgisteredUserVehicleInfo',
+    props: ["item", "params"],
     data() {
         return {
-            rating: '',
             details: false,
+            success: false,
+            error: false,
+            errorMessage: '',
+            buttonShow: true,
+            rating: 0,
             days: 10,
-            totalPrice: 0,
+            price: 0,
+
+            // ikonice
             locationIcon: faMapMarkerAlt,
             euroIcon: faEuroSign,
             personIcon: faUser,
+            discountIcon: faTag,
             infoIcon: faInfoCircle,
             descriptionIcon: faAlignLeft
         } 
@@ -99,22 +127,34 @@ export default {
         getVehicleType() {
             this.item.type = this.item.type.replace(/_/g,' ')
             return this.item.type.charAt(0).toUpperCase() + this.item.type.slice(1).toLowerCase()
-        }
-       
+        },
+        // Razlika izmedju pickUpDate i dropOffDate
+        daysAndPrice() {
+            this.days = 10
+            if (this.params != null) {
+                if (this.params != null && this.params.dropOffDate != null)
+                    this.days = this.date_diff_indays(this.params.pickUpDate, this.params.dropOffDate)
+            } 
+
+            this.price = this.days * this.item.price
+        },
+        date_diff_indays(date1, date2) {
+            let dt1 = new Date(date1);
+            let dt2 = new Date(date2);
+            return Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
+        },
+        // Racunanje prosecne ocene vozila
+        getRating: async function() {
+            await AXIOS.get('/vehicles/rating/' + this.item.id)
+            .then(response => {
+                this.rating = response.data
+            })
+            .catch(err => console.log(err))
+        },
     },
     mounted() {
-        // Racunannje prosecne ocene vozila
-        if (this.item.rating.length > 0) {
-            for (var i = 0; i < this.item.rating.length; i++) {
-                this.rating += this.item.rating.rate[i]
-            }
-            this.rating = this.rating / this.item.rating.length
-        } else {
-            this.rating = 0
-        }
-
-        this.totalPrice = 10 * this.item.price
-        this.vehicleType = this.getVehicleType()
+        this.daysAndPrice()
+        this.getRating()
     }
 }
 </script>

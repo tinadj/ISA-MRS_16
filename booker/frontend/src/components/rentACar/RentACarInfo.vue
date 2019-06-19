@@ -2,7 +2,7 @@
   <b-card-group deck>
     <b-card  border-variant="light" header-tag="header">
       <h6 slot="header" class="mb-0"><b>Rent a car Information</b></h6>
-      <AdminRACInfo v-bind:item="rentACar"></AdminRACInfo>
+      <AdminRACInfo v-bind:item="rentACar" v-bind:rating="rating"></AdminRACInfo>
     </b-card >
 
     <b-card border-variant="light" style="max-width: 25rem;">
@@ -44,17 +44,30 @@ export default {
   components: { yandexMap, ymapMarker, AdminRACInfo },
   data () {
     return {
-      rentACar: ''
-      
+      rentACar: '',
+      rating: 0
+    }
+  },
+  methods: {
+    // Racunanje prosecne ocene rent a car servisa
+    getRACRating: async function() {
+      await AXIOS.get('/rent-a-cars/rating/' + this.rentACar.name)
+        .then(response => {
+          this.rating = response.data
+        })
+        .catch(err => console.log(err))
     }
   },
   mounted () {
-    let api = 'rent-a-cars/' +  this.$route.params.id
+      let api = 'rent-a-cars/' +  this.$route.params.id
       AXIOS.get(api)
       .then(response => { 
         this.rentACar = response.data
-        })
+        this.getRACRating()
+      })
       .catch(err => console.log(err))
+
+      
   }
 }
 </script>

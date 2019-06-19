@@ -1,6 +1,5 @@
 package org.tim16.booker.service.interfaces;
 
-import org.tim16.booker.dto.RoomDTO;
 import org.tim16.booker.model.hotel.Room;
 
 import java.util.List;

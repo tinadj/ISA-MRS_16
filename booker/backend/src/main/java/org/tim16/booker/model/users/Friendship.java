@@ -1,20 +1,26 @@
 package org.tim16.booker.model.users;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "friendships")
-public class Friendship {
+public class Friendship implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
+    @JsonBackReference("user-friendships")
     @ManyToOne
     @JoinColumn(name = "user1", referencedColumnName = "id", nullable = false)
     private RegisteredUser user1;
 
+    @JsonBackReference("user-friendships")
     @ManyToOne
     @JoinColumn(name = "user2", referencedColumnName = "id", nullable = false)
     private RegisteredUser user2;
@@ -23,7 +29,7 @@ public class Friendship {
     @Column( nullable = false)
     private FriendshipStatus status;
 
-    public Friendship() {}
+    public Friendship() { /* empty constructor */}
 
     public Integer getId() {
         return id;

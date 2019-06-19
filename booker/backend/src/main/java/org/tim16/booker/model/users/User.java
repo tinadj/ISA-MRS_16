@@ -33,6 +33,8 @@ public abstract class User implements UserDetails {
 
     private Integer phoneNum;
 
+    private String profilePicture;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -44,7 +46,7 @@ public abstract class User implements UserDetails {
 
     private Timestamp lastPasswordResetDate;
 
-    public User() {}
+    public User() { /* empty constructor */}
 
     public User(String username, String password) {
         this.username = username;
@@ -125,14 +127,21 @@ public abstract class User implements UserDetails {
         this.phoneNum = phoneNum;
     }
 
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     public List<Authority> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthority(List<Authority> authorities) {
+    public void setAuthorities(List<Authority> authorities) {
         this.authorities = authorities;
     }
-
 
     @JsonIgnore
     @Override
@@ -161,9 +170,7 @@ public abstract class User implements UserDetails {
         this.enabled = enabled;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
-        this.authorities = authorities;
-    }
+
 
     public Timestamp getLastPasswordResetDate() {
         return lastPasswordResetDate;

@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import addAirline from '@/components/airlines/addAirline'
+
+import editLuggage from '@/components/airlines/editLuggage'
+
 import editAirline from '@/components/airlines/editAirline'
 import SysAdminAirlineTable from '@/components/airlines/SysAdmin_AirlineTable'
 import editProfile from '@/components/account/editProfile'
@@ -13,6 +16,16 @@ import UnregisteredUserSearchAirline from '@/components/airlines/UnregisteredUse
 import AirlineView from '@/components/airlines/index'
 import HotelView from '@/components/hotels/index'
 import RentACarView from '@/components/rentACar/index'
+import destinationsTable from '@/components/destinations/destinationsTable'
+
+
+//Flights
+import addFlight from '@/components/flights/addFlight'
+
+
+// Destinations
+
+import addDestination from '@/components/destinations/addDestination'
 
 // Hotel
 
@@ -35,6 +48,8 @@ import RentACarInfo from '@/components/rentACar/RentACarInfo'
 import editRentACar from '@/components/rentACar/editRentACar'
 import RegisteredUserSearchRAC from '@/components/rentACar/RegisteredUser_searchRAC'
 import UnregisteredUserSearchRAC from '@/components/rentACar/UnregisteredUser_searchRAC'
+import RACReports from '@/components/reports/RACReports'
+import RACIncome from '@/components/reports/RACIncome'
 
 // Branch offices
 import BranchOfficesTable from '@/components/branchOffices/BranchOfficesTable'
@@ -72,6 +87,8 @@ import editRoom from '@/components/rooms/editRoom'
 import editExtraServices from '@/components/rooms/editExtraServices'
 import RegisteredUserSearchRooms from '@/components/rooms/registered_searchRoom'
 
+// Reservations
+import ReservationList from '@/components/reservations/ReservationList'
 
 Vue.use(Router)
 
@@ -129,6 +146,10 @@ export default new Router({
         {
           path: 'rent-a-cars',
           component: RegisteredUserSearchRAC
+        },
+        {
+          path: 'reservations',
+          component: ReservationList
         },
         {
           path: 'profile-page',
@@ -260,6 +281,10 @@ export default new Router({
           component: editAirline
         },
         {
+          path: 'edit-luggage',
+          component: editLuggage
+        },
+        {
           path: 'profile-page',
           component: ProfilePage
         },
@@ -270,6 +295,18 @@ export default new Router({
         {
           path: 'change-pass',
           component: changePassword
+        },
+        {
+          path: 'destinations',
+          component: destinationsTable,
+        },
+        {
+          path: 'add-destination',
+          component: addDestination,
+        },
+        {
+          path: 'add-flight',
+          component: addFlight,
         },
         {
           path: 'sign-out',
@@ -380,6 +417,14 @@ export default new Router({
         {
           path: 'sign-out',
           component: Logout
+        },
+        {
+          path: 'rac-reports',
+          component: RACReports
+        },
+        {
+          path: 'rac-income',
+          component: RACIncome
         }
       ]
     },

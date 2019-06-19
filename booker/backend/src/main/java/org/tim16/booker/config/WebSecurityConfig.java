@@ -72,6 +72,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/users/**").permitAll()
+                .antMatchers("/api/discounts/create").permitAll()
+
+                .antMatchers("/api/hotels/search", "/api/hotels/all").permitAll()
+
+                .antMatchers("/api/rent-a-cars/all", "/api/rent-a-cars/{id}/vehicles", "/api/rent-a-cars/{id}/branch-offices","/api/rent-a-cars/rating/**","/api/vehicles/rating/**").permitAll()
+                .antMatchers("/api/rent-a-cars/search", "/api/vehicles/search").permitAll()
+
+                .antMatchers("/api/airlines/all").permitAll()
+
+                .antMatchers().permitAll()
+
 
                 // svaki zahtev mora biti autorizovan
                 .anyRequest().authenticated().and()
@@ -86,16 +97,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         // TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/hotels/search");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/hotels/all");
-      
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register", "/api/auth/default-sys-admin", "/api/discounts/create");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/auth/user-confirm/{token}", "/api/auth/check-mail/{email}");
-
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/rent-a-cars/all", "/api/rent-a-cars/{id}/vehicles","/api/rent-a-cars/{id}/branch-offices");
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/rent-a-cars/search", "/api/vehicles/search");
-
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/airlines/all");
+        web.ignoring().antMatchers(HttpMethod.POST, "/api/auth/login");
 
         web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js");
     }

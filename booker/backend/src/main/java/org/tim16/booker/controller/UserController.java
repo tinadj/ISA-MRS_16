@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.multipart.MultipartFile;
 import org.tim16.booker.dto.RoleIdDTO;
 import org.tim16.booker.dto.UserDTO;
 import org.tim16.booker.model.admins.AirlineAdmin;
@@ -21,8 +20,15 @@ import org.tim16.booker.model.users.UserAuthorities;
 import org.tim16.booker.service.CustomUserDetailsService;
 import org.tim16.booker.service.UserService;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -34,7 +40,9 @@ public class UserController {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    @RequestMapping(value = "/get-role-and-id", method = RequestMethod.GET)
+    private final String ASSETS_PATH = "C:\\Users\\Public\\Pictures\\assets";
+
+    @GetMapping(path = "/get-role-and-id")
     public ResponseEntity<RoleIdDTO> getRoleAndID() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,7 +71,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}")
     public ResponseEntity<User> getUser(@PathVariable Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -77,7 +85,7 @@ public class UserController {
 
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PutMapping(path = "/update")
     public ResponseEntity<User> update(@RequestBody UserDTO dto) {
         User user = userService.findByUsername(dto.getUsername());
 
@@ -91,20 +99,37 @@ public class UserController {
         return new ResponseEntity<>(userDetailsService.update(user), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update-profile-pic", method = RequestMethod.PUT, consumes ="multipart/form-data")
-    public ResponseEntity<User> updateProfilePic(MultipartFile file) {
+    @PutMapping(path = "/upload-picture", consumes = "image/*")
+    public ResponseEntity<String> backUploadPicture(InputStream in,
+                                                    @RequestHeader("Image-Extension") String extension) {
+
+        String fileName = UUID.randomUUID().toString() + "." + extension;
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String username = authentication.getName();
             User user = userService.findByUsername(username);
+            user.setProfilePicture(fileName);
+            userService.save(user);
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            File assets_dir = new File(ASSETS_PATH);
+            if (!assets_dir.exists()){
+                assets_dir.mkdir();
+            }
+
+            java.nio.file.Path BASE_DIR = Paths.get(ASSETS_PATH);
+            try {
+                Files.copy(in, BASE_DIR.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(fileName, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value = "/get-admins", method = RequestMethod.GET)
+    @GetMapping(path = "/get-admins")
     @PreAuthorize("hasAuthority('SYS_ADMIN')")
     public ResponseEntity<List<User>> getAdmins( ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

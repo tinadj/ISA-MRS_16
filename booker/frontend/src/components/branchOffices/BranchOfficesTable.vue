@@ -1,14 +1,26 @@
 <template>
-  <b-card-group>
-    <b-card border-variant="light" class="mb-2 mx-auto">
-      <b-alert v-model="noResult" variant="light">There are no branch offices!</b-alert>
-      <ul>
-        <li v-for="item in offices">
-          <AdminBranchOfficeInfo v-bind:item="item"></AdminBranchOfficeInfo>
-        </li>
-      </ul> 
-    </b-card>
-  </b-card-group>
+  <b-container>
+      <b-row>
+        <b-col lg="3">
+            <b-button variant="outline-primary" :to="{ path: 'add-branch-office'}">Add new Branch Office</b-button>
+        </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <br>
+        <b-card-group>
+          <b-card border-variant="light" class="mb-2 mx-auto">
+            <b-alert v-model="noResult" variant="light">There are no branch offices!</b-alert>
+            <ul>
+              <li v-for="item in offices">
+                <AdminBranchOfficeInfo v-bind:item="item"></AdminBranchOfficeInfo>
+              </li>
+            </ul> 
+          </b-card>
+        </b-card-group>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
