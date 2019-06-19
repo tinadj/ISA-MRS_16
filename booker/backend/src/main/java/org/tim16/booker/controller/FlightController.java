@@ -219,4 +219,38 @@ public class FlightController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/removeSeat/{SeatId}/{id}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
+    public ResponseEntity<List<Flight>> removeSeat(@PathVariable Integer SeatId, @PathVariable Integer id)
+    {
+        Flight flight = flightService.findOne(id);
+
+        if (flight == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        for (Ticket t : flight.getTickets()) {
+            if(t.getSeat().getId() == SeatId) {
+                if(t.getReserved() == true) {
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+            }
+
+            flight.getTickets().remove(t);
+            break;
+        }
+
+        for (Seat s : flight.getSeats()) {
+            if(s.getId() == SeatId) {
+                flight.getSeats().remove(s);
+                break;
+            }
+        }
+
+
+        flightService.update(flight);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

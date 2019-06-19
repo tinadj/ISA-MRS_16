@@ -65,10 +65,11 @@
                           </div>
 
                           <div class="mt-10" v-if="selectedSeat != ''">
-                            <h3> SELECTED SEAT </h3>
+                            <h3> SELECTED SEAT {{ selectedSeat.id }}</h3>
                             <b-form-input v-model="selectedSeat.seatRow" ></b-form-input>
                             <b-form-input v-model="selectedSeat.seatLetter" ></b-form-input>
                             <b-button class="mt-3" variant="outline-primary" block v-on:click="saveSeat">Save</b-button>
+                            <b-button class="mt-3" variant="outline-danger" block v-on:click="removeSeat">Remove seat</b-button>
 
                           </div>
 
@@ -172,6 +173,15 @@ export default {
               this.error = true
             })
            }
+
+        },
+        removeSeat: function() {
+          let api = '/flights/removeSeat/' +  this.selectedSeat.id + "/" +this.$route.params.id;
+              AXIOS.delete(api)
+              .then(response => {
+              })
+              .catch(err => console.log(err))
+              this.$refs['editSeats'].hide()
 
         },
         removeFlight: function() {
