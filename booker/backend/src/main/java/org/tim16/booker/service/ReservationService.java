@@ -51,14 +51,14 @@ public class ReservationService {
     public void update(Reservation reservation) { reservationRepository.save(reservation); }
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public ResponseEntity<HttpStatus> reserveVehicle(RacReservationDTO dto) {
+    public ResponseEntity<Boolean> reserveVehicle(RacReservationDTO dto) {
         Reservation reservation = new Reservation();
         RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         RentACarReservation rentACarReservation = setUpRACReservation(dto);
         if (rentACarReservation == null) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
         }
 
         user.getReservations().add(reservation);
@@ -71,7 +71,7 @@ public class ReservationService {
         reservationRepository.save(reservation);
         userService.save(user);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     // Incijalizacija rent a car rezervacije

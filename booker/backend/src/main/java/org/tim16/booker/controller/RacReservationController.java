@@ -48,7 +48,7 @@ public class RacReservationController {
 
     @PostMapping(path = "reserve-vehicle", consumes="application/json")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<HttpStatus> reserveVehicle(@RequestBody RacReservationDTO dto) {
+    public ResponseEntity<Boolean> reserveVehicle(@RequestBody RacReservationDTO dto) {
         return reservationService.reserveVehicle(dto);
     }
 

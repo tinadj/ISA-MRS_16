@@ -30,7 +30,7 @@ export default {
               } else if (response.data.role == "SYS_ADMIN") {
                 this.$router.push("/airlines")
               } else if (response.data.role == "USER") {   
-                this.$router.push("/" + response.data.userID + "/home/")
+                this.$router.push("/" + response.data.userID + "/home/reservations")
               }
           })
         }
