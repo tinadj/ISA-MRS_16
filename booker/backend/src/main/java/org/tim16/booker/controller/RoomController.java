@@ -10,6 +10,7 @@ import org.tim16.booker.comparator.*;
 import org.tim16.booker.dto.RoomDTO;
 import org.tim16.booker.dto.RoomSearchParamsDTO;
 import org.tim16.booker.model.hotel.ExtraService;
+import org.tim16.booker.model.hotel.ExtraServicePrice;
 import org.tim16.booker.model.hotel.Hotel;
 import org.tim16.booker.model.hotel.Room;
 import org.tim16.booker.service.HotelService;
@@ -83,7 +84,6 @@ public class RoomController {
         Room room = new Room();
         room.setBalcony(roomDTO.getBalcony());
         room.setBeds(roomDTO.getBeds());
-        room.setPrice(roomDTO.getPrice());
         room.setDiscount(roomDTO.getDiscount());
         room.setFloor(roomDTO.getFloor());
         room.setHotel(hotel);
@@ -93,9 +93,33 @@ public class RoomController {
 
         HashSet<ExtraService> roomservices = roomExtraServicesSet(roomDTO);
 
+        room.setExtraServices(roomservices);
+
         /*  **********************************************************************************************      */
 
-        room.setExtraServices(roomservices);
+        /* Cena je 0 na pocetku
+           1: Dodaje se basic cena za samu sobu na ukupnu cenu
+           2: Prolazi se kroz sve ES sobe i za svaki koji postoji -> uzima se cena tog ES iz hotela i dodaje na ukupnu cenu
+        */
+        float price = 0.0f;
+
+        price += roomDTO.getPrice();
+
+        for(ExtraService es : roomservices)
+        {
+            for(ExtraServicePrice esp : hotel.getExtraServicePrices())
+            {
+                if(es.equals(esp.getType()))
+                {
+                    price += esp.getPrice();
+                }
+            }
+
+        }
+
+        room.setPrice(price);
+
+        /* **** */
 
         roomService.create(room);
         return new ResponseEntity(HttpStatus.OK);
@@ -270,6 +294,409 @@ public class RoomController {
         else if (!dto.isBalcony()) {
             for (Room r : rooms) {
                 if (r.getBalcony() == true) {
+                    result.remove(r);
+                }
+            }
+        }
+
+
+        /* Da li su ukljuceni odredjeni ekstraservisi */
+
+        if(dto.isBreakfast())
+        {
+            boolean checker = false;
+
+            for(Room r : rooms)
+            {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for(ExtraService e : extraset)
+                {
+                    if(e.equals(ExtraService.BREAKFAST))
+                    {
+                        checker = true;
+                    }
+                }
+
+                if(checker == false)
+                {
+                    result.remove(r);
+                }
+
+            }
+        }
+        else
+        {
+            boolean checker = false;
+
+            for(Room r : rooms)
+            {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for(ExtraService e : extraset)
+                {
+                    if(e.equals(ExtraService.BREAKFAST))
+                    {
+                        checker = true;
+                    }
+                }
+
+                if(checker == true)
+                {
+                    result.remove(r);
+                }
+            }
+        }
+
+        /* AIRPORT TRANSFER */
+        if(dto.isAirport_transfer())
+        {
+            boolean checker = false;
+
+            for(Room r : rooms)
+            {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for(ExtraService e : extraset)
+                {
+                    if(e.equals(ExtraService.AIRPORT_TRANSFER))
+                    {
+                        checker = true;
+                    }
+                }
+
+                if(checker == false)
+                {
+                    result.remove(r);
+                }
+
+            }
+        }
+        else {
+            boolean checker = false;
+
+            for (Room r : rooms) {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for (ExtraService e : extraset) {
+                    if (e.equals(ExtraService.AIRPORT_TRANSFER)) {
+                        checker = true;
+                    }
+                }
+
+                if (checker == true) {
+                    result.remove(r);
+                }
+            }
+        }
+
+        /* HOTEL RESTAURANT */
+        if(dto.isHotel_restaurant())
+        {
+            boolean checker = false;
+
+            for(Room r : rooms)
+            {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for(ExtraService e : extraset)
+                {
+                    if(e.equals(ExtraService.HOTEL_RESTAURANT))
+                    {
+                        checker = true;
+                    }
+                }
+
+                if(checker == false)
+                {
+                    result.remove(r);
+                }
+
+            }
+        }
+        else {
+            boolean checker = false;
+
+            for (Room r : rooms) {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for (ExtraService e : extraset) {
+                    if (e.equals(ExtraService.HOTEL_RESTAURANT)) {
+                        checker = true;
+                    }
+                }
+
+                if (checker == true) {
+                    result.remove(r);
+                }
+            }
+        }
+
+        /* MINIBAR */
+        if(dto.isMinibar())
+        {
+            boolean checker = false;
+
+            for(Room r : rooms)
+            {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for(ExtraService e : extraset)
+                {
+                    if(e.equals(ExtraService.MINIBAR))
+                    {
+                        checker = true;
+                    }
+                }
+
+                if(checker == false)
+                {
+                    result.remove(r);
+                }
+
+            }
+        }
+        else {
+            boolean checker = false;
+
+            for (Room r : rooms) {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for (ExtraService e : extraset) {
+                    if (e.equals(ExtraService.MINIBAR)) {
+                        checker = true;
+                    }
+                }
+
+                if (checker == true) {
+                    result.remove(r);
+                }
+            }
+        }
+
+        /* PARKING */
+        if(dto.isParking())
+        {
+            boolean checker = false;
+
+            for(Room r : rooms)
+            {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for(ExtraService e : extraset)
+                {
+                    if(e.equals(ExtraService.PARKING))
+                    {
+                        checker = true;
+                    }
+                }
+
+                if(checker == false)
+                {
+                    result.remove(r);
+                }
+
+            }
+        }
+        else {
+            boolean checker = false;
+
+            for (Room r : rooms) {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for (ExtraService e : extraset) {
+                    if (e.equals(ExtraService.PARKING)) {
+                        checker = true;
+                    }
+                }
+
+                if (checker == true) {
+                    result.remove(r);
+                }
+            }
+        }
+
+        /* PARKING */
+        if(dto.isPool())
+        {
+            boolean checker = false;
+
+            for(Room r : rooms)
+            {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for(ExtraService e : extraset)
+                {
+                    if(e.equals(ExtraService.POOL))
+                    {
+                        checker = true;
+                    }
+                }
+
+                if(checker == false)
+                {
+                    result.remove(r);
+                }
+
+            }
+        }
+        else {
+            boolean checker = false;
+
+            for (Room r : rooms) {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for (ExtraService e : extraset) {
+                    if (e.equals(ExtraService.POOL)) {
+                        checker = true;
+                    }
+                }
+
+                if (checker == true) {
+                    result.remove(r);
+                }
+            }
+        }
+
+        /* TV */
+        if(dto.isTv())
+        {
+            boolean checker = false;
+
+            for(Room r : rooms)
+            {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for(ExtraService e : extraset)
+                {
+                    if(e.equals(ExtraService.TV))
+                    {
+                        checker = true;
+                    }
+                }
+
+                if(checker == false)
+                {
+                    result.remove(r);
+                }
+
+            }
+        }
+        else {
+            boolean checker = false;
+
+            for (Room r : rooms) {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for (ExtraService e : extraset) {
+                    if (e.equals(ExtraService.TV)) {
+                        checker = true;
+                    }
+                }
+
+                if (checker == true) {
+                    result.remove(r);
+                }
+            }
+        }
+
+        /* WELLNESS SPA */
+        if(dto.isWellness_spa())
+        {
+            boolean checker = false;
+
+            for(Room r : rooms)
+            {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for(ExtraService e : extraset)
+                {
+                    if(e.equals(ExtraService.WELLNESS_SPA))
+                    {
+                        checker = true;
+                    }
+                }
+
+                if(checker == false)
+                {
+                    result.remove(r);
+                }
+
+            }
+        }
+        else {
+            boolean checker = false;
+
+            for (Room r : rooms) {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for (ExtraService e : extraset) {
+                    if (e.equals(ExtraService.WELLNESS_SPA)) {
+                        checker = true;
+                    }
+                }
+
+                if (checker == true) {
+                    result.remove(r);
+                }
+            }
+        }
+
+        /* WIFI */
+        if(dto.isWifi())
+        {
+            boolean checker = false;
+
+            for(Room r : rooms)
+            {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for(ExtraService e : extraset)
+                {
+                    if(e.equals(ExtraService.WIFI))
+                    {
+                        checker = true;
+                    }
+                }
+
+                if(checker == false)
+                {
+                    result.remove(r);
+                }
+
+            }
+        }
+        else {
+            boolean checker = false;
+
+            for (Room r : rooms) {
+                Set<ExtraService> extraset = new HashSet<ExtraService>();
+                extraset = r.getExtraServices();
+
+                for (ExtraService e : extraset) {
+                    if (e.equals(ExtraService.WIFI)) {
+                        checker = true;
+                    }
+                }
+
+                if (checker == true) {
                     result.remove(r);
                 }
             }
