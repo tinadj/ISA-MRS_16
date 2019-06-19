@@ -69,7 +69,7 @@ export default {
       let minutes = Math.floor(diff1 / 60);
       let seconds = diff1 % 60;
 
-      this.diff = hours + "h " + minutes + "min " + seconds +"s"
+      this.diff =  minutes + "h " + seconds +" min"
     },
     methods: {
         showModal: function(id) {
@@ -78,8 +78,15 @@ export default {
         hideModal: function() {
             this.$refs['confirmation'].hide()
         },
-        removeVehicle: function() {
+        removeFlight: function() {
+          let api = '/flights/remove/' +  this.item.id + "/" +this.$route.params.id;
+              AXIOS.delete(api)
+              .then(response => {
+                this.$router.go();
 
+              })
+              .catch(err => console.log(err))
+              this.$refs['confirmation'].hide()
           },
          diff_minutes: function(dt2, dt1)
            {

@@ -159,4 +159,22 @@ public class FlightController {
         airlineService.update(airline);
         return new ResponseEntity<>(flight, HttpStatus.CREATED);
     }
+
+    @RequestMapping(value = "/remove/{id}/{airlineID}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
+    public ResponseEntity<List<Flight>> removeFlight(@PathVariable Integer id, @PathVariable Integer airlineID)
+    {
+        Flight flight = flightService.findOne(id);
+
+        if (flight == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Airline airline = airlineService.findOne(airlineID);
+        airline.removeFlight(id);
+
+        airlineService.update(airline);
+        flightService.remove(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

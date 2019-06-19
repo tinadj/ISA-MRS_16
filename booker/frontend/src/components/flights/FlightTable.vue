@@ -40,6 +40,7 @@ export default {
       AXIOS.get(api)
       .then(response => {
         this.offices = response.data
+        console.log(response.data)
         if (this.offices.length == 0) {
           this.noResult = true
         }

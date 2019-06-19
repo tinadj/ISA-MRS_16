@@ -84,6 +84,19 @@ public class Airline implements Serializable {
         }
     }
 
+    public void removeFlight(Integer id)
+    {
+
+        for (Flight d: getFlights())
+        {
+            if (d.getId() == id)
+            {
+                this.getFlights().remove(d);
+                return;
+            }
+        }
+    }
+
     public Integer getId() {
         return id;
     }
