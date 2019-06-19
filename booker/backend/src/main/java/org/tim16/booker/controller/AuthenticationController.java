@@ -122,6 +122,7 @@ public class AuthenticationController {
 
         RegisteredUser user = new RegisteredUser(dto.getUsername(), bc.encode(dto.getPassword()), dto.getName(), dto.getLastname(),
                 dto.getEmail(), dto.getCity(), dto.getPhoneNum());
+        user.setProfilePicture("userDefault.png");
 
         List<Authority> authorityList = new ArrayList();
         Authority authority = new Authority();
@@ -196,6 +197,7 @@ public class AuthenticationController {
         if (userService.findByUsername("sys") == null) {
             BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
             SysAdmin admin = new SysAdmin("sys", bc.encode("sys"));
+            admin.setProfilePicture("userDefault.png");
 
             List<Authority> authorityList = new ArrayList();
             Authority authority = new Authority();
@@ -242,6 +244,7 @@ public class AuthenticationController {
 
         AirlineAdmin admin = new AirlineAdmin(dto.getUsername(), bc.encode(dto.getPassword()), dto.getName(), dto.getLastName(),
                 dto.getEmail(), dto.getCity(), dto.getPhoneNum());
+        admin.setProfilePicture("userDefault.png");
 
         List<Authority> authorityList = new ArrayList();
         Authority authority = new Authority();
@@ -272,6 +275,7 @@ public class AuthenticationController {
 
         HotelAdmin admin = new HotelAdmin(dto.getUsername(), bc.encode(dto.getPassword()), dto.getName(), dto.getLastName(),
                 dto.getEmail(), dto.getCity(), dto.getPhoneNum());
+        admin.setProfilePicture("userDefault.png");
 
         List<Authority> authorityList = new ArrayList();
         Authority authority = new Authority();
@@ -302,6 +306,7 @@ public class AuthenticationController {
 
         RentACarAdmin admin = new RentACarAdmin(dto.getUsername(), bc.encode(dto.getPassword()), dto.getName(), dto.getLastName(),
                 dto.getEmail(), dto.getCity(), dto.getPhoneNum());
+        admin.setProfilePicture("userDefault.png");
 
         List<Authority> authorityList = new ArrayList();
         Authority authority = new Authority();
@@ -340,6 +345,7 @@ public class AuthenticationController {
 
         SysAdmin admin = new SysAdmin(dto.getUsername(), bc.encode(dto.getPassword()), dto.getName(), dto.getLastName(),
                 dto.getEmail(), dto.getCity(), dto.getPhoneNum());
+        admin.setProfilePicture("userDefault.png");
 
         List<Authority> authorityList = new ArrayList();
         Authority authority = new Authority();

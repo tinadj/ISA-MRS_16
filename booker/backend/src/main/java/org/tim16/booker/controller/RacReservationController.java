@@ -49,25 +49,7 @@ public class RacReservationController {
     @PostMapping(path = "reserve-vehicle", consumes="application/json")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<HttpStatus> reserveVehicle(@RequestBody RacReservationDTO dto) {
-        Reservation reservation = new Reservation();
-        RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        RentACarReservation rentACarReservation = setUpRACReservation(dto);
-        if (rentACarReservation == null)
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        user.getReservations().add(reservation);
-        reservation.setUser(user);
-
-        racReservationService.create(rentACarReservation);
-        rentACarReservation.setReservation(reservation);
-        reservation.setRentACarReservation(rentACarReservation);
-
-        reservationService.update(reservation);
-        userService.save(user);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-
+        return reservationService.reserveVehicle(dto);
     }
 
     @PostMapping(path = "cancel/{id}")
@@ -95,34 +77,7 @@ public class RacReservationController {
 
     }
 
-    // Incijalizacija rent a car rezervacije
-    private RentACarReservation setUpRACReservation(RacReservationDTO dto) {
-        RentACarReservation rentACarReservation = new RentACarReservation();
 
-        Vehicle vehicle = vehicleService.findOne(dto.getVehicle());
-        BranchOffice pickUp = branchOfficeService.findOne(dto.getPickUpLocation());
-        BranchOffice dropOff = branchOfficeService.findOne(dto.getDropOffLocation());
-
-        if (vehicle == null || pickUp == null || dropOff == null)
-            return null;
-
-        rentACarReservation.setVehicle(vehicle);
-        rentACarReservation.setPickUpDate(dto.getPickUpDate());
-        rentACarReservation.setDays(dto.getDays());
-        rentACarReservation.setPassangerNum(dto.getPassangerNum());
-        rentACarReservation.setPickUpLocation(pickUp);
-        rentACarReservation.setDropOffLocation(dropOff);
-        rentACarReservation.setRentACar(vehicle.getRentACar().getName());
-        rentACarReservation.setVehicleChecked(false);
-
-        Float price = vehicle.getPrice() * dto.getDays();
-        if (vehicle.getDiscount() != 0) {
-            price = price - (price / 100 * vehicle.getDiscount());
-        }
-        rentACarReservation.setTotalPrice(price);
-
-        return rentACarReservation;
-    }
 
     @GetMapping(path = "report-daily/{rac}/{strStartDate}/{strEndDate}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")

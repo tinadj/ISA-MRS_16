@@ -24,7 +24,6 @@
             :min-date='new Date()'
             v-model="dates" 
             :first-day-of-week="2"
-            v-on:change="updateInput"
             locale="en_US"
             :input-props='{
                 placeholder: "Date range",

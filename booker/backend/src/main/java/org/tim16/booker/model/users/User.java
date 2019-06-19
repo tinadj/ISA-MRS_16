@@ -33,6 +33,8 @@ public abstract class User implements UserDetails {
 
     private Integer phoneNum;
 
+    private String profilePicture;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -123,6 +125,14 @@ public abstract class User implements UserDetails {
 
     public void setPhoneNum(Integer phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public List<Authority> getAuthorities() {

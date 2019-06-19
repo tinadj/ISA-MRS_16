@@ -20,8 +20,15 @@ import org.tim16.booker.model.users.UserAuthorities;
 import org.tim16.booker.service.CustomUserDetailsService;
 import org.tim16.booker.service.UserService;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -32,6 +39,8 @@ public class UserController {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
+
+    private final String ASSETS_PATH = "C:\\Users\\Public\\Pictures\\assets";
 
     @GetMapping(path = "/get-role-and-id")
     public ResponseEntity<RoleIdDTO> getRoleAndID() {
@@ -88,6 +97,36 @@ public class UserController {
         user.setCity(dto.getCity());
         user.setPhoneNum(dto.getPhoneNum());
         return new ResponseEntity<>(userDetailsService.update(user), HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/upload-picture", consumes = "image/*")
+    public ResponseEntity<String> backUploadPicture(InputStream in,
+                                                    @RequestHeader("Image-Extension") String extension) {
+
+        String fileName = UUID.randomUUID().toString() + "." + extension;
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String username = authentication.getName();
+            User user = userService.findByUsername(username);
+            user.setProfilePicture(fileName);
+            userService.save(user);
+
+            File assets_dir = new File(ASSETS_PATH);
+            if (!assets_dir.exists()){
+                assets_dir.mkdir();
+            }
+
+            java.nio.file.Path BASE_DIR = Paths.get(ASSETS_PATH);
+            try {
+                Files.copy(in, BASE_DIR.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(fileName, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(path = "/get-admins")
