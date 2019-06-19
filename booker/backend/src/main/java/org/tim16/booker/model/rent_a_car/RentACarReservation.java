@@ -39,6 +39,8 @@ public class RentACarReservation implements Serializable {
 
     private Float totalPrice;
 
+    private boolean vehicleChecked;
+
     public RentACarReservation() { /* empty constructor */}
 
     public Integer getId() {
@@ -119,5 +121,13 @@ public class RentACarReservation implements Serializable {
 
     public void setRentACar(String rentACar) {
         this.rentACar = rentACar;
+    }
+
+    public boolean isVehicleChecked() {
+        return vehicleChecked;
+    }
+
+    public void setVehicleChecked(boolean vehicleChecked) {
+        this.vehicleChecked = vehicleChecked;
     }
 }

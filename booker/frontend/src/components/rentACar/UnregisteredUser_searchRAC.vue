@@ -19,11 +19,21 @@
         </b-input-group>
         </b-col>
 
-        <b-col lg="2">
-            <v-date-picker mode="range" v-model="dates"/>
+        <b-col lg="3">
+            <v-date-picker mode="range" 
+            :min-date='new Date()'
+            v-model="dates" 
+            :first-day-of-week="2"
+            v-on:change="updateInput"
+            locale="en_US"
+            :input-props='{
+                placeholder: "Date range",
+                readonly: true
+            }'
+            />
         </b-col>
 
-        <b-col lg="2.5">
+        <b-col lg="2">
             <b-form-select v-model="criteria" :options="criteriaOptions" ></b-form-select>
         </b-col>
 
@@ -39,7 +49,7 @@
                     <b-alert v-model="noResultMsg" variant="light">There are no results that match your search!</b-alert>
                     <ul>
                         <li v-for="item in rentACars">
-                            <UnregisteredUserRACInfo v-bind:item="item"></UnregisteredUserRACInfo>
+                            <UnregisteredUserRACInfo v-bind:item="item" :key="componentKey"></UnregisteredUserRACInfo>
                         </li>
                     </ul>
                 </b-card>
@@ -66,6 +76,7 @@
                 city: '',
                 state: '',
                 dates: '',
+                calendarPlaceholder: "Date Range",
                 noResultMsg: false,
                 criteria: 0,
                 criteriaOptions: [
@@ -75,7 +86,16 @@
                     {value: 3, text: "City Descending"},
                     {value: 4, text: "State Ascending"},
                     {value: 5, text: "State Descending"}
-                ]
+                ],
+                componentKey: 0
+            }
+        },
+        computed: {
+            inputState() {
+                return {
+                    type: 'text',
+                    message: 'Date range',
+                };
             }
         },
         methods: {
@@ -120,6 +140,7 @@
                     })
                     .catch(err => console.log(err))
                 }
+                this.componentKey += 1
             }
         },
         mounted() {

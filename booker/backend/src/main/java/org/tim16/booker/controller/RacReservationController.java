@@ -113,6 +113,7 @@ public class RacReservationController {
         rentACarReservation.setPickUpLocation(pickUp);
         rentACarReservation.setDropOffLocation(dropOff);
         rentACarReservation.setRentACar(vehicle.getRentACar().getName());
+        rentACarReservation.setVehicleChecked(false);
 
         Float price = vehicle.getPrice() * dto.getDays();
         if (vehicle.getDiscount() != 0) {

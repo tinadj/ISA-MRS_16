@@ -6,12 +6,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.tim16.booker.comparator.RacReservationsOldest;
+import org.tim16.booker.comparator.ReservationsOldest;
 import org.tim16.booker.model.rent_a_car.RentACarReservation;
 import org.tim16.booker.model.rent_a_car.Vehicle;
 import org.tim16.booker.service.RacReservationService;
 import org.tim16.booker.service.VehicleService;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -32,13 +35,18 @@ public class UpdatingVehicles {
 
         // prebacivanje vozila iz pick up branch office-a u drop off
         List<RentACarReservation> reservations = reservationService.findAll();
+        Collections.sort(reservations, new RacReservationsOldest());
+
         Date today = new Date();
         for (RentACarReservation reservation : reservations) {
             Date returnDate = calculateReturnDate(reservation);
-            if (returnDate.before(today) && !reservation.getPickUpLocation().getId().equals(reservation.getDropOffLocation().getId())) {
+            if (returnDate.before(today) && !reservation.isVehicleChecked() && !reservation.getPickUpLocation().getId().equals(reservation.getDropOffLocation().getId())) {
                 Vehicle vehicle = reservation.getVehicle();
                 vehicle.setCurrentlyIn(reservation.getDropOffLocation());
                 vehicleService.update(vehicle);
+
+                reservation.setVehicleChecked(true);
+                reservationService.update(reservation);
             }
         }
         logger.info("< updated vehicles currently in branch office");

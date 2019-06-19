@@ -6,7 +6,13 @@
         </b-form-group>
         
         <b-form-group>
-            <v-date-picker v-model="searchParams.pickUpDate"/>
+            <v-date-picker  v-model="searchParams.pickUpDate" 
+            :min-date='new Date()' 
+            :first-day-of-week="2" 
+            :input-props='{
+                placeholder: "Pick up date",
+                readonly: true
+            }'/>
         </b-form-group>
         
 
@@ -15,7 +21,13 @@
         </b-form-group>
         
         <b-form-group>
-            <v-date-picker v-model="searchParams.dropOffDate"/>
+            <v-date-picker v-model="searchParams.dropOffDate" 
+            :min-date='new Date()' 
+            :first-day-of-week="2"
+            :input-props='{
+                placeholder: "Drop off date",
+                readonly: true
+            }'/>
         </b-form-group>
 
         <b-form-group>
@@ -44,7 +56,7 @@
         <b-alert v-model="noResultMsg" variant="light">{{message}}</b-alert>
         <ul>
             <li v-for="item in vehicles">
-                <RegisteredUserVehicleInfo v-bind:item="item" v-bind:params="searchParams"></RegisteredUserVehicleInfo>
+                <RegisteredUserVehicleInfo v-bind:item="item" v-bind:params="searchParams" :key="componentKey"></RegisteredUserVehicleInfo>
             </li>
         </ul>
     </b-card>
@@ -111,14 +123,21 @@
                     {value: null, text: "Choose drop off location"}
                 ],
                 error: false,
-                errorMessage: ''
+                errorMessage: '',
+                componentKey: 0
             }
         },
         methods: {
             // Provera da li su uneti svi parametri za rezervaciju
             valid() {
-                if (this.searchParams.pickUpLocation == null || this.searchParams.dropOffLocation == null || this.searchParams.pickUpDate == null || this.searchParams.dropOffDate == null || this.searchParams.passangerNum.length == 0)
+                if (this.searchParams.pickUpLocation == null || this.searchParams.dropOffLocation == null || this.searchParams.pickUpDate == null || this.searchParams.dropOffDate == null || this.searchParams.passangerNum.length == 0) {
+                    this.errorMessage = "You need to fill in all fields!"
                     return false
+                }
+                if (this.searchParams.pickUpDate.getTime() == this.searchParams.dropOffDate.getTime()) {
+                    this.errorMessage = "Dates must be different!"
+                    return false
+                }
                 return true
             },
             search() {
@@ -146,8 +165,8 @@
                         this.vehicles = response.data
                         if (this.vehicles.length == 0) {
                             this.message = "There are no results that match your search!"
-                            this.noResultMsg = true
-                        }
+                            this.noResultMsg = true 
+                        }                       
                     })
                     .catch(err => {
                         this.errorMessage = "Something went wrong!"
@@ -155,9 +174,10 @@
                     })
 
                 }  else {
-                    this.errorMessage = "You need to fill in all fields!"
+                    
                     this.error = true
                 }
+                this.componentKey += 1
             },
             onCancel(e) {
                 e.preventDefault()
