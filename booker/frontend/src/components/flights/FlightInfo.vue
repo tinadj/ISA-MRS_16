@@ -25,6 +25,7 @@
 
             <div class="profile-info-value">
               <span>
+                  <b-button class="marg" variant="outline-primary"  v-on:click="showEditModal">Edit seats</b-button>
                   <b-button variant="outline-danger"  v-on:click="showModal">Remove</b-button>
                   <b-modal ref="confirmation" hide-footer>
                       <div class="d-block text-center">
@@ -32,6 +33,31 @@
                       </div>
                       <b-button class="mt-3" variant="outline-primary" block v-on:click="removeFlight">Yes</b-button>
                       <b-button class="mt-2" block v-on:click="hideModal">Cancel</b-button>
+                  </b-modal>
+
+                  <b-modal ref="editSeats" hide-footer>
+                      <div class="d-block text-center">
+                          <h3>Seats</h3>
+
+                          <div class="row">
+                            <div v-for="(ticket, index) in item.tickets" class="col-md-2" >
+                              <button type="button" class="btn disabled"  v-if="ticket.reserved == true" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                              <button type="button" class="btn btn-danger" v-on:click="select(ticket.seat)" v-else-if="ticket.seat.type == 'BUSINESS'" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                              <button type="button" class="btn btn-warning" v-on:click="select(ticket.seat)" v-else-if="ticket.seat.type == 'FIRST'" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                              <button type="button" class="btn btn-success" v-on:click="select(ticket.seat)" v-else-if="ticket.seat.type == 'ECONOMY'" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                            </div>
+                          </div>
+
+                          <div class="mt-10" v-if="selectedSeat != ''">
+                            <h3> SELECTED SEAT </h3>
+                            <b-form-input v-model="selectedSeat.seatRow" ></b-form-input>
+                            <b-form-input v-model="selectedSeat.seatLetter" ></b-form-input>
+                            <b-button class="mt-3" variant="outline-primary" block v-on:click="saveSeat">Save</b-button>
+
+                          </div>
+
+                      </div>
+                      <b-button class="mt-2" block v-on:click="hideEditModal">Cancel</b-button>
                   </b-modal>
               </span>
             </div>
@@ -54,7 +80,8 @@ export default {
         return {
             locationIcon: faMapMarkerAlt,
             map: false,
-            diff: ''
+            diff: '',
+            selectedSeat: ''
         }
     },
     mounted() {
@@ -75,8 +102,19 @@ export default {
         showModal: function(id) {
             this.$refs['confirmation'].show()
         },
+        showEditModal: function(id) {
+            this.$refs['editSeats'].show()
+        },
+        select: function(seat){
+        console.log(seat)
+          this.selectedSeat = seat
+        },
         hideModal: function() {
             this.$refs['confirmation'].hide()
+        },
+        hideEditModal: function() {
+            this.$refs['editSeats'].hide()
+            this.selectedSeat = ''
         },
         removeFlight: function() {
           let api = '/flights/remove/' +  this.item.id + "/" +this.$route.params.id;
@@ -106,6 +144,9 @@ export default {
 
   .align-center, .center {
       text-align: center!important;
+  }
+  .marg {
+    margin-right: 5px;
   }
   .small-font {
     font-size: 20px;
