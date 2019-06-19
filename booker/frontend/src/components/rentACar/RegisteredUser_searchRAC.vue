@@ -130,7 +130,7 @@
                     })
                     .catch(err => console.log(err))
                 }
-                this.this.componentKey += 1
+                this.componentKey += 1
             }
         },
         mounted() {
