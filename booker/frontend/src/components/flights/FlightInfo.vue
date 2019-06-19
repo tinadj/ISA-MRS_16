@@ -43,6 +43,9 @@
                           <b-form-input v-model="newSeat.seatLetter" ></b-form-input>
                           <b-form-select v-model="newSeat.type" :options="options"></b-form-select>
 
+                          <b-alert variant="success" v-model="success">Successfully added!</b-alert>
+                          <b-alert variant="danger" v-model="error" dismissible>Something went wrong!</b-alert>
+
                       </div>
                       <b-button class="mt-3" variant="outline-primary" block v-on:click="addSeat">Add seat</b-button>
                       <b-button class="mt-2" block v-on:click="hideAddModal">Cancel</b-button>
@@ -98,12 +101,14 @@ export default {
             newSeat: {
               seatLetter: '',
               seatRow: '',
-              type: ''
+              type: null
             },
             options: [
              { value: 'BUSINESS', text: 'BUSINESS CLASS' },
              { value: 'FIRST', text: 'FIRST CLASS' },
-             { value: 'ECONOMY', text: 'ECONOMY CLASS' }]
+             { value: 'ECONOMY', text: 'ECONOMY CLASS' }],
+             success: false,
+             error: false
         }
     },
     mounted() {
@@ -142,7 +147,32 @@ export default {
         hideEditModal: function() {
             this.$refs['editSeats'].hide()
             this.selectedSeat = ''
-        },addSeat {
+        },addSeat : function(){
+
+          if((this.newSeat.seatRow <0 && this.newSeat.seatRow == '') && this.newSeat.seatLetter == '' && this.newSeat.type != null){
+            this.success = false;
+            this.error = true
+          }
+          else {
+            const destination = {
+              'seatRow': this.newSeat.seatRow,
+              'seatLetter': this.newSeat.seatLetter,
+              'type': this.newSeat.type,
+              'id': this.$route.params.id
+            }
+
+            AXIOS.post('/flights/add-seat', destination)
+            .then(response => {
+              this.success = true;
+              this.error = false;
+              this.$router.go();
+            })
+            .catch(err => {
+              this.success = false;
+              this.error = true
+            })
+           }
+
         },
         removeFlight: function() {
           let api = '/flights/remove/' +  this.item.id + "/" +this.$route.params.id;

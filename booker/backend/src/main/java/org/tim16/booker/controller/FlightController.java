@@ -9,6 +9,7 @@ import org.tim16.booker.comparator.*;
 import org.tim16.booker.dto.AirlineDestinationDTO;
 import org.tim16.booker.dto.DestinationDTO;
 import org.tim16.booker.dto.FlightDTO;
+import org.tim16.booker.dto.SeatDTO;
 import org.tim16.booker.model.airline.*;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.AirlineService;
@@ -158,6 +159,47 @@ public class FlightController {
         flight = flightService.create(flight);
         airlineService.update(airline);
         return new ResponseEntity<>(flight, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/add-seat", method = RequestMethod.POST, consumes="application/json")
+    @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
+    public ResponseEntity<Seat> add(@RequestBody SeatDTO dto) {
+        Flight flight = flightService.findOne(dto.getId());
+        if (flight == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        for(Seat s : flight.getSeats()) {
+            if(s.getSeatLetter().equals(dto.getSeatLetter()) && s.getSeatRow() == dto.getSeatRow()){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        Ticket ticket;
+        Seat seat = new Seat();
+        seat.setSeatRow(dto.getSeatRow());
+        seat.setSeatLetter(dto.getSeatLetter());
+
+        ticket = new Ticket();
+        ticket.setFlight(flight);
+        ticket.setDiscount(0);
+
+        if(dto.getType().equals("BUSINESS")) {
+            seat.setType(TravelClass.BUSINESS);
+        }else if(dto.getType().equals("FIRST")) {
+            seat.setType(TravelClass.FIRST);
+        } else {
+            seat.setType(TravelClass.ECONOMY);
+        }
+        ticket.setPrice(0.0f);
+        flight.getSeats().add(seat);
+        ticket.setReserved(false);
+        ticket.setSeat(seat);
+
+        flight.getTickets().add(ticket);
+
+        flight = flightService.update(flight);
+        return new ResponseEntity<>(seat, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/remove/{id}/{airlineID}", method = RequestMethod.DELETE)
