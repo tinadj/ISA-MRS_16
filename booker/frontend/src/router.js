@@ -21,7 +21,7 @@ import destinationsTable from '@/components/destinations/destinationsTable'
 
 //Flights
 import addFlight from '@/components/flights/addFlight'
-
+import FlightTable from '@/components/flights/FlightTable'
 
 // Destinations
 
@@ -301,6 +301,10 @@ export default new Router({
         {
           path: 'add-destination',
           component: addDestination,
+        },
+        {
+          path: 'flights',
+          component: FlightTable,
         },
         {
           path: 'add-flight',

@@ -41,7 +41,7 @@ public class FlightController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
     @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<Flight> add(@RequestBody FlightDTO dto) {
-        Airline airline = airlineService.findOne(dto.getAirlineId());
+        Airline airline = airlineService.findOne(5);
         if (airline == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -56,7 +56,7 @@ public class FlightController {
 
         flight.setDepartureDestination(dep);
 
-        dep = destinationService.findOne(dto.getDeparture());
+        dep = destinationService.findOne(dto.getArrival());
         if (dep == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

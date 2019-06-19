@@ -1,5 +1,6 @@
 package org.tim16.booker.model.airline;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
@@ -11,6 +12,8 @@ import java.util.*;
 
 @Entity
 @Table(name = "flights")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class Flight implements Serializable {
 
     @Id
