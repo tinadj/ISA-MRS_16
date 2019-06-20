@@ -11,6 +11,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.tim16.booker.controller.VehicleController;
 import org.tim16.booker.dto.VehicleDTO;
 import org.tim16.booker.model.admins.RentACarAdmin;
+import org.tim16.booker.model.rent_a_car.QuickRACReservation;
 import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.rent_a_car.Vehicle;
 import org.tim16.booker.repository.RentACarRepository;
@@ -27,6 +28,9 @@ public class VehicleService  {
     private VehicleRepository vehicleRepository;
     @Autowired
     private RentACarRepository rentACarRepository;
+    @Autowired
+    private QuickRACReservationService quickRACReservationService;
+
 
     public Vehicle findOne(Integer id) {
         return vehicleRepository.getOne(id);
@@ -55,6 +59,13 @@ public class VehicleService  {
 
                 if (rentACar != null) {
                     rentACar.removeVehicle(vehicle.getId());
+
+                    List<QuickRACReservation> quickRACReservations = quickRACReservationService.findAll();
+                    for (QuickRACReservation quickReservation : quickRACReservations) {
+                        if (quickReservation.getVehicle().getId().equals(vehicle.getId())) {
+                            quickRACReservationService.remove(quickReservation.getId());
+                        }
+                    }
 
                     rentACarRepository.save(rentACar);
                     vehicleRepository.deleteById(id);

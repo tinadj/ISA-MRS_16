@@ -103,7 +103,7 @@ export default {
             this.errorMessage = "Dates must be different!"
             return false
         }
-        if (this.discount == 0 || this.discount.length == 0) {
+        if (this.discount == 0 || this.discount.length == 0 || this.discount > 100) {
             this.errorMessage = "Discount input is not valid!"
             return false
         }

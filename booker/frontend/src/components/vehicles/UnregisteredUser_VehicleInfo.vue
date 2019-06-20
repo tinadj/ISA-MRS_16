@@ -38,12 +38,6 @@
 									</div>
 								</div>
 
-                                <div class="profile-info-row">
-									<div class="profile-info-value">
-										<span><font-awesome-icon :icon="discountIcon"/> Discount: {{item.discount}}% </span>
-									</div>
-								</div>
-
                                 <!-- Link Show more details -->
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
@@ -118,7 +112,6 @@ export default {
             locationIcon: faMapMarkerAlt,
             euroIcon: faEuroSign,
             personIcon: faUser,
-            discountIcon: faTag,
             infoIcon: faInfoCircle,
             descriptionIcon: faAlignLeft
         } 
