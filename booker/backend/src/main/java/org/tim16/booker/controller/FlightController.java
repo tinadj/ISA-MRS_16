@@ -6,10 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.comparator.*;
+
 import org.tim16.booker.dto.AirlineDestinationDTO;
 import org.tim16.booker.dto.DestinationDTO;
 import org.tim16.booker.dto.FlightDTO;
 import org.tim16.booker.dto.SeatDTO;
+
 import org.tim16.booker.model.airline.*;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.AirlineService;
@@ -18,6 +20,7 @@ import org.tim16.booker.service.FlightService;
 import org.tim16.booker.service.SeatService;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.ZoneId;
 import java.util.*;
 
 @RestController
@@ -42,7 +45,9 @@ public class FlightController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
     @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<Flight> add(@RequestBody FlightDTO dto) {
-        Airline airline = airlineService.findOne(5);
+
+        Airline airline = airlineService.findOne(dto.getId());
+
         if (airline == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -202,6 +207,49 @@ public class FlightController {
         return new ResponseEntity<>(seat, HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/add-discount", method = RequestMethod.POST, consumes="application/json")
+    @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
+    public ResponseEntity<Ticket> addDiscount(@RequestBody TicketDTO dto) {
+        Flight flight = flightService.findOne(dto.getId());
+        if (flight == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if(dto.getDiscount() < 0 || dto.getDiscount() >99) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Ticket ticket = null;
+
+        for(Ticket s : flight.getTickets()) {
+            if(s.getId() == dto.getTicket()){
+                ticket = s;
+                break;
+            }
+        }
+
+        if(ticket == null || ticket.getReserved() == true) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        flight.getTickets().remove(ticket);
+        ticket.setReserved(true);
+        ticket.setDiscount(dto.getDiscount());
+
+        for(TicketPrice tp : flight.getTicketPrices()) {
+            if(tp.getTravelClass() == ticket.getSeat().getType()) {
+                ticket.setPrice(tp.getPrice());
+            }
+        }
+
+        flight.getTickets().add(ticket);
+        flight = flightService.update(flight);
+
+        Airline airline = airlineService.findOne(flight.getAirline().getId());
+        airline.getDiscountTickets().add(ticket);
+        airline = airlineService.update(airline);
+        return new ResponseEntity<>(ticket, HttpStatus.CREATED);
+    }
+
     @RequestMapping(value = "/remove/{id}/{airlineID}", method = RequestMethod.DELETE)
     @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<List<Flight>> removeFlight(@PathVariable Integer id, @PathVariable Integer airlineID)
@@ -252,5 +300,74 @@ public class FlightController {
         flightService.update(flight);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    private List<Flight> searchByDeparture(List<Flight> flights, List<Flight> result, String name) {
+        for (Flight flight: flights) {
+            if (!flight.getDepartureDestination().getCity().toLowerCase().contains(name.toLowerCase())) {
+                result.remove(flight);
+            }
+
+            if (!flight.getDepartureDestination().getState().toLowerCase().contains(name.toLowerCase())) {
+                result.remove(flight);
+            }
+        }
+        return result;
+    }
+
+    private List<Flight> searchByDepartureDate(List<Flight> flights, List<Flight> result, Date date) {
+        for (Flight flight: flights) {
+            if (!flight.getDeparture().toLocalDate().equals(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
+                result.remove(flight);
+            }
+        }
+        return result;
+    }
+
+    private List<Flight> searchByReturnDate(String arrival,List<Flight> result, Date date) {
+        for (Flight flight: flightService.findAll()) {
+            if(flight.getDepartureDestination().getCity().toLowerCase().contains(arrival.toLowerCase()) || flight.getDepartureDestination().getState().toLowerCase().contains(arrival.toLowerCase())) {
+                if (!flight.getDeparture().toLocalDate().equals(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
+                    result.add(flight);
+                }
+            }
+        }
+        return result;
+    }
+
+
+    private List<Flight> searchByArrival(List<Flight> flights, List<Flight> result, String name) {
+        for (Flight flight: flights) {
+            if (!flight.getArrivalDestination().getCity().toLowerCase().contains(name.toLowerCase())) {
+                result.remove(flight);
+            }
+
+            if (!flight.getArrivalDestination().getState().toLowerCase().contains(name.toLowerCase())) {
+                result.remove(flight);
+            }
+        }
+        return result;
+    }
+
+    @PostMapping(path = "/search")
+    public ResponseEntity<List<Flight>> search(@RequestBody FlightSearchParam dto) {
+        List<Flight> rentACars = flightService.findAll();
+        List<Flight> result = flightService.findAll();
+        if (!dto.getDeparture().equals("")) {
+            result = searchByDeparture(rentACars, result, dto.getDeparture());
+        }
+
+        if (!dto.getArrival().equals("")) {
+            result = searchByArrival(rentACars, result, dto.getArrival());
+        }
+
+        if (dto.getDepartureDate() != null) {
+            result = searchByDepartureDate(rentACars, result, dto.getDepartureDate());
+        }
+
+        if (dto.getReturnDate() != null) {
+            result = searchByReturnDate(dto.getArrival(), result, dto.getDepartureDate());
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
