@@ -26,7 +26,6 @@
             <div class="profile-info-value">
               <span>
                   <b-button class="marg" variant="outline-primary"  v-on:click="showDiscountModal">Add discount</b-button>
-
                   <b-button class="marg" variant="outline-primary"  v-on:click="showAddModal">Add seat</b-button>
 
                   <b-button class="marg" variant="outline-primary"  v-on:click="showEditModal">Edit seats</b-button>
@@ -210,7 +209,6 @@ export default {
             this.discount = 0
         },
         addSeat : function(){
-
           if((this.newSeat.seatRow <0 && this.newSeat.seatRow == '') && this.newSeat.seatLetter == '' && this.newSeat.type != null){
             this.success = false;
             this.error = true

@@ -106,6 +106,12 @@
                                         </span>
 									</div>
 								</div>
+
+                                <div class="profile-info-row">
+                                    <div class="profile-info-value">
+                                        <b-alert variant="danger" v-model="error" dismissible>Vehicle is just recently removed, refresh page!</b-alert>
+                                    </div>
+							    </div>
 							</div>
 						</div><!-- /.col -->
 					</div><!-- /.row -->				
@@ -142,7 +148,8 @@ export default {
             currentlyIn: null,
             branchOfficeValid: null,
             discount: '',
-            errorDiscount: false
+            errorDiscount: false,
+            error: false
         } 
     },
     methods: {
@@ -213,9 +220,17 @@ export default {
             }
         },
         removeVehicle: function() {
+            this.error = false
             AXIOS.delete('/vehicles/remove/' + this.item.id)
-            .then(response => this.$router.go())
-            .catch(err => console.log(err))
+            .then(response => {
+
+                if (response.status == 200) {
+                    this.$router.go()
+                } else {
+                    this.error = true
+                }
+            })
+            .catch(err => this.error = true)
 
             this.$refs['confirmation'].hide()
         },

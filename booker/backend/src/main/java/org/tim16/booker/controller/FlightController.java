@@ -6,7 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.comparator.*;
-import org.tim16.booker.dto.*;
+
+import org.tim16.booker.dto.AirlineDestinationDTO;
+import org.tim16.booker.dto.DestinationDTO;
+import org.tim16.booker.dto.FlightDTO;
+import org.tim16.booker.dto.SeatDTO;
+
 import org.tim16.booker.model.airline.*;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.AirlineService;
@@ -40,7 +45,9 @@ public class FlightController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
     @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<Flight> add(@RequestBody FlightDTO dto) {
+
         Airline airline = airlineService.findOne(dto.getId());
+
         if (airline == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -294,7 +301,6 @@ public class FlightController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
     private List<Flight> searchByDeparture(List<Flight> flights, List<Flight> result, String name) {
         for (Flight flight: flights) {
             if (!flight.getDepartureDestination().getCity().toLowerCase().contains(name.toLowerCase())) {
