@@ -34,4 +34,6 @@ public class HotelService implements IHotelService {
     public void remove(Integer id) {
         repository.deleteById(id);
     }
+
+    public Hotel findByName(String name) {return repository.findByName(name);}
 }

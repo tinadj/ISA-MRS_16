@@ -372,7 +372,7 @@ public class FlightController {
     }
 
     /*
-    Ocenjivanje leta
+    Dobavljanje ocene leta
      */
     @GetMapping(path = "rating/{id}")
     public ResponseEntity<Float> getRating(@PathVariable Integer id) {
@@ -384,6 +384,9 @@ public class FlightController {
         return new ResponseEntity<>(RentACarController.getAverageRating(flight.getRating()), HttpStatus.OK);
     }
 
+    /*
+    Ocenjivanje leta
+     */
     @PostMapping(path = "rate/{id}/{rateValue}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Float> rateVehicle(@PathVariable Integer id, @PathVariable Integer rateValue) {

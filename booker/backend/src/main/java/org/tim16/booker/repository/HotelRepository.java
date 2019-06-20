@@ -6,4 +6,6 @@ import org.tim16.booker.model.hotel.Hotel;
 
 @Repository
 public interface HotelRepository extends JpaRepository<Hotel, Integer> {
+
+    Hotel findByName(String name);
 }

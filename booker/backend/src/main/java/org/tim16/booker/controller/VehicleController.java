@@ -173,6 +173,9 @@ public class VehicleController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    /*
+    Dobavljanje ocene rent a car servisa
+     */
     @GetMapping(path = "rating/{id}")
     public ResponseEntity<Float> getRating(@PathVariable Integer id) {
         Vehicle vehicle = vehicleService.findOne(id);
@@ -183,6 +186,9 @@ public class VehicleController {
         return new ResponseEntity<>(getAverageRating(vehicle.getRating()), HttpStatus.OK);
     }
 
+    /*
+    Ocenjivanje rent a car servisa
+     */
     @PostMapping(path = "rate/{id}/{rateValue}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Float> rateVehicle(@PathVariable Integer id, @PathVariable Integer rateValue) {
