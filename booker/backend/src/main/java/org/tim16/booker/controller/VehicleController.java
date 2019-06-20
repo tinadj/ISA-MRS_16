@@ -90,8 +90,12 @@ public class VehicleController {
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<Vehicle>> removeVehicle(@PathVariable Integer id)
     {
-        vehicleService.remove(id);
-        return new ResponseEntity<>(vehicleService.findAll(), HttpStatus.OK);
+        boolean success = vehicleService.remove(id);
+
+        if (success)
+            return new ResponseEntity<>(vehicleService.findAll(), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping(path = "/update", consumes = "application/json")
