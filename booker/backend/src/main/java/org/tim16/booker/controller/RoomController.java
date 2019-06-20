@@ -268,9 +268,10 @@ public class RoomController {
     }
 
     /* Funkcija kojoj se prosledjuje hotelID, a koja vraca sve sobe tog hotela u ArrayList<Room> */
-    private List<Room> getRooms(Integer hotelID)
-    {
+    private List<Room> getRooms(Integer hotelID) {
         Hotel hotel = hotelService.findOne(hotelID);
         List<Room> rooms = new ArrayList<>();
+        return rooms;
+    }
 
 }
