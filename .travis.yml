@@ -7,7 +7,6 @@ before_install:
 
 script:
   - ./mvnw clean install -DskipTests=false -B
-  - ./mvnw sonar:sonar -Dsonar.projectKey=<generisani_project_key> -Dsonar.organization=stojkovm-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
 
 deploy:
   provider: heroku
