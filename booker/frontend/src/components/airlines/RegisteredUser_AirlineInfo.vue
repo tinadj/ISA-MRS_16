@@ -75,12 +75,11 @@
                                         </span>
 									</div>
 								</div>
-
-
-                                <div class="profile-info-row">
-									<div class="profile-info-value">
-									</div>
-								</div>
+                <div class="profile-info-row">
+                  <div class="profile-info-value">
+                     <b-button class="marg" variant="outline-primary" v-on:click="reserve">Quick reservations</b-button>
+                  </div>
+                </div>
 
 							</div>
 						</div><!-- /.col -->
@@ -110,6 +109,11 @@ export default {
         } 
     },
     methods: {
+      reserve: function()
+         {
+            let url = 'airlines/' + this.item.id + "/tickets";
+            this.$router.push(url)
+         }
     },
     mounted() {
         // Racunannje prosecne ocene aviokompanije

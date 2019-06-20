@@ -160,4 +160,18 @@ public class Flight implements Serializable {
     public void setRating(Set<Rate> rating) {
         this.rating = rating;
     }
+
+    public Ticket findTicket(Integer id)
+    {
+
+        for (Ticket d: getTickets())
+        {
+            if (d.getId() == id)
+            {
+                return d;
+            }
+        }
+
+        return null;
+    }
 }

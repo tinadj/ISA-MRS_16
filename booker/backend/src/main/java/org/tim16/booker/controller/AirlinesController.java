@@ -8,8 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.AirlineDTO;
 import org.tim16.booker.dto.LuggageDTO;
-import org.tim16.booker.model.airline.Airline;
-import org.tim16.booker.model.airline.Flight;
+import org.tim16.booker.model.airline.*;
+
 
 import org.tim16.booker.model.airline.LuggagePrice;
 import org.tim16.booker.model.airline.LuggageType;
@@ -24,6 +24,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/airlines")
@@ -153,6 +154,37 @@ public class AirlinesController {
         }
 
         return new ResponseEntity<>(destinations, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}/tickets", method = RequestMethod.GET)
+    public ResponseEntity<List<Ticket>> getTickets(@PathVariable Integer id) {
+        Airline airline = service.findOne(id);
+
+        if (airline == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<Ticket> tickets = new ArrayList<>();
+        for (Ticket d: airline.getDiscountTickets()) {
+            tickets.add(d);
+        }
+
+        return new ResponseEntity<>(tickets, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/ticket/{id}/{airline}", method = RequestMethod.GET)
+    public ResponseEntity<Flight> findTicket(@PathVariable Integer id, @PathVariable Integer airline)
+    {
+        Airline air = service.findOne(airline);
+        Set<Flight> flights = air.getFlights();
+
+        for(Flight f : flights) {
+            if(f.findTicket(id) != null) {
+                return new ResponseEntity<>(f, HttpStatus.OK);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "/{id}/flights", method = RequestMethod.GET)
