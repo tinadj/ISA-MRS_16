@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.AirlineDTO;
 import org.tim16.booker.dto.LuggageDTO;
@@ -12,9 +13,12 @@ import org.tim16.booker.model.airline.Flight;
 
 import org.tim16.booker.model.airline.LuggagePrice;
 import org.tim16.booker.model.airline.LuggageType;
+import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.utility.Destination;
+import org.tim16.booker.model.utility.Rate;
 import org.tim16.booker.service.AirlineService;
 import org.tim16.booker.service.DestinationService;
+import org.tim16.booker.service.RateService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -29,6 +33,8 @@ public class AirlinesController {
     private AirlineService service;
     @Autowired
     private DestinationService destinationService;
+    @Autowired
+    private RateService rateService;
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<Airline>> getAll() {
@@ -163,6 +169,53 @@ public class AirlinesController {
         }
 
         return new ResponseEntity<>(flights, HttpStatus.OK);
+    }
+
+    /*
+    Dobavljanje ocene aviokompanije
+     */
+    @GetMapping(path = "rating/{name}")
+    public ResponseEntity<Float> getRating(@PathVariable String name) {
+        Airline rentACar = service.findByName(name);
+
+        if (rentACar == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(RentACarController.getAverageRating(rentACar.getRating()), HttpStatus.OK);
+    }
+
+    /*
+    Ocenjivanje aviokompanije
+     */
+    @PostMapping(path = "rate/{name}/{rateValue}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Float> rateVehicle(@PathVariable String name, @PathVariable Integer rateValue) {
+        Airline airline = service.findByName(name);
+        RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (airline == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        // Ako je korisnik vec ocenio, promeni vrednost te ocene
+        boolean rated = false;
+        for (Rate rate : airline.getRating()) {
+            if (rate.getUser().getId().equals(user.getId())) {
+                rate.setRateValue(rateValue);
+                rateService.update(rate);
+                rated = true;
+                break;
+            }
+        }
+
+        // Ako nije ocenio, dodaj novu ocenu
+        if (!rated) {
+            Rate rate = new Rate(user, rateValue);
+            airline.getRating().add(rate);
+            rateService.create(rate);
+            service.update(airline);
+        }
+
+        return new ResponseEntity<>(RentACarController.getAverageRating(airline.getRating()), HttpStatus.OK);
     }
 
 }

@@ -6,4 +6,6 @@ import org.tim16.booker.model.airline.Airline;
 
 @Repository
 public interface AirlineRepository extends JpaRepository<Airline, Integer> {
+
+    Airline findByName(String name);
 }
