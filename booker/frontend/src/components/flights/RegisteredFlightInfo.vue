@@ -15,6 +15,11 @@
                 <div class="row">
                   <h4>Airline: {{item.airline.name}}</h4>
                 </div>
+
+                <div class="row">
+                  Departure: {{item.departure}}
+                  Arrival: {{item.arrival}}
+                </div>
               </div>
 
               <div class="col-md-2">
