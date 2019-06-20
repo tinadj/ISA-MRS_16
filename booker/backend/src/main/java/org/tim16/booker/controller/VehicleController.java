@@ -165,8 +165,8 @@ public class VehicleController {
             result = searchByVehicleType(vehicles, result, dto.getVehicleType());
         }
 
-        if (dto.getMinPrice() != 0 && dto.getMaxPrice()!= 0) {
-            result = searchByPrice(vehicles, result, (float)dto.getMinPrice(), (float)dto.getMinPrice());
+        if (dto.getMinPrice() != 0 || dto.getMaxPrice()!= 100) {
+            result = searchByPrice(vehicles, result, (float)dto.getMinPrice(), (float)dto.getMaxPrice());
         }
 
         if (dto.getPickUpDate() != null && dto.getDropOffDate() != null) {

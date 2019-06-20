@@ -71,7 +71,7 @@
                                                 <b-row>
                                                     <b-col>
                                                         <b>{{getTotalPrice()}} </b><font-awesome-icon :icon="euroIcon"/><br>
-                                                        (price for {{countDays()}} days)<br>
+                                                        (price for {{countDays()}} day/days)<br>
                                                     </b-col>
                                                     <b-col>
                                                         <b-button v-if="buttonShow" v-on:click="book" variant="outline-secondary">Book</b-button>
