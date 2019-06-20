@@ -7,7 +7,7 @@
                 </b-col>
                 <b-col lg="8">
                     <button v-b-toggle="flightToggle" class="m-1 btn btn-info">Flight</button>
-                    <button v-b-toggle="hotelToggle" class="m-1 btn btn-info">Hotel</button>
+                    <button v-if="hotelExists" v-b-toggle="hotelToggle" class="m-1 btn btn-info">Hotel</button>
                     <button v-if="racExists" v-b-toggle="racToggle" class="m-1 btn btn-info">Rent a Car</button>
                 </b-col>
             </b-row>
@@ -19,7 +19,7 @@
         </b-collapse>
 
         <b-collapse v-bind:id="hotelToggle">
-            <HotelReservationInfo v-if="hotelExists" v-bind:reservation="reservation.hotelReservation"></HotelReservationInfo>
+            <b-card>Hotel reservation!</b-card>
         </b-collapse>
 
         <b-collapse  v-bind:id="racToggle">
@@ -31,14 +31,12 @@
 <script>
     import {AXIOS} from '../../http-common'
     import RentACarReservationInfo from './RentACarReservationInfo'
-    import HotelReservationInfo from './HotelReservationInfo'
 
     export default {
         name: 'ReservationInfo',
         props: ["reservation"],
         components: {
-            RentACarReservationInfo,
-            HotelReservationInfo
+            RentACarReservationInfo
         },
         data() {
             return {
@@ -54,10 +52,10 @@
         methods: {
         },
         mounted() {
-            
+            /*
             if (this.reservation.hotelReservation == null)
                 this.hotelExists = false
-            
+            */
             if (this.reservation.rentACarReservation == null)
                 this.racExists = false
         }

@@ -20,7 +20,6 @@ public class Room implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
-
     @JsonBackReference("hotel-rooms")
     @ManyToOne()
     @JoinColumn(name = "hotel", referencedColumnName = "id", nullable = false)
@@ -31,14 +30,11 @@ public class Room implements Serializable {
     private Integer beds;
     private Boolean balcony;
 
-    private Float price;
     private Integer discount;
 
-    /*
     @JsonBackReference("room-price")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="room")
     private Set<RoomPrice> roomPrice = new HashSet<>();
-    */
 
     @ElementCollection(targetClass = ExtraService.class)
     @Enumerated(EnumType.STRING)
@@ -49,14 +45,6 @@ public class Room implements Serializable {
     private Set<Rate> rating = new HashSet<>();
 
     public Room() { /* empty constructor */}
-
-    public Float getPrice() {
-        return price;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
-    }
 
     public Integer getId() {
         return id;
@@ -90,8 +78,6 @@ public class Room implements Serializable {
         this.discount = discount;
     }
 
-    /*
-
     public Set<RoomPrice> getRoomPrice() {
         return roomPrice;
     }
@@ -99,8 +85,6 @@ public class Room implements Serializable {
     public void setRoomPrice(Set<RoomPrice> roomPrice) {
         this.roomPrice = roomPrice;
     }
-
-    */
 
     public Set<ExtraService> getExtraServices() {
         return extraservices;

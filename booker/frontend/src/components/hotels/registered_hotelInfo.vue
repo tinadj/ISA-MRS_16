@@ -55,7 +55,7 @@
                                 <!-- Ovde treba da ide search na rooms -->
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
-										<span><b-button :to="{ path: 'rooms-' + item.id}" variant="outline-secondary">Search Rooms</b-button></span>
+										<span><b-button variant="outline-secondary">Search Rooms</b-button></span>
 									</div>
 								</div>
 

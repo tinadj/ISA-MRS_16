@@ -8,7 +8,7 @@
           <th>Floor</th>
           <th>Room Number</th>
           <th>Number of Beds</th>
-          <th>Price Per Night</th>
+          <th>Included Balcony</th>
           <th>Discount</th>
           <th></th>
           <th></th>
@@ -20,7 +20,7 @@
           <td>{{room.floor}}</td>
           <td>{{room.roomNum}}</td>
           <td>{{room.beds}}</td>
-          <td>{{room.price}}</td>
+          <td>{{room.balcony}}</td>
           <td>{{room.discount}}</td>      
           <td><b-link :to="{ path: 'edit-room/' + room.id }">Edit</b-link></td>
           <td><b-link v-on:click="showModal(room.id)">Remove</b-link></td>

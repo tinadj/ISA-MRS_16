@@ -1,7 +1,7 @@
 <template>
   <b-card-group>
     <b-card header-tag="header" border-variant="light" style="max-width: 40rem;" class="mb-2 mx-auto">
-      <h6 slot="header" class="mb-0"><b>Edit Prices for Room Extraservices</b></h6>
+      <h6 slot="header" class="mb-0"><b>Edit prices for room extraservices (IN EUROS)</b></h6>
         <form @submit="edit">
 
           <b-form-group 
