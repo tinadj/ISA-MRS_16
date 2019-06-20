@@ -40,7 +40,7 @@ public class FlightController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
     @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<Flight> add(@RequestBody FlightDTO dto) {
-        Airline airline = airlineService.findOne(5);
+        Airline airline = airlineService.findOne(dto.getId());
         if (airline == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
