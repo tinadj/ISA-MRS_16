@@ -23,6 +23,7 @@ import destinationsTable from '@/components/destinations/destinationsTable'
 import addFlight from '@/components/flights/addFlight'
 import FlightTable from '@/components/flights/FlightTable'
 import RegistredFlightTable from '@/components/flights/RegisteredFlightTable'
+import RegistredTicketTable from '@/components/flights/RegisteredTicketTable'
 
 
 // Destinations
@@ -144,6 +145,11 @@ export default new Router({
           path: 'flights',
           component: RegistredFlightTable
         },
+        {
+          path: 'airlines/:airline/tickets',
+          component: RegistredTicketTable
+        },
+
         {
           path: 'hotels',
           component: registered_searchHotels

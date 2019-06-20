@@ -7,10 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.comparator.*;
 
-import org.tim16.booker.dto.AirlineDestinationDTO;
-import org.tim16.booker.dto.DestinationDTO;
-import org.tim16.booker.dto.FlightDTO;
-import org.tim16.booker.dto.SeatDTO;
+import org.tim16.booker.dto.*;
 
 import org.tim16.booker.model.airline.*;
 import org.tim16.booker.model.utility.Destination;
