@@ -200,6 +200,49 @@ public class FlightController {
         return new ResponseEntity<>(seat, HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/add-discount", method = RequestMethod.POST, consumes="application/json")
+    @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
+    public ResponseEntity<Ticket> addDiscount(@RequestBody TicketDTO dto) {
+        Flight flight = flightService.findOne(dto.getId());
+        if (flight == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if(dto.getDiscount() < 0 || dto.getDiscount() >99) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Ticket ticket = null;
+
+        for(Ticket s : flight.getTickets()) {
+            if(s.getId() == dto.getTicket()){
+                ticket = s;
+                break;
+            }
+        }
+
+        if(ticket == null || ticket.getReserved() == true) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        flight.getTickets().remove(ticket);
+        ticket.setReserved(true);
+        ticket.setDiscount(dto.getDiscount());
+
+        for(TicketPrice tp : flight.getTicketPrices()) {
+            if(tp.getTravelClass() == ticket.getSeat().getType()) {
+                ticket.setPrice(tp.getPrice());
+            }
+        }
+
+        flight.getTickets().add(ticket);
+        flight = flightService.update(flight);
+
+        Airline airline = airlineService.findOne(flight.getAirline().getId());
+        airline.getDiscountTickets().add(ticket);
+        airline = airlineService.update(airline);
+        return new ResponseEntity<>(ticket, HttpStatus.CREATED);
+    }
+
     @RequestMapping(value = "/remove/{id}/{airlineID}", method = RequestMethod.DELETE)
     @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<List<Flight>> removeFlight(@PathVariable Integer id, @PathVariable Integer airlineID)

@@ -96,7 +96,7 @@
                           <h3> SELECTED TICKET {{ selectedTicket.id }}</h3>
                           {{ selectedTicket.seat.seatRow }}{{selectedTicket.seat.seatLetter }}
                           Current discount: {{ selectedTicket.discount }}
-                          <b-form-input v-model="this.discount" placeholder="Enter discount for ticket"></b-form-input>
+                          <b-form-input v-model="discount" type=number step=1 placeholder="Enter discount for ticket"></b-form-input>
                           <b-button class="mt-3" variant="outline-primary" block v-on:click="saveDiscount">Save</b-button>
                         </div>
 
@@ -189,7 +189,25 @@ export default {
             this.selectedSeat = ''
         },
         saveDiscount: function() {
+        console.log(this.discount)
+            const destination = {
+              'id': this.$route.params.id,
+              'ticket': this.selectedTicket.id,
+              'discount': this.discount
+            }
 
+            AXIOS.post('/flights/add-discount', destination)
+            .then(response => {
+              this.success = true;
+              this.error = false;
+              this.$router.go();
+            })
+            .catch(err => {
+              this.success = false;
+              this.error = true
+            })
+
+            this.discount = 0
         },
         addSeat : function(){
 
