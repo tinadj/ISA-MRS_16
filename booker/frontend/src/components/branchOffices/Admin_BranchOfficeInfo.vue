@@ -68,6 +68,12 @@
                                         </span>
 									</div>
 								</div>
+
+                                <div class="profile-info-row">
+                                    <div class="profile-info-value">
+                                        <b-alert variant="danger" v-model="error" dismissible>{{errorMessage}}</b-alert>
+                                    </div>
+							    </div>
 							</div>
 						</div><!-- /.col -->				
           </div>
@@ -87,7 +93,9 @@ export default {
         return {
             locationIcon: faMapMarkerAlt,
             map: false,
-            vehicles: false
+            vehicles: false,
+            error: false,
+            errorMessage: ''
         } 
     },
     methods: {
@@ -95,11 +103,29 @@ export default {
             this.$refs['confirmation'].show()
         },
         removeVehicle: function() {
+            this.error = false
             AXIOS.delete('branch-offices/remove/' + this.item.id)
             .then(response => {
-                this.$router.go()
+                if (response.status == 200) {
+                    this.$router.go()
+                }  
+                else if (response.status == 404) {
+                    this.errorMessage = "Branch office is just recently removed, refresh page!"
+                    this.error = true
+                } else {
+                    this.errorMessage = "Something went wrong!"
+                    this.error = true;
+                }
             })
-            .catch(err => this.vehicles = true)
+            .catch(err => {
+                console.log(err.response.status)
+                if (err.response.status == 404) {
+                    this.errorMessage = "Branch office is just recently removed, refresh page!"
+                    this.error = true
+                } else {
+                    this.vehicles = true;
+                }
+            })
 
             this.$refs['confirmation'].hide()
         },

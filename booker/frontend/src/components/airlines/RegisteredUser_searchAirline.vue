@@ -1,6 +1,9 @@
 <template>
     <b-container>
     <b-row>
+      <span><b-button variant="outline-secondary" :to="{ path: 'flights'}">Search Flights</b-button></span>
+    </b-row>
+    <b-row>
         <b-col>
             <br>
             <b-card-group>

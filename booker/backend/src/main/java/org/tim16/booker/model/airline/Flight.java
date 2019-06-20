@@ -1,5 +1,7 @@
 package org.tim16.booker.model.airline;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
@@ -11,6 +13,8 @@ import java.util.*;
 
 @Entity
 @Table(name = "flights")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class Flight implements Serializable {
 
     @Id
@@ -55,6 +59,7 @@ public class Flight implements Serializable {
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Ticket> tickets = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<>();
 
@@ -154,5 +159,19 @@ public class Flight implements Serializable {
 
     public void setRating(Set<Rate> rating) {
         this.rating = rating;
+    }
+
+    public Ticket findTicket(Integer id)
+    {
+
+        for (Ticket d: getTickets())
+        {
+            if (d.getId() == id)
+            {
+                return d;
+            }
+        }
+
+        return null;
     }
 }

@@ -3,14 +3,17 @@ package org.tim16.booker.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.tim16.booker.dto.BranchOfficeDTO;
+import org.tim16.booker.model.admins.RentACarAdmin;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
 import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.rent_a_car.Vehicle;
+import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.repository.BranchOfficeRepository;
 import org.tim16.booker.repository.DestinationRepository;
@@ -53,31 +56,47 @@ public class BranchOfficeService {
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public HttpStatus remove(Integer id) {
-        BranchOffice vehicle = branchOfficeRepository.getOne(id);
+        RentACarAdmin user = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user.getUsername().equals("rac2")) {
+            try {
+                 Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
 
-        if (vehicle != null) {
-            RentACar rentACar = rentACarRepository.getOne(vehicle.getRentACar().getId());
+        try {
+            BranchOffice vehicle = branchOfficeRepository.getOne(id);
 
-            if (rentACar != null) {
+            if (vehicle != null) {
+                RentACar rentACar = rentACarRepository.getOne(vehicle.getRentACar().getId());
 
-                for (Vehicle v : vehicleRepository.findAll()) {
-                    if (v.getCurrentlyIn().getId().equals(id))
-                        return HttpStatus.FORBIDDEN;
+                if (rentACar != null) {
+
+                    for (Vehicle v : vehicleRepository.findAll()) {
+                        if (v.getCurrentlyIn().getId().equals(id))
+                            return HttpStatus.FORBIDDEN;
+                    }
+
+                    rentACar.removeBranchOffice(vehicle.getId());
+
+                    rentACarRepository.save(rentACar);
+                    branchOfficeRepository.deleteById(id);
+
+                    return HttpStatus.OK;
+                } else {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return HttpStatus.NOT_FOUND;
                 }
-
-                rentACar.removeBranchOffice(vehicle.getId());
-
-                rentACarRepository.save(rentACar);
-                branchOfficeRepository.deleteById(id);
-
-                return HttpStatus.OK;
             } else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return HttpStatus.NOT_FOUND;
             }
-        } else {
+        } catch (EntityNotFoundException ex) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return HttpStatus.NOT_FOUND;
         }
-        return HttpStatus.BAD_REQUEST;
+
     }
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)

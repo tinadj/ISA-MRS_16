@@ -30,4 +30,6 @@ public class AirlineService implements IAirlineService {
     public void remove(Integer id) {
         repository.deleteById(id);
     }
+
+    public Airline findByName(String name) {return repository.findByName(name);}
 }

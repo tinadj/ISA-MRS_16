@@ -38,12 +38,6 @@
 									</div>
 								</div>
 
-                                <div class="profile-info-row">
-									<div class="profile-info-value">
-										<span><font-awesome-icon :icon="discountIcon"/> Discount: {{item.discount}}% </span>
-									</div>
-								</div>
-
                                 <!-- Link Show more details -->
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
@@ -70,8 +64,8 @@
                                             <b-container>
                                                 <b-row>
                                                     <b-col>
-                                                        <b>{{this.price}} </b><font-awesome-icon :icon="euroIcon"/><br>
-                                                        (price for {{this.days}} days)<br>
+                                                        <b>{{getTotalPrice()}} </b><font-awesome-icon :icon="euroIcon"/><br>
+                                                        (price for {{countDays()}} day/days)<br>
                                                     </b-col>
                                                 </b-row>
                                             </b-container>
@@ -118,7 +112,6 @@ export default {
             locationIcon: faMapMarkerAlt,
             euroIcon: faEuroSign,
             personIcon: faUser,
-            discountIcon: faTag,
             infoIcon: faInfoCircle,
             descriptionIcon: faAlignLeft
         } 
@@ -129,14 +122,15 @@ export default {
             return this.item.type.charAt(0).toUpperCase() + this.item.type.slice(1).toLowerCase()
         },
         // Razlika izmedju pickUpDate i dropOffDate
-        daysAndPrice() {
-            this.days = 10
-            if (this.params != null) {
-                if (this.params != null && this.params.dropOffDate != null)
-                    this.days = this.date_diff_indays(this.params.pickUpDate, this.params.dropOffDate)
-            } 
-
-            this.price = this.days * this.item.price
+        countDays() {
+            let days = 10
+            if (this.params.pickUpDate != null && this.params.dropOffDate != null)
+                days = this.date_diff_indays(this.params.pickUpDate, this.params.dropOffDate)
+            return days
+        },
+        getTotalPrice() {
+            let price = this.countDays() * this.item.price
+            return price
         },
         date_diff_indays(date1, date2) {
             let dt1 = new Date(date1);

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.tim16.booker.dto.HotelReservationDTO;
+import org.tim16.booker.controller.RentACarController;
 import org.tim16.booker.dto.RacReservationDTO;
 import org.tim16.booker.model.hotel.HotelReservation;
 import org.tim16.booker.model.hotel.Room;
@@ -19,7 +20,9 @@ import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.users.Reservation;
 import org.tim16.booker.repository.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -133,7 +136,8 @@ public class ReservationService {
     }
 
     // Incijalizacija rent a car rezervacije
-    private RentACarReservation setUpRACReservation(RacReservationDTO dto) {
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public RentACarReservation setUpRACReservation(RacReservationDTO dto) {
         RentACarReservation rentACarReservation = new RentACarReservation();
 
         Vehicle vehicle = vehicleRepository.getOne(dto.getVehicle());
@@ -141,6 +145,9 @@ public class ReservationService {
         BranchOffice dropOff = branchOfficeRepository.getOne(dto.getDropOffLocation());
 
         if (vehicle == null || pickUp == null || dropOff == null)
+            return null;
+
+        if (!isVehicleAvailable(vehicle.getId(), dto.getPickUpDate(), dto.getDays()))
             return null;
 
         rentACarReservation.setVehicle(vehicle);
@@ -151,13 +158,24 @@ public class ReservationService {
         rentACarReservation.setDropOffLocation(dropOff);
         rentACarReservation.setRentACar(vehicle.getRentACar().getName());
         rentACarReservation.setVehicleChecked(false);
-
-        Float price = vehicle.getPrice() * dto.getDays();
-        if (vehicle.getDiscount() != 0) {
-            price = price - (price / 100 * vehicle.getDiscount());
-        }
-        rentACarReservation.setTotalPrice(price);
+        rentACarReservation.setTotalPrice(vehicle.getPrice() * dto.getDays());
 
         return rentACarReservation;
+    }
+
+    /*
+    Provera da li je neko u medjuvremenu rezervisao vozilo
+     */
+    private boolean isVehicleAvailable(Integer id, Date pickUp, Integer days) {
+        Date returnDate = RentACarController.calculateReturnDate(pickUp, days);
+        for (RentACarReservation reservation: racReservationRepository.findAll()) {
+            if (reservation.getVehicle().getId().equals(id)) {
+                Date returnDateRes = RentACarController.calculateReturnDate(reservation.getPickUpDate(), reservation.getDays());
+                if (reservation.getPickUpDate().before(returnDate) && returnDateRes.after(pickUp)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

@@ -105,7 +105,7 @@ export default {
           'businessClassPrice': this.businessClassPrice,
           'economyClass': this.economyClass,
           'economyClassPrice': this.economyClassPrice,
-          'AirlineID': this.$route.params.id
+          'id': this.$route.params.id
         }
 
         AXIOS.post('/flights/add', flight)

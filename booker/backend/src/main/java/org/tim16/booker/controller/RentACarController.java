@@ -212,7 +212,7 @@ public class RentACarController {
      */
     private List<RentACar> searchByDates(List<RentACar> result, Date pickUpDate, Date returnDate) {
         for (RentACarReservation reservation: reservationService.findAll()) {
-            Date returnDateCalc = calculateReturnDate(reservation);
+            Date returnDateCalc = calculateReturnDate(reservation.getPickUpDate(), reservation.getDays());
 
             if (reservation.getPickUpDate().before(returnDate) && returnDateCalc.after(pickUpDate)) {
                 result.remove(reservation.getVehicle().getRentACar());
@@ -267,10 +267,10 @@ public class RentACarController {
     /*
     Izracunava datum povratka vozila na osnovu datuma preuzimanja i broja dana
      */
-    private Date calculateReturnDate(RentACarReservation reservation) {
+    public static Date calculateReturnDate(Date pickUpDate, Integer days) {
         Calendar c = Calendar.getInstance();
-        c.setTime(reservation.getPickUpDate());
-        c.add(Calendar.DATE, reservation.getDays());
+        c.setTime(pickUpDate);
+        c.add(Calendar.DATE, days);
         return c.getTime();
     }
 
@@ -292,7 +292,7 @@ public class RentACarController {
     /*
     Racuna prosecnu ocenu
     */
-    private Float getAverageRating(Set<Rate> rates) {
+    public static Float getAverageRating(Set<Rate> rates) {
         Float sum = 0f;
         for (Rate rate : rates) {
             sum += rate.getRateValue();
