@@ -17,6 +17,7 @@ import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 import org.tim16.booker.service.DestinationService;
+import org.tim16.booker.service.HotelReservationService;
 import org.tim16.booker.service.HotelService;
 import org.tim16.booker.service.RateService;
 
@@ -36,6 +37,9 @@ public class HotelController {
     private DestinationService destinationService;
     @Autowired
     private RateService rateService;
+
+    @Autowired
+    private HotelReservationService reservationService;
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<Hotel>> getAll()
@@ -135,11 +139,11 @@ public class HotelController {
             }
             else if(es.getType().equals(ExtraService.HOTEL_RESTAURANT))
             {
-                dto.setHotelRestaurant(es.getPrice());
+                dto.setHotel_restaurant(es.getPrice());
             }
             else if(es.getType().equals(ExtraService.AIRPORT_TRANSFER))
             {
-                dto.setAirportTransfer(es.getPrice());
+                dto.setAirport_transfer(es.getPrice());
             }
             else if(es.getType().equals(ExtraService.PARKING))
             {
@@ -151,7 +155,7 @@ public class HotelController {
             }
             else if(es.getType().equals(ExtraService.WELLNESS_SPA))
             {
-                dto.setWellnessSpa(es.getPrice());
+                dto.setWellness_spa(es.getPrice());
             }
             else if(es.getType().equals(ExtraService.WIFI))
             {
@@ -307,14 +311,14 @@ public class HotelController {
                 }
                 else if(es.getType().equals(ExtraService.HOTEL_RESTAURANT))
                 {
-                    es.setPrice(dto.getHotelRestaurant());
+                    es.setPrice(dto.getHotel_restaurant());
                     es.setType(ExtraService.HOTEL_RESTAURANT);
 
                     extraprices.add(es);
                 }
                 else if(es.getType().equals(ExtraService.AIRPORT_TRANSFER))
                 {
-                    es.setPrice(dto.getAirportTransfer());
+                    es.setPrice(dto.getAirport_transfer());
                     es.setType(ExtraService.AIRPORT_TRANSFER);
 
                     extraprices.add(es);
@@ -335,7 +339,7 @@ public class HotelController {
                 }
                 else if(es.getType().equals(ExtraService.WELLNESS_SPA))
                 {
-                    es.setPrice(dto.getWellnessSpa());
+                    es.setPrice(dto.getWellness_spa());
                     es.setType(ExtraService.WELLNESS_SPA);
 
                     extraprices.add(es);

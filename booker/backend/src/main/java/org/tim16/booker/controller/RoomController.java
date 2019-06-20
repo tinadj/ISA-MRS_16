@@ -7,7 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.tim16.booker.comparator.*;
+import org.tim16.booker.comparator.RoomPrice;
 import org.tim16.booker.dto.RoomDTO;
+import org.tim16.booker.dto.RoomSearchParamsDTO;
+import org.tim16.booker.model.hotel.*;
+import org.tim16.booker.service.HotelReservationService;
 import org.tim16.booker.model.hotel.ExtraService;
 import org.tim16.booker.model.hotel.Hotel;
 import org.tim16.booker.model.hotel.Room;
@@ -19,9 +24,7 @@ import org.tim16.booker.service.RateService;
 import org.tim16.booker.service.RoomService;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api/room")
@@ -34,7 +37,7 @@ public class RoomController {
     private HotelService hotelService;
 
     @Autowired
-    private RateService rateService;
+    private HotelReservationService reservationService;
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<Room>> getAll() {
@@ -96,9 +99,33 @@ public class RoomController {
 
         Set<ExtraService> roomservices = roomExtraServicesSet(roomDTO);
 
+        room.setExtraServices(roomservices);
+
         /*  **********************************************************************************************      */
 
-        room.setExtraServices(roomservices);
+        /* Cena je 0 na pocetku
+           1: Dodaje se basic cena za samu sobu na ukupnu cenu
+           2: Prolazi se kroz sve ES sobe i za svaki koji postoji -> uzima se cena tog ES iz hotela i dodaje na ukupnu cenu
+        */
+        float price = 0.0f;
+
+        price += roomDTO.getPrice();
+
+        for(ExtraService es : roomservices)
+        {
+            for(ExtraServicePrice esp : hotel.getExtraServicePrices())
+            {
+                if(es.equals(esp.getType()))
+                {
+                    price += esp.getPrice();
+                }
+            }
+
+        }
+
+        room.setPrice(price);
+
+        /* **** */
 
         roomService.create(room);
         return new ResponseEntity(HttpStatus.OK);
@@ -128,6 +155,7 @@ public class RoomController {
             room.setRoomNum(roomDTO.getRoomNum());
             room.setBeds(roomDTO.getBeds());
             room.setBalcony(roomDTO.getBalcony());
+            room.setPrice(roomDTO.getPrice());
             room.setDiscount(roomDTO.getDiscount());
             Hotel hotel = hotelService.findOne(roomDTO.getHotelId());
             room.setHotel(hotel);
@@ -145,6 +173,26 @@ public class RoomController {
         }
         catch (EntityNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(path = "is-reserved/{id}")
+    @PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+    public HttpStatus isReserved(@PathVariable Integer id)
+    {
+        try{
+            /*
+            for(HotelReservation reservation : reservationService.findAll())
+            {
+                if(reservation.getRoom().getId().equals(id))
+                    return HttpStatus.FORBIDDEN;
+            }
+            */
+            return HttpStatus.OK;
+        }
+        catch(EntityNotFoundException e)
+        {
+            return HttpStatus.BAD_REQUEST;
         }
     }
 
@@ -176,12 +224,12 @@ public class RoomController {
             roomservices.add(ExtraService.BREAKFAST);
         }
 
-        if(roomDTO.getHotelRestaurant().equals(true))
+        if(roomDTO.getHotel_restaurant().equals(true))
         {
             roomservices.add(ExtraService.HOTEL_RESTAURANT);
         }
 
-        if(roomDTO.getAirportTransfer().equals(true))
+        if(roomDTO.getAirport_transfer().equals(true))
         {
             roomservices.add(ExtraService.AIRPORT_TRANSFER);
         }
@@ -196,7 +244,7 @@ public class RoomController {
             roomservices.add(ExtraService.POOL);
         }
 
-        if(roomDTO.getWellnessSpa().equals(true))
+        if(roomDTO.getWellness_spa().equals(true))
         {
             roomservices.add(ExtraService.WELLNESS_SPA);
         }
@@ -219,51 +267,10 @@ public class RoomController {
         return roomservices;
     }
 
-    /*
-    Dobavljanje ocene sobe
-     */
-    @GetMapping(path = "rating/{id}")
-    public ResponseEntity<Float> getRating(@PathVariable Integer id) {
-        Room room = roomService.findOne(id);
-
-        if (room == null)
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        return new ResponseEntity<>(RentACarController.getAverageRating(room.getRating()), HttpStatus.OK);
-    }
-
-    /*
-    Ocenjivanje rent a car servisa
-    */
-    @PostMapping(path = "rate/{id}/{rateValue}")
-    @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Float> rateVehicle(@PathVariable Integer id, @PathVariable Integer rateValue) {
-        Room room = roomService.findOne(id);
-        RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (room == null)
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        // Ako je korisnik vec ocenio, promeni vrednost te ocene
-        boolean rated = false;
-        for (Rate rate : room.getRating()) {
-            if (rate.getUser().getId().equals(user.getId())) {
-                rate.setRateValue(rateValue);
-                rateService.update(rate);
-                rated = true;
-                break;
-            }
-        }
-
-        // Ako nije ocenio, dodaj novu ocenu
-        if (!rated) {
-            Rate rate = new Rate(user, rateValue);
-            room.getRating().add(rate);
-            rateService.create(rate);
-            roomService.update(room);
-        }
-
-        return new ResponseEntity<>(RentACarController.getAverageRating(room.getRating()), HttpStatus.OK);
-    }
+    /* Funkcija kojoj se prosledjuje hotelID, a koja vraca sve sobe tog hotela u ArrayList<Room> */
+    private List<Room> getRooms(Integer hotelID)
+    {
+        Hotel hotel = hotelService.findOne(hotelID);
+        List<Room> rooms = new ArrayList<>();
 
 }

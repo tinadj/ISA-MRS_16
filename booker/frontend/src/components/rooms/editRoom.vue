@@ -29,6 +29,14 @@
           </b-form-group>
           
           <b-form-group 
+            label="Price per Night: " 
+            label-cols="4" 
+            label-cols-lg="2" 
+            label-for="input-5">
+            <b-form-input id="input-5" v-model="price" placeholder="Price per Night" type="number"></b-form-input>
+          </b-form-group>
+
+          <b-form-group 
             label="Discount: " 
             label-cols="4" 
             label-cols-lg="2" 
@@ -36,7 +44,7 @@
             <b-form-input id="input-5" v-model="discount" placeholder="Discount" type="number"></b-form-input>
           </b-form-group>
 
-          <b-form-checkbox id="balcony_checkbox" v-model="balcony_status" name="balcony_checkbox" value="true" unchecked-value="false">
+          <b-form-checkbox id="balcony_checkbox" v-model="balcony" name="balcony_checkbox" value="true" unchecked-value="false">
             Balcony inclusion
           </b-form-checkbox>
 
@@ -93,7 +101,7 @@ export default {
       floor: '',
       roomNum: '',
       beds: '',
-      balcony_status: 'false',
+      balcony: 'false',
       breakfast : 'false',
       hotel_restaurant : 'false',
       airport_transfer : 'false',
@@ -103,6 +111,7 @@ export default {
       wifi : 'false',
       tv : 'false',
       minibar : 'false',
+      price: '',
       discount: '',
       hotelId: '',
       success: false,
@@ -118,7 +127,7 @@ export default {
         'floor': this.floor,
         'roomNum': this.roomNum,
         'beds': this.beds,
-        'balcony': this.balcony_status,
+        'balcony': this.balcony,
         'breakfast' : this.breakfast,
         'hotel_restaurant' : this.hotel_restaurant,
         'airport_transfer' : this.airport_transfer,
@@ -128,6 +137,7 @@ export default {
         'wifi' : this.wifi,
         'tv' : this.tv,
         'minibar' : this.minibar,
+        'price' : this.price,
         'discount': this.discount,
         'hotelId':this.$route.params.id
     }
@@ -155,9 +165,10 @@ export default {
       this.floor = response.data.floor
       this.roomNum = response.data.roomNum
       this.beds = response.data.beds
+      this.price = response.data.price
       this.discount = response.data.discount
       this.hotel = response.data.hotel
-      this.balcony_status = response.data.balcony
+      this.balcony = response.data.balcony
 
       for(let i in response.data.extraServices)
       {

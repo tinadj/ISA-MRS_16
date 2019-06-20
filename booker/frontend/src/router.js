@@ -89,6 +89,7 @@ import addRooms from '@/components/rooms/addRooms'
 import RoomsTable from '@/components/rooms/RoomsTable'
 import editRoom from '@/components/rooms/editRoom'
 import editExtraServices from '@/components/rooms/editExtraServices'
+import RegisteredUserSearchRooms from '@/components/rooms/registered_searchRoom'
 
 // Reservations
 import ReservationList from '@/components/reservations/ReservationList'
@@ -183,6 +184,10 @@ export default new Router({
         {
           path: 'vehicles-:rac_id',
           component: RegisteredUserSearchVehicle
+        },
+        {
+          path: 'rooms-:hotel_id',
+          component: RegisteredUserSearchRooms
         }
       ]
     },
