@@ -6,8 +6,7 @@ import org.tim16.booker.model.users.Reservation;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "hotel_reservations")
@@ -21,19 +20,24 @@ public class HotelReservation implements Serializable {
     @OneToOne
     private Reservation reservation;
 
-    @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
-    private Set<RoomReservation> rooms = new HashSet<>();
+    private String hotel;
+
+    /*
+    @ManyToOne
+    private Room room;
+    */
+
+    private Integer roomID;
+
 
     @Temporal(TemporalType.DATE)
-    private Date checkInDate;
+    private Date checkinDate;
 
     private Integer nights;
 
-    private Integer guests;
-
     private Float totalPrice;
 
-    public HotelReservation() { /* empty constructor */}
+    public HotelReservation() {}
 
     public Integer getId() {
         return id;
@@ -43,20 +47,46 @@ public class HotelReservation implements Serializable {
         this.id = id;
     }
 
-    public Set<RoomReservation> getRooms() {
-        return rooms;
+    public Reservation getReservation() {
+        return reservation;
     }
 
-    public void setRooms(Set<RoomReservation> rooms) {
-        this.rooms = rooms;
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
 
-    public Date getCheckInDate() {
-        return checkInDate;
+    public String getHotel() {
+        return hotel;
     }
 
-    public void setCheckInDate(Date checkInDate) {
-        this.checkInDate = checkInDate;
+    public void setHotel(String hotel) {
+        this.hotel = hotel;
+    }
+
+    /*
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+    */
+
+    public Integer getRoomID() {
+        return roomID;
+    }
+
+    public void setRoomID(Integer roomID) {
+        this.roomID = roomID;
+    }
+
+    public Date getCheckinDate() {
+        return checkinDate;
+    }
+
+    public void setCheckinDate(Date checkinDate) {
+        this.checkinDate = checkinDate;
     }
 
     public Integer getNights() {
@@ -67,27 +97,11 @@ public class HotelReservation implements Serializable {
         this.nights = nights;
     }
 
-    public Integer getGuests() {
-        return guests;
-    }
-
-    public void setGuests(Integer guests) {
-        this.guests = guests;
-    }
-
     public Float getTotalPrice() {
         return totalPrice;
     }
 
     public void setTotalPrice(Float totalPrice) {
         this.totalPrice = totalPrice;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
     }
 }

@@ -4,22 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.comparator.*;
+import org.tim16.booker.comparator.RoomPrice;
 import org.tim16.booker.dto.RoomDTO;
 import org.tim16.booker.dto.RoomSearchParamsDTO;
-import org.tim16.booker.model.hotel.ExtraService;
-import org.tim16.booker.model.hotel.ExtraServicePrice;
-import org.tim16.booker.model.hotel.Hotel;
-import org.tim16.booker.model.hotel.Room;
+import org.tim16.booker.model.hotel.*;
+import org.tim16.booker.service.HotelReservationService;
 import org.tim16.booker.service.HotelService;
 import org.tim16.booker.service.RoomService;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api/room")
@@ -30,6 +27,9 @@ public class RoomController {
 
     @Autowired
     private HotelService hotelService;
+
+    @Autowired
+    private HotelReservationService reservationService;
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<Room>> getAll() {
@@ -168,6 +168,26 @@ public class RoomController {
         }
     }
 
+    @GetMapping(path = "is-reserved/{id}")
+    @PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+    public HttpStatus isReserved(@PathVariable Integer id)
+    {
+        try{
+            /*
+            for(HotelReservation reservation : reservationService.findAll())
+            {
+                if(reservation.getRoom().getId().equals(id))
+                    return HttpStatus.FORBIDDEN;
+            }
+            */
+            return HttpStatus.OK;
+        }
+        catch(EntityNotFoundException e)
+        {
+            return HttpStatus.BAD_REQUEST;
+        }
+    }
+
     @DeleteMapping(path = "/remove/{id}")
     public ResponseEntity<List<Room>> removeRoom(@PathVariable Integer id)
     {
@@ -196,12 +216,12 @@ public class RoomController {
             roomservices.add(ExtraService.BREAKFAST);
         }
 
-        if(roomDTO.getHotelRestaurant().equals(true))
+        if(roomDTO.getHotel_restaurant().equals(true))
         {
             roomservices.add(ExtraService.HOTEL_RESTAURANT);
         }
 
-        if(roomDTO.getAirportTransfer().equals(true))
+        if(roomDTO.getAirport_transfer().equals(true))
         {
             roomservices.add(ExtraService.AIRPORT_TRANSFER);
         }
@@ -216,7 +236,7 @@ public class RoomController {
             roomservices.add(ExtraService.POOL);
         }
 
-        if(roomDTO.getWellnessSpa().equals(true))
+        if(roomDTO.getWellness_spa().equals(true))
         {
             roomservices.add(ExtraService.WELLNESS_SPA);
         }
@@ -269,6 +289,13 @@ public class RoomController {
         List<Room> result = getRooms(dto.getHotelID());
 
 
+        /* Datumi da li se poklapaju */
+        if (dto.getCheckinDate() != null && dto.getCheckoutDate() != null)
+        {
+            result = searchByDates(rooms, result, dto.getCheckinDate(), dto.getCheckoutDate());
+        }
+
+
         /* Ukoliko je cena sobe van okvira zeljene cene -> soba se izbacuje iz liste za pretragu */
         if (dto.getMinPrice() != 0 && dto.getMaxPrice()!= 0) {
             for (Room r : rooms) {
@@ -297,6 +324,9 @@ public class RoomController {
             }
         }
 
+
+        rooms = new ArrayList<>();
+        rooms = result;
 
         /* Da li su ukljuceni odredjeni ekstraservisi */
 
@@ -348,6 +378,9 @@ public class RoomController {
             }
         }
 
+        rooms = new ArrayList<>();
+        rooms = result;
+
         /* AIRPORT TRANSFER */
         if(dto.isAirport_transfer())
         {
@@ -391,6 +424,9 @@ public class RoomController {
                 }
             }
         }
+
+        rooms = new ArrayList<>();
+        rooms = result;
 
         /* HOTEL RESTAURANT */
         if(dto.isHotel_restaurant())
@@ -436,6 +472,9 @@ public class RoomController {
             }
         }
 
+        rooms = new ArrayList<>();
+        rooms = result;
+
         /* MINIBAR */
         if(dto.isMinibar())
         {
@@ -479,6 +518,9 @@ public class RoomController {
                 }
             }
         }
+
+        rooms = new ArrayList<>();
+        rooms = result;
 
         /* PARKING */
         if(dto.isParking())
@@ -524,7 +566,10 @@ public class RoomController {
             }
         }
 
-        /* PARKING */
+        rooms = new ArrayList<>();
+        rooms = result;
+
+        /* POOL */
         if(dto.isPool())
         {
             boolean checker = false;
@@ -567,6 +612,9 @@ public class RoomController {
                 }
             }
         }
+
+        rooms = new ArrayList<>();
+        rooms = result;
 
         /* TV */
         if(dto.isTv())
@@ -612,6 +660,9 @@ public class RoomController {
             }
         }
 
+        rooms = new ArrayList<>();
+        rooms = result;
+
         /* WELLNESS SPA */
         if(dto.isWellness_spa())
         {
@@ -655,6 +706,9 @@ public class RoomController {
                 }
             }
         }
+
+        rooms = new ArrayList<>();
+        rooms = result;
 
         /* WIFI */
         if(dto.isWifi())
@@ -719,5 +773,45 @@ public class RoomController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    private List<Room> searchByDates(List<Room> rooms, List<Room> result, Date checkinDate, Date checkoutDate)
+    {
+        for(Room r : rooms)
+        {
+            if(isReserved(r, checkinDate, checkoutDate))
+            {
+                result.remove(r);
+            }
+        }
+        return result;
+    }
+
+    private boolean isReserved(Room room, Date checkinDate, Date checkoutDate)
+    {
+        /*
+        for(HotelReservation reservation : reservationService.findAll())
+        {
+            if(reservation.getRoom().getId().equals(room.getId()))
+            {
+                Date checkoutdate = calculateCheckoutDate(reservation);
+
+                if(reservation.getCheckinDate().before(checkoutDate) && checkoutdate.after(checkinDate))
+                {
+                    return true;
+                }
+            }
+        }
+        */
+        return false;
+    }
+
+    // Funkcija koja izracunava datum povratka vozila na osnovu checkina i broja noci
+    private Date calculateCheckoutDate(HotelReservation reservation)
+    {
+        Calendar c = Calendar.getInstance();
+        c.setTime(reservation.getCheckinDate());
+        c.add(Calendar.DATE, reservation.getNights());
+
+        return c.getTime();
+    }
 
 }

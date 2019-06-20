@@ -8,16 +8,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.tim16.booker.dto.HotelReservationDTO;
 import org.tim16.booker.dto.RacReservationDTO;
+import org.tim16.booker.model.hotel.HotelReservation;
+import org.tim16.booker.model.hotel.Room;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
 import org.tim16.booker.model.rent_a_car.RentACarReservation;
 import org.tim16.booker.model.rent_a_car.Vehicle;
 import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.users.Reservation;
-import org.tim16.booker.repository.BranchOfficeRepository;
-import org.tim16.booker.repository.RacReservationRepository;
-import org.tim16.booker.repository.ReservationRepository;
-import org.tim16.booker.repository.VehicleRepository;
+import org.tim16.booker.repository.*;
 
 import java.util.List;
 
@@ -32,10 +32,16 @@ public class ReservationService {
     private VehicleRepository vehicleRepository;
 
     @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
     private BranchOfficeRepository branchOfficeRepository;
 
     @Autowired
     private RacReservationRepository racReservationRepository;
+
+    @Autowired
+    private HotelReservationRepository hotelReservationRepository;
 
     @Autowired
     private UserService userService;
@@ -72,6 +78,58 @@ public class ReservationService {
         userService.save(user);
 
         return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public ResponseEntity<Boolean> reserveRoom(HotelReservationDTO dto)
+    {
+        Reservation reservation = new Reservation();
+        RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        HotelReservation hotelreservation = setUpHotelReservation(dto);
+        if (hotelreservation == null){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+
+        user.getReservations().add(reservation);
+        reservation.setUser(user);
+
+        hotelReservationRepository.save(hotelreservation);
+        hotelreservation.setReservation(reservation);
+        reservation.setHotelReservation(hotelreservation);
+
+        reservationRepository.save(reservation);
+        userService.save(user);
+
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    private HotelReservation setUpHotelReservation(HotelReservationDTO dto)
+    {
+        HotelReservation hotelReservation = new HotelReservation();
+
+        Room room = roomRepository.getOne(dto.getRoom());
+
+        if(room == null)
+            return null;
+
+
+        Integer r_id = room.getId();
+        hotelReservation.setRoomID(r_id);
+
+        hotelReservation.setCheckinDate(dto.getCheckinDate());
+        hotelReservation.setNights(dto.getNights());
+        hotelReservation.setHotel(room.getHotel().getName());
+
+        Float price = room.getPrice() * dto.getNights();
+        if(room.getDiscount() != 0)
+        {
+            price = price - (price / 100 * room.getDiscount());
+        }
+        hotelReservation.setTotalPrice(price);
+
+        return hotelReservation;
     }
 
     // Incijalizacija rent a car rezervacije

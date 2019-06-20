@@ -23,7 +23,7 @@
             <b-form-input v-model="discount" placeholder="Discount" type="number"></b-form-input>
           </b-form-group>
 
-          <b-form-checkbox id="balcony_checkbox" v-model="balcony_status" name="balcony_checkbox" value="true" unchecked-value="false">
+          <b-form-checkbox id="balcony_checkbox" v-model="balcony" name="balcony_checkbox" value="true" unchecked-value="false">
             Balcony inclusion
           </b-form-checkbox>
 
@@ -79,7 +79,7 @@ export default {
       floor: '',
       roomNum: '',
       beds: '',
-      balcony_status: 'false',
+      balcony: 'false',
       breakfast : 'false',
       hotel_restaurant : 'false',
       airport_transfer : 'false',
@@ -104,7 +104,7 @@ export default {
         'floor': this.floor,
         'roomNum': this.roomNum,
         'beds': this.beds,
-        'balcony': this.balcony_status,
+        'balcony': this.balcony,
         'breakfast' : this.breakfast,
         'hotel_restaurant' : this.hotel_restaurant,
         'airport_transfer' : this.airport_transfer,

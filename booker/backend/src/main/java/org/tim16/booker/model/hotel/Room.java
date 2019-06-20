@@ -1,6 +1,7 @@
 package org.tim16.booker.model.hotel;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.tim16.booker.model.utility.Rate;
 
@@ -19,6 +20,7 @@ public class Room implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
+
     @JsonBackReference("hotel-rooms")
     @ManyToOne()
     @JoinColumn(name = "hotel", referencedColumnName = "id", nullable = false)
@@ -32,14 +34,17 @@ public class Room implements Serializable {
     private Float price;
     private Integer discount;
 
+    /*
     @JsonBackReference("room-price")
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="room")
     private Set<RoomPrice> roomPrice = new HashSet<>();
+    */
 
     @ElementCollection(targetClass = ExtraService.class)
     @Enumerated(EnumType.STRING)
     private Set<ExtraService> extraservices = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<>();
 
@@ -85,6 +90,8 @@ public class Room implements Serializable {
         this.discount = discount;
     }
 
+    /*
+
     public Set<RoomPrice> getRoomPrice() {
         return roomPrice;
     }
@@ -92,6 +99,8 @@ public class Room implements Serializable {
     public void setRoomPrice(Set<RoomPrice> roomPrice) {
         this.roomPrice = roomPrice;
     }
+
+    */
 
     public Set<ExtraService> getExtraServices() {
         return extraservices;
