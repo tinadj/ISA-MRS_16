@@ -4,17 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.comparator.*;
 
 import org.tim16.booker.dto.*;
 
 import org.tim16.booker.model.airline.*;
+import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.utility.Destination;
-import org.tim16.booker.service.AirlineService;
-import org.tim16.booker.service.DestinationService;
-import org.tim16.booker.service.FlightService;
-import org.tim16.booker.service.SeatService;
+import org.tim16.booker.model.utility.Rate;
+import org.tim16.booker.service.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.ZoneId;
@@ -32,6 +32,9 @@ public class FlightController {
 
     @Autowired
     private AirlineService airlineService;
+
+    @Autowired
+    private RateService rateService;
 
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -366,5 +369,52 @@ public class FlightController {
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /*
+    Dobavljanje ocene leta
+     */
+    @GetMapping(path = "rating/{id}")
+    public ResponseEntity<Float> getRating(@PathVariable Integer id) {
+        Flight flight = flightService.findOne(id);
+
+        if (flight == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(RentACarController.getAverageRating(flight.getRating()), HttpStatus.OK);
+    }
+
+    /*
+    Ocenjivanje leta
+     */
+    @PostMapping(path = "rate/{id}/{rateValue}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Float> rateVehicle(@PathVariable Integer id, @PathVariable Integer rateValue) {
+        Flight flight = flightService.findOne(id);
+        RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (flight == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        // Ako je korisnik vec ocenio, promeni vrednost te ocene
+        boolean rated = false;
+        for (Rate rate : flight.getRating()) {
+            if (rate.getUser().getId().equals(user.getId())) {
+                rate.setRateValue(rateValue);
+                rateService.update(rate);
+                rated = true;
+                break;
+            }
+        }
+
+        // Ako nije ocenio, dodaj novu ocenu
+        if (!rated) {
+            Rate rate = new Rate(user, rateValue);
+            flight.getRating().add(rate);
+            rateService.create(rate);
+            flightService.update(flight);
+        }
+
+        return new ResponseEntity<>(RentACarController.getAverageRating(flight.getRating()), HttpStatus.OK);
     }
 }

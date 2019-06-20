@@ -36,8 +36,6 @@ public class Vehicle implements Serializable {
 
     private Float price;
 
-    private Integer discount;
-
     private String description;
 
     @JsonBackReference("rent_a_car-vehicles")
@@ -148,13 +146,5 @@ public class Vehicle implements Serializable {
 
     public void setCurrentlyIn(BranchOffice currentlyIn) {
         this.currentlyIn = currentlyIn;
-    }
-
-    public Integer getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Integer discount) {
-        this.discount = discount;
     }
 }

@@ -65,6 +65,7 @@ import AddVehicle from '@/components/vehicles/AddVehicle'
 import EditVehicle from '@/components/vehicles/EditVehicle'
 import RegisteredUserSearchVehicle from '@/components/vehicles/RegisteredUser_searchVehicle'
 import UnregisteredUserSearchVehicle from '@/components/vehicles/UnregisteredUser_searchVehicle'
+import DefineQuickReservation from '@/components/vehicles/DefineQuickReservation'
 
 // Admins
 import AirlineAdmin from '@/components/admins/AirlineAdmin'
@@ -91,6 +92,7 @@ import editExtraServices from '@/components/rooms/editExtraServices'
 
 // Reservations
 import ReservationList from '@/components/reservations/ReservationList'
+import RACAdminQuickReservationsTable from '@/components/quickReservations/RACAdmin_QuickReservationsTable'
 
 Vue.use(Router)
 
@@ -400,6 +402,14 @@ export default new Router({
         {
           path: 'edit-vehicle-:v_id',
           component: EditVehicle
+        },
+        {
+          path: 'quick-reservation-vehicle-:v_id',
+          component: DefineQuickReservation
+        },
+        {
+          path: 'quick-reservations',
+          component: RACAdminQuickReservationsTable
         },
         {
           path: 'branch-offices',

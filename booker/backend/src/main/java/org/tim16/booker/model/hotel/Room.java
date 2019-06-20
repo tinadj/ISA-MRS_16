@@ -1,6 +1,7 @@
 package org.tim16.booker.model.hotel;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.tim16.booker.model.utility.Rate;
 
@@ -39,6 +40,7 @@ public class Room implements Serializable {
     @Enumerated(EnumType.STRING)
     private Set<ExtraService> extraservices = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(cascade={CascadeType.ALL}, fetch=FetchType.LAZY)
     private Set<Rate> rating = new HashSet<>();
 

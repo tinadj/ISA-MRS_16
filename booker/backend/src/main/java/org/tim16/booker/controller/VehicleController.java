@@ -36,6 +36,9 @@ public class VehicleController {
     @Autowired
     private RateService rateService;
 
+    @Autowired
+    private QuickRACReservationService quickRACReservationService;
+
     @GetMapping(path = "/all")
     public ResponseEntity<List<Vehicle>> getAll() {
         return new ResponseEntity<>(vehicleService.findAll(), HttpStatus.OK);
@@ -62,7 +65,6 @@ public class VehicleController {
         vehicle.setProductionYear(dto.getProductionYear());
         vehicle.setSeatsNum(dto.getSeatsNum());
         vehicle.setPrice(dto.getPrice());
-        vehicle.setDiscount(0);
         vehicle.setType(intToVehicleType(dto.getType()));
         rentACar.addVehicle(vehicle);
         vehicle.setRentACar(rentACar);
@@ -121,19 +123,6 @@ public class VehicleController {
         }
     }
 
-    @PutMapping(path = "/discount/{id}/{discount}")
-    @PreAuthorize("hasAuthority('RAC_ADMIN')")
-    public ResponseEntity<HttpStatus> setDiscount(@PathVariable Integer id, @PathVariable Integer discount) {
-        Vehicle vehicle = vehicleService.findOne(id);
-
-        if (vehicle == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        vehicle.setDiscount(discount);
-        vehicleService.update(vehicle);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @PutMapping(path = "/update-vehicle-location/{id}/{officeID}")
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public HttpStatus updateVehicleLocation(@PathVariable Integer id, @PathVariable Integer officeID) {
@@ -156,6 +145,8 @@ public class VehicleController {
 
         List<Vehicle> vehicles = getVehicles(dto.getRacID());
         List<Vehicle> result = getVehicles(dto.getRacID());
+
+        result = removeVehiclesOnDiscount(result, dto.getPickUpDate(), dto.getDropOffDate());
 
         if (dto.getPickUpLocation() != null) {
             result = searchByPickUpLocation(vehicles, result, dto.getPickUpLocation());
@@ -182,6 +173,9 @@ public class VehicleController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    /*
+    Dobavljanje ocene rent a car servisa
+     */
     @GetMapping(path = "rating/{id}")
     public ResponseEntity<Float> getRating(@PathVariable Integer id) {
         Vehicle vehicle = vehicleService.findOne(id);
@@ -192,6 +186,9 @@ public class VehicleController {
         return new ResponseEntity<>(getAverageRating(vehicle.getRating()), HttpStatus.OK);
     }
 
+    /*
+    Ocenjivanje rent a car servisa
+     */
     @PostMapping(path = "rate/{id}/{rateValue}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Float> rateVehicle(@PathVariable Integer id, @PathVariable Integer rateValue) {
@@ -387,5 +384,31 @@ public class VehicleController {
             Collections.sort(result, new VehicleYear());
         }
         return  result;
+    }
+
+    /*
+    Uklanja vozila iz liste koja se nalaze na pospustu u datom periodu
+     */
+    private List<Vehicle> removeVehiclesOnDiscount(List<Vehicle> result, Date pickUpDate, Date dropOffDate) {
+        for (Vehicle vehicle : vehicleService.findAll()) {
+            if (isOnDiscount(vehicle.getId(), pickUpDate, dropOffDate)) {
+                result.remove(vehicle);
+            }
+        }
+        return result;
+    }
+
+    /*
+    Provera dali je vozilo na popustu u odredjenom periodu
+     */
+    private boolean isOnDiscount(Integer id, Date pickUp, Date dropOff) {
+        for (QuickRACReservation reservation : quickRACReservationService.findAll()) {
+            if (reservation.getVehicle().getId().equals(id)) {
+                if (reservation.getPickUpDate().before(dropOff) && reservation.getDropOffDate().after(pickUp)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
