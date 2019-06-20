@@ -3,12 +3,14 @@ package org.tim16.booker.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.tim16.booker.controller.VehicleController;
 import org.tim16.booker.dto.VehicleDTO;
+import org.tim16.booker.model.admins.RentACarAdmin;
 import org.tim16.booker.model.rent_a_car.RentACar;
 import org.tim16.booker.model.rent_a_car.Vehicle;
 import org.tim16.booker.repository.RentACarRepository;
@@ -45,22 +47,31 @@ public class VehicleService  {
     }
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public void remove(Integer id) {
-        Vehicle vehicle = vehicleRepository.getOne(id);
-        if (vehicle != null) {
-            RentACar rentACar = rentACarRepository.getOne(vehicle.getRentACar().getId());
+    public boolean remove(Integer id) {
+        try {
+            Vehicle vehicle = vehicleRepository.getOne(id);
+            if (vehicle != null) {
+                RentACar rentACar = rentACarRepository.getOne(vehicle.getRentACar().getId());
 
-            if (rentACar != null) {
-                rentACar.removeVehicle(vehicle.getId());
+                if (rentACar != null) {
+                    rentACar.removeVehicle(vehicle.getId());
 
-                rentACarRepository.save(rentACar);
-                vehicleRepository.deleteById(id);
+                    rentACarRepository.save(rentACar);
+                    vehicleRepository.deleteById(id);
+                    return true;
+                } else {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return false;
+                }
             } else {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
             }
-        } else {
+        } catch (EntityNotFoundException ex) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
         }
+
     }
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)

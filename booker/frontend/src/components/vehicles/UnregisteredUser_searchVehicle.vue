@@ -49,7 +49,8 @@
         </b-form-group>
         
         <b-button variant="outline-primary" v-on:click="search" class="mr-3">Search</b-button>
-        <b-button @click="onCancel">Cancel</b-button>
+        <b-button @click="onCancel">Cancel</b-button><br><br>
+        <b-alert variant="danger" v-model="error" dismissible>{{errorMessage}}</b-alert>
 
     </b-card>
     <b-card border-variant="light" style="max-width: 40rem;">
@@ -88,10 +89,9 @@
                 vehicles: '',
                 searchParams: {
                     pickUpLocation: null,
-                    pickUpDate: '',
+                    pickUpDate: null,
                     dropOffLocation: null,
-                    dropOffDate: '',
-                    vehicleType: '',
+                    dropOffDate: null,
                     vehicleType: null,
                     priceRange: [0, 100],
                     criteria: 0,
@@ -123,6 +123,8 @@
                 branchOfficesDropOff: [
                     {value: null, text: "Choose drop off location"}
                 ],
+                error: false,
+                errorMessage: '',
                 componentKey: 0
             }
         },
@@ -158,29 +160,19 @@
                     .catch(err => console.log(err))
                     this.componentKey += 1
                 } else {
-                    this.noResultMsg = true
+                    this.error = true
                 }
             },
             valid() {
-                console.log(this.searchParams.pickUpDate == this.searchParams.dropOffDate)
                 if (this.searchParams.pickUpDate == null || this.searchParams.dropOffDate == null) {
-                    this.message = "You have to choose dates!"
+                    this.errorMessage = "You have to choose dates!"
                     return false
                 }
                 if (this.searchParams.pickUpDate.getTime() == this.searchParams.dropOffDate.getTime()) {
-                    this.message = "Dates must be different!"
+                    this.errorMessage = "Dates must be different!"
                     return false
                 }
                 return true
-            },
-            getVehicleMaxPrice() {
-                maxPrice = 0
-                for (let v = 0; v < this.vehicles.length; i++) {
-                    if (v.price > maxPrice) {
-                        maxPrice = v.price
-                    }
-                }
-                return maxPrice
             },
             onCancel(e) {
                 e.preventDefault()
@@ -196,9 +188,6 @@
                 if (this.vehicles.length == 0) {
                     this.noResultMsg = true
                     this.message = "There are no available vehicles!"
-                } else {
-                    maxPrice = this.getVehicleMaxPrice()
-                    this.searchParams.priceRange = [0, maxPrice]
                 }
             })
             .catch(err => console.log(err))

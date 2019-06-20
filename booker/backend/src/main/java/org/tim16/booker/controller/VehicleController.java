@@ -90,8 +90,12 @@ public class VehicleController {
     @PreAuthorize("hasAuthority('RAC_ADMIN')")
     public ResponseEntity<List<Vehicle>> removeVehicle(@PathVariable Integer id)
     {
-        vehicleService.remove(id);
-        return new ResponseEntity<>(vehicleService.findAll(), HttpStatus.OK);
+        boolean success = vehicleService.remove(id);
+
+        if (success)
+            return new ResponseEntity<>(vehicleService.findAll(), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping(path = "/update", consumes = "application/json")
@@ -165,8 +169,8 @@ public class VehicleController {
             result = searchByVehicleType(vehicles, result, dto.getVehicleType());
         }
 
-        if (dto.getMinPrice() != 0 && dto.getMaxPrice()!= 0) {
-            result = searchByPrice(vehicles, result, (float)dto.getMinPrice(), (float)dto.getMinPrice());
+        if (dto.getMinPrice() != 0 || dto.getMaxPrice()!= 100) {
+            result = searchByPrice(vehicles, result, (float)dto.getMinPrice(), (float)dto.getMaxPrice());
         }
 
         if (dto.getPickUpDate() != null && dto.getDropOffDate() != null) {
