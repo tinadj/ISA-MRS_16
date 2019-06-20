@@ -9,6 +9,7 @@ import org.tim16.booker.comparator.*;
 import org.tim16.booker.dto.AirlineDestinationDTO;
 import org.tim16.booker.dto.DestinationDTO;
 import org.tim16.booker.dto.FlightDTO;
+import org.tim16.booker.dto.SeatDTO;
 import org.tim16.booker.model.airline.*;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.service.AirlineService;
@@ -41,7 +42,7 @@ public class FlightController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, consumes="application/json")
     @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
     public ResponseEntity<Flight> add(@RequestBody FlightDTO dto) {
-        Airline airline = airlineService.findOne(dto.getAirlineId());
+        Airline airline = airlineService.findOne(5);
         if (airline == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -56,7 +57,7 @@ public class FlightController {
 
         flight.setDepartureDestination(dep);
 
-        dep = destinationService.findOne(dto.getDeparture());
+        dep = destinationService.findOne(dto.getArrival());
         if (dep == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -158,5 +159,98 @@ public class FlightController {
         flight = flightService.create(flight);
         airlineService.update(airline);
         return new ResponseEntity<>(flight, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/add-seat", method = RequestMethod.POST, consumes="application/json")
+    @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
+    public ResponseEntity<Seat> add(@RequestBody SeatDTO dto) {
+        Flight flight = flightService.findOne(dto.getId());
+        if (flight == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        for(Seat s : flight.getSeats()) {
+            if(s.getSeatLetter().equals(dto.getSeatLetter()) && s.getSeatRow() == dto.getSeatRow()){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        Ticket ticket;
+        Seat seat = new Seat();
+        seat.setSeatRow(dto.getSeatRow());
+        seat.setSeatLetter(dto.getSeatLetter());
+
+        ticket = new Ticket();
+        ticket.setFlight(flight);
+        ticket.setDiscount(0);
+
+        if(dto.getType().equals("BUSINESS")) {
+            seat.setType(TravelClass.BUSINESS);
+        }else if(dto.getType().equals("FIRST")) {
+            seat.setType(TravelClass.FIRST);
+        } else {
+            seat.setType(TravelClass.ECONOMY);
+        }
+        ticket.setPrice(0.0f);
+        flight.getSeats().add(seat);
+        ticket.setReserved(false);
+        ticket.setSeat(seat);
+
+        flight.getTickets().add(ticket);
+
+        flight = flightService.update(flight);
+        return new ResponseEntity<>(seat, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/remove/{id}/{airlineID}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
+    public ResponseEntity<List<Flight>> removeFlight(@PathVariable Integer id, @PathVariable Integer airlineID)
+    {
+        Flight flight = flightService.findOne(id);
+
+        if (flight == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Airline airline = airlineService.findOne(airlineID);
+        airline.removeFlight(id);
+
+        airlineService.update(airline);
+        flightService.remove(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/removeSeat/{SeatId}/{id}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasAuthority('AIRLINE_ADMIN')")
+    public ResponseEntity<List<Flight>> removeSeat(@PathVariable Integer SeatId, @PathVariable Integer id)
+    {
+        Flight flight = flightService.findOne(id);
+
+        if (flight == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        for (Ticket t : flight.getTickets()) {
+            if(t.getSeat().getId() == SeatId) {
+                if(t.getReserved() == true) {
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+            }
+
+            flight.getTickets().remove(t);
+            break;
+        }
+
+        for (Seat s : flight.getSeats()) {
+            if(s.getId() == SeatId) {
+                flight.getSeats().remove(s);
+                break;
+            }
+        }
+
+
+        flightService.update(flight);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -5,14 +5,14 @@ import org.tim16.booker.model.utility.Destination;
 import java.time.LocalDateTime;
 
 public class FlightDTO {
-    private int AirlineId;
+    private int airlineId;
 
     public int getAirlineId() {
-        return AirlineId;
+        return airlineId;
     }
 
     public void setAirlineId(int airlineId) {
-        AirlineId = airlineId;
+        this.airlineId = airlineId;
     }
 
     private int departure;

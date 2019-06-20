@@ -8,6 +8,7 @@
         <b-nav-item :to="{ path: 'edit-luggage'}">Edit Luggage</b-nav-item>
         <b-nav-item :to="{ path: 'destinations'}">Destinations</b-nav-item>
         <b-nav-item :to="{ path: 'add-destination'}">Add Destination</b-nav-item>
+        <b-nav-item :to="{ path: 'flights'}">Flights</b-nav-item>
         <b-nav-item :to="{ path: 'add-flight'}">Add Flight</b-nav-item>
         <b-nav-item :to="{ path: 'profile-page'}">Profile</b-nav-item>
         <b-nav-item :to="{ path: 'sign-out'}"><font-awesome-icon :icon="singOutIcon"/> Sign out</b-nav-item>
