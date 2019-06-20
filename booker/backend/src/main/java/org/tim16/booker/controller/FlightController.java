@@ -305,8 +305,6 @@ public class FlightController {
         List<Flight> result = flightService.findAll();
         if (!dto.getDeparture().equals("")) {
             result = searchByDeparture(rentACars, result, dto.getDeparture());
-            return new ResponseEntity<>(result, HttpStatus.OK);
-
         }
 
         if (!dto.getArrival().equals("")) {
