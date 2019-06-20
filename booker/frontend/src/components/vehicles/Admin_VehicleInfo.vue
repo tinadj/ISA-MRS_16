@@ -89,6 +89,7 @@
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
 										<span>
+                                            <b-button variant="outline-warning" v-on:click="quickReservation" class="mr-3">Define quick reservation</b-button>
                                             <b-button variant="outline-primary" v-on:click="edit" class="mr-3">Edit</b-button>
                                             <b-button variant="outline-danger"  v-on:click="showModal">Remove</b-button>
                                             <b-modal ref="confirmation" hide-footer>
@@ -242,6 +243,9 @@ export default {
         },
         hideVehicleLocationModal: function() {
             this.$refs['vehicle-location'].hide()
+        },
+        quickReservation: function() {
+            this.$router.push("quick-reservation-vehicle-" + this.item.id)
         },
         edit: function() {
             AXIOS.get('/vehicles/is-reserved/' + this.item.id)
