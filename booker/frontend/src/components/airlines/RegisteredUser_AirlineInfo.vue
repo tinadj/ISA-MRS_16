@@ -79,7 +79,6 @@
 
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
-										<span><b-button variant="outline-secondary">Search Flights</b-button></span>
 									</div>
 								</div>
 

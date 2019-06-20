@@ -21,12 +21,43 @@ public class FlightReservation implements Serializable {
     @ManyToOne
     private Flight flight;
 
+    @OneToOne
+    private Ticket ticket;
+
+    private int checked;
+
+    private int carryOn;
+
     private Float totalPrice;
 
     public FlightReservation() { /* empty constructor */}
 
+    public int getChecked() {
+        return checked;
+    }
+
+    public void setChecked(int checked) {
+        this.checked = checked;
+    }
+
+    public int getCarryOn() {
+        return carryOn;
+    }
+
+    public void setCarryOn(int carryOn) {
+        this.carryOn = carryOn;
+    }
+
     public Integer getId() {
         return id;
+    }
+
+    public Ticket getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
     }
 
     public void setId(Integer id) {

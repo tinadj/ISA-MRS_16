@@ -25,6 +25,7 @@
 
             <div class="profile-info-value">
               <span>
+                  <b-button class="marg" variant="outline-primary"  v-on:click="showDiscountModal">Add discount</b-button>
                   <b-button class="marg" variant="outline-primary"  v-on:click="showAddModal">Add seat</b-button>
 
                   <b-button class="marg" variant="outline-primary"  v-on:click="showEditModal">Edit seats</b-button>
@@ -76,6 +77,31 @@
                       </div>
                       <b-button class="mt-2" block v-on:click="hideEditModal">Cancel</b-button>
                   </b-modal>
+
+                  <b-modal ref="addDiscount" hide-footer>
+                    <div class="d-block text-center">
+                        <h3>Seats</h3>
+
+                        <div class="row">
+                          <div v-for="(ticket, index) in item.tickets" class="col-md-2" >
+                            <button type="button" class="btn disabled"  v-if="ticket.reserved == true" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                            <button type="button" class="btn btn-danger" v-on:click="selectTicket(ticket)" v-else-if="ticket.seat.type == 'BUSINESS'" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                            <button type="button" class="btn btn-warning" v-on:click="selectTicket(ticket)" v-else-if="ticket.seat.type == 'FIRST'" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                            <button type="button" class="btn btn-success" v-on:click="selectTicket(ticket)" v-else-if="ticket.seat.type == 'ECONOMY'" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                          </div>
+                        </div>
+
+                        <div class="mt-10" v-if="selectedTicket != ''">
+                          <h3> SELECTED TICKET {{ selectedTicket.id }}</h3>
+                          {{ selectedTicket.seat.seatRow }}{{selectedTicket.seat.seatLetter }}
+                          Current discount: {{ selectedTicket.discount }}
+                          <b-form-input v-model="discount" type=number step=1 placeholder="Enter discount for ticket"></b-form-input>
+                          <b-button class="mt-3" variant="outline-primary" block v-on:click="saveDiscount">Save</b-button>
+                        </div>
+
+                    </div>
+                    <b-button class="mt-2" block v-on:click="hideEditModal">Cancel</b-button>
+                </b-modal>
               </span>
             </div>
             </div>
@@ -98,7 +124,9 @@ export default {
             locationIcon: faMapMarkerAlt,
             map: false,
             diff: '',
+            discount: 0,
             selectedSeat: '',
+            selectedTicket:'',
             newSeat: {
               seatLetter: '',
               seatRow: '',
@@ -133,23 +161,54 @@ export default {
         showAddModal: function(id) {
             this.$refs['addSeat'].show()
         },
+        showDiscountModal: function(id) {
+            this.$refs['addDiscount'].show()
+        },
         showEditModal: function(id) {
             this.$refs['editSeats'].show()
         },
         select: function(seat){
           this.selectedSeat = seat
         },
+        selectTicket: function(seat){
+                  this.selectedTicket = seat
+                },
         hideModal: function() {
             this.$refs['confirmation'].hide()
         },
         hideAddModal: function() {
             this.$refs['addSeat'].hide()
         },
+        hideDiscountModal: function() {
+              this.$refs['addDiscount'].hide()
+              this.selectedSeat = ''
+          },
         hideEditModal: function() {
             this.$refs['editSeats'].hide()
             this.selectedSeat = ''
-        },addSeat : function(){
+        },
+        saveDiscount: function() {
+        console.log(this.discount)
+            const destination = {
+              'id': this.$route.params.id,
+              'ticket': this.selectedTicket.id,
+              'discount': this.discount
+            }
 
+            AXIOS.post('/flights/add-discount', destination)
+            .then(response => {
+              this.success = true;
+              this.error = false;
+              this.$router.go();
+            })
+            .catch(err => {
+              this.success = false;
+              this.error = true
+            })
+
+            this.discount = 0
+        },
+        addSeat : function(){
           if((this.newSeat.seatRow <0 && this.newSeat.seatRow == '') && this.newSeat.seatLetter == '' && this.newSeat.type != null){
             this.success = false;
             this.error = true
