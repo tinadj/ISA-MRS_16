@@ -292,7 +292,7 @@ public class RentACarController {
     /*
     Racuna prosecnu ocenu
     */
-    private Float getAverageRating(Set<Rate> rates) {
+    public static Float getAverageRating(Set<Rate> rates) {
         Float sum = 0f;
         for (Rate rate : rates) {
             sum += rate.getRateValue();

@@ -54,7 +54,7 @@ public class RacReservationController {
 
     @PostMapping(path = "cancel/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Boolean> reserveVehicle(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> cancelReservation(@PathVariable Integer id) {
         RentACarReservation reservation = racReservationService.findOne(id);
 
         if (reservation == null)

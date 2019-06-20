@@ -3,17 +3,13 @@ package org.tim16.booker.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.tim16.booker.dto.DestinationDTO;
 import org.tim16.booker.dto.RentACarDTO;
-import org.tim16.booker.model.admins.RentACarAdmin;
 import org.tim16.booker.model.rent_a_car.RentACar;
-import org.tim16.booker.model.users.RegisteredUser;
 import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.repository.DestinationRepository;
 import org.tim16.booker.repository.RentACarRepository;

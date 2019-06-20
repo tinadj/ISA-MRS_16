@@ -4,12 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.RoomDTO;
 import org.tim16.booker.model.hotel.ExtraService;
 import org.tim16.booker.model.hotel.Hotel;
 import org.tim16.booker.model.hotel.Room;
+import org.tim16.booker.model.rent_a_car.RentACar;
+import org.tim16.booker.model.users.RegisteredUser;
+import org.tim16.booker.model.utility.Rate;
 import org.tim16.booker.service.HotelService;
+import org.tim16.booker.service.RateService;
 import org.tim16.booker.service.RoomService;
 
 import javax.persistence.EntityNotFoundException;
@@ -26,6 +32,9 @@ public class RoomController {
 
     @Autowired
     private HotelService hotelService;
+
+    @Autowired
+    private RateService rateService;
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<Room>> getAll() {
@@ -210,5 +219,51 @@ public class RoomController {
         return roomservices;
     }
 
+    /*
+    Dobavljanje ocene sobe
+     */
+    @GetMapping(path = "rating/{id}")
+    public ResponseEntity<Float> getRating(@PathVariable Integer id) {
+        Room room = roomService.findOne(id);
+
+        if (room == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(RentACarController.getAverageRating(room.getRating()), HttpStatus.OK);
+    }
+
+    /*
+    Ocenjivanje rent a car servisa
+    */
+    @PostMapping(path = "rate/{id}/{rateValue}")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Float> rateVehicle(@PathVariable Integer id, @PathVariable Integer rateValue) {
+        Room room = roomService.findOne(id);
+        RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (room == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        // Ako je korisnik vec ocenio, promeni vrednost te ocene
+        boolean rated = false;
+        for (Rate rate : room.getRating()) {
+            if (rate.getUser().getId().equals(user.getId())) {
+                rate.setRateValue(rateValue);
+                rateService.update(rate);
+                rated = true;
+                break;
+            }
+        }
+
+        // Ako nije ocenio, dodaj novu ocenu
+        if (!rated) {
+            Rate rate = new Rate(user, rateValue);
+            room.getRating().add(rate);
+            rateService.create(rate);
+            roomService.update(room);
+        }
+
+        return new ResponseEntity<>(RentACarController.getAverageRating(room.getRating()), HttpStatus.OK);
+    }
 
 }

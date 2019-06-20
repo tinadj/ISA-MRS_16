@@ -43,20 +43,6 @@
 									</div>
 								</div>
 
-                                <!-- Adding discount -->
-                                <div class="profile-info-row">
-									<div class="profile-info-value">
-										<span><font-awesome-icon :icon="discountIcon"/> Discount: {{item.discount}}% &nbsp
-                                        <b-link v-on:click="showDiscountModal" class="mr-3">Change</b-link></span>
-                                        <b-modal ref="discount" hide-footer>
-                                            <b-input type="number" v-model="discount" placeholder="Discount"></b-input>
-                                            <b-button class="mt-3" variant="outline-primary" block v-on:click="addDiscount">Save</b-button>
-                                            <b-button class="mt-2" block v-on:click="hideDiscount">Cancel</b-button><br>
-                                            <b-alert variant="danger" v-model="errorDiscount" dismissible>Invalid input!</b-alert>
-                                        </b-modal>
-                                    </div>
-								</div>
-
                                 <!-- Link Show more details -->
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
@@ -89,6 +75,7 @@
                                 <div class="profile-info-row">
 									<div class="profile-info-value">
 										<span>
+                                            <b-button variant="outline-warning" v-on:click="quickReservation" class="mr-3">Define quick reservation</b-button>
                                             <b-button variant="outline-primary" v-on:click="edit" class="mr-3">Edit</b-button>
                                             <b-button variant="outline-danger"  v-on:click="showModal">Remove</b-button>
                                             <b-modal ref="confirmation" hide-footer>
@@ -136,7 +123,6 @@ export default {
             vehicleType: '',
             totalPrice: 0,
             locationIcon: faMapMarkerAlt,
-            discountIcon: faTag,
             euroIcon: faEuroSign,
             personIcon: faUser,
             infoIcon: faInfoCircle,
@@ -147,8 +133,6 @@ export default {
             ],
             currentlyIn: null,
             branchOfficeValid: null,
-            discount: '',
-            errorDiscount: false,
             error: false
         } 
     },
@@ -168,9 +152,6 @@ export default {
                     console.log(response)
             })
             .catch(err => console.log(err)) 
-        },
-        showDiscountModal: function() {
-            this.$refs['discount'].show()
         },
         showVehicleLocationModal: function(id) {
             // pokupi sve lokacije branch office-a
@@ -195,17 +176,6 @@ export default {
                 .catch(err => console.log(err))
                 })
             .catch(err => console.log(err))
-        },
-        addDiscount: function() {
-            this.errorDiscount = false
-
-            if (this.discount < 0 || this.discount > 100) {
-                this.errorDiscount = true
-            } else {
-                AXIOS.put('/vehicles/discount/' + this.item.id + '/' +  this.discount)
-                .then(response => this.$router.go())
-                .catch(err => this.errorDiscount = true)
-            }
         },
         changeVehicleLocation: function() {
             this.branchOfficesValid = null
@@ -237,11 +207,11 @@ export default {
         hideModal: function() {
             this.$refs['confirmation'].hide()
         },
-        hideDiscount: function() {
-            this.$refs['discount'].hide()
-        },
         hideVehicleLocationModal: function() {
             this.$refs['vehicle-location'].hide()
+        },
+        quickReservation: function() {
+            this.$router.push("quick-reservation-vehicle-" + this.item.id)
         },
         edit: function() {
             AXIOS.get('/vehicles/is-reserved/' + this.item.id)

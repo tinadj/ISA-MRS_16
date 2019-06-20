@@ -100,12 +100,7 @@ public class ReservationService {
         rentACarReservation.setDropOffLocation(dropOff);
         rentACarReservation.setRentACar(vehicle.getRentACar().getName());
         rentACarReservation.setVehicleChecked(false);
-
-        Float price = vehicle.getPrice() * dto.getDays();
-        if (vehicle.getDiscount() != 0) {
-            price = price - (price / 100 * vehicle.getDiscount());
-        }
-        rentACarReservation.setTotalPrice(price);
+        rentACarReservation.setTotalPrice(vehicle.getPrice() * dto.getDays());
 
         return rentACarReservation;
     }
