@@ -42,7 +42,7 @@ export default {
     mounted() {
     console.log(this.item)
       let api = '/airlines/ticket/' + this.item.id + "/" + this.$route.params.airline;
-
+	console.log(api)
       AXIOS.get(api)
       .then(response => {
         this.flight = response.data

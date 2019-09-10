@@ -190,7 +190,7 @@ export default {
         saveDiscount: function() {
         console.log(this.discount)
             const destination = {
-              'id': this.$route.params.id,
+              'id': this.item.id,
               'ticket': this.selectedTicket.id,
               'discount': this.discount
             }
