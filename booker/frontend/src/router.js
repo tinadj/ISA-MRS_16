@@ -24,6 +24,8 @@ import addFlight from '@/components/flights/addFlight'
 import FlightTable from '@/components/flights/FlightTable'
 import RegistredFlightTable from '@/components/flights/RegisteredFlightTable'
 import RegistredTicketTable from '@/components/flights/RegisteredTicketTable'
+import AirlineReports from '@/components/reports/AirlineReports'
+import AirlineIncome from '@/components/reports/AirlineIncome'
 
 
 // Destinations
@@ -329,6 +331,14 @@ export default new Router({
         {
           path: 'sign-out',
           component: Logout
+        },
+        {
+          path: 'airline-reports',
+          component: AirlineReports
+        },
+        {
+          path: 'airline-income',
+          component: AirlineIncome
         }
       ]
     },
