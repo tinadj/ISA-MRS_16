@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.tim16.booker.dto.FlightReservationDTO;
 import org.tim16.booker.dto.RacReservationDTO;
+import org.tim16.booker.model.airline.FlightReservation;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
 import org.tim16.booker.model.rent_a_car.RentACarReservation;
 import org.tim16.booker.model.rent_a_car.Vehicle;
@@ -49,5 +50,4 @@ public class FlightReservationController {
     public ResponseEntity<Boolean> reserveFlight(@RequestBody FlightReservationDTO dto) {
         return reservationService.reserveFlight(dto);
     }
-
 }

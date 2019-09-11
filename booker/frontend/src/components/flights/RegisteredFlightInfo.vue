@@ -39,13 +39,29 @@
 
             <div class="profile-info-value">
               <span>
-                  <b-button class="marg" variant="outline-primary">Reserve</b-button>
+                  <b-button class="marg" variant="outline-primary" v-on:click="reserveModal">Reserve</b-button>
 
               </span>
             </div>
             </div>
           </div>
           </div>
+         <b-modal ref="addDiscount" hide-footer>
+            <div class="d-block text-center">
+                <h3>RESEERVATION INFO</h3>
+                <div class="mt-10">
+                  <b-form-input v-model="checked" type=number step=1 placeholder="Enter number of checked luggage"></b-form-input>
+                  <b-form-input v-model="carryOn" type=number step=1 placeholder="Enter number of carry on luggage"></b-form-input>
+                    <b-form-input v-model="firstName" placeholder="Enter first name"></b-form-input>
+                  <b-form-input v-model="lastName"  placeholder="Enter last name"></b-form-input>
+                  <b-form-input v-model="passport" placeholder="Enter passport number"></b-form-input>
+
+                    <b-button class="mt-3" variant="outline-primary" block v-on:click="reserve">Reserve</b-button>
+                </div>
+
+            </div>
+            <b-button class="mt-2" block v-on:click="hideEditModal">Cancel</b-button>
+        </b-modal>
         </div>
       </div>
     </b-card >
@@ -74,7 +90,12 @@ export default {
              { value: 'FIRST', text: 'FIRST CLASS' },
              { value: 'ECONOMY', text: 'ECONOMY CLASS' }],
              success: false,
-             error: false
+             error: false,
+             checked: 0,
+            carryOn: 0,
+            firstName: '',
+            lastName: '',
+            passport: ''
         }
     },
     mounted() {
@@ -97,6 +118,15 @@ export default {
           var diff =(dt2.getTime() - dt1.getTime()) / 1000;
           diff /= 60;
           return Math.abs(Math.round(diff));
+         },
+         reserveModal: function(id) {
+            this.$refs['addDiscount'].show()
+        },hideEditModal: function() {
+              this.$refs['addDiscount'].hide()
+          },
+         reserve: function()
+         {
+
          }
     }
 }
