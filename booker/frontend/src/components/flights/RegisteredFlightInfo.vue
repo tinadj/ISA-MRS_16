@@ -48,7 +48,19 @@
           </div>
          <b-modal ref="addDiscount" hide-footer>
             <div class="d-block text-center">
-                <h3>RESEERVATION INFO</h3>
+                 <h3>Seats</h3>
+
+                <div class="row">
+                  <div v-for="(ticket, index) in item.tickets" class="col-md-2" >
+                    <button type="button" class="btn disabled"  v-if="ticket.reserved == true" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                    <button type="button" class="btn btn-danger" v-on:click="selectTicket(ticket)" v-else-if="ticket.seat.type == 'BUSINESS'" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                    <button type="button" class="btn btn-warning" v-on:click="selectTicket(ticket)" v-else-if="ticket.seat.type == 'FIRST'" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                    <button type="button" class="btn btn-success" v-on:click="selectTicket(ticket)" v-else-if="ticket.seat.type == 'ECONOMY'" >{{ ticket.seat.seatRow }}{{ ticket.seat.seatLetter }}</button>
+                  </div>
+                </div>
+
+                <h3>RESERVATION INFO</h3> <br />
+                Selected ticket: {{ selectedTicket.id }}
                 <div class="mt-10">
                   <b-form-input v-model="checked" type=number step=1 placeholder="Enter number of checked luggage"></b-form-input>
                   <b-form-input v-model="carryOn" type=number step=1 placeholder="Enter number of carry on luggage"></b-form-input>
@@ -79,7 +91,7 @@ export default {
             locationIcon: faMapMarkerAlt,
             map: false,
             diff: '',
-            selectedSeat: '',
+            selectedTicket:'',
             newSeat: {
               seatLetter: '',
               seatRow: '',
@@ -126,8 +138,38 @@ export default {
           },
          reserve: function()
          {
+            if(this.selectedTicket !== ""){
+                const params = {
+                "flightId" : this.item.id,
+                "checked" : this.checked,
+                "carryOn" : this.carryOn,
+                "firstName" : this.firstName,
+                "lastName" : this.lastName,
+                "passport" : this.passport,
+                "ticketId" : this.selectedTicket
+                }
 
-         }
+                AXIOS.post('flight-reservations/reserve-flight', params)
+                .then(response => {
+                    if (response.status == 200) {
+                        this.success = true
+                    } else if (response.status = 403) {
+                        this.errorMessage = "Ticket is reserved in this period!"
+                        this.error = true
+                    } else {
+                        this.errorMessage = "Something went wrong!"
+                        this.error = true
+                    }
+                })
+                .catch(err => {
+                    this.errorMessage = "Something went wrong!"
+                    this.error = true
+                })
+            }
+         },
+         selectTicket: function(seat){
+          this.selectedTicket = seat
+        }
     }
 }
 </script>
