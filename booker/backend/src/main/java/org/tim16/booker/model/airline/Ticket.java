@@ -14,6 +14,8 @@ public class Ticket implements Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
+
+    @JsonBackReference("flight-tickets")
     @ManyToOne
     @JoinColumn(name = "flight", referencedColumnName = "id", nullable = false)
     private Flight flight;

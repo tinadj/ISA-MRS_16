@@ -233,6 +233,7 @@ public class FlightController {
 
         flight.getTickets().remove(ticket);
         ticket.setReserved(true);
+        ticket.setFlight(flight);
         ticket.setDiscount(dto.getDiscount());
 
         for(TicketPrice tp : flight.getTicketPrices()) {

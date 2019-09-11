@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.tim16.booker.dto.FlightReservationDTO;
 import org.tim16.booker.dto.HotelReservationDTO;
 import org.tim16.booker.controller.RentACarController;
 import org.tim16.booker.dto.RacReservationDTO;
+import org.tim16.booker.model.airline.*;
 import org.tim16.booker.model.hotel.HotelReservation;
 import org.tim16.booker.model.hotel.Room;
 import org.tim16.booker.model.rent_a_car.BranchOffice;
@@ -47,6 +49,16 @@ public class ReservationService {
     private HotelReservationRepository hotelReservationRepository;
 
     @Autowired
+    private FlightReservationRepository flightReservationRepository;
+
+    @Autowired
+    private FlightRepository flightRepository;
+
+    @Autowired
+    private AirlineService airlineService;
+
+
+    @Autowired
     private UserService userService;
 
     public Reservation findOne(Integer id) { return reservationRepository.getOne(id); }
@@ -76,6 +88,30 @@ public class ReservationService {
         racReservationRepository.save(rentACarReservation);
         rentACarReservation.setReservation(reservation);
         reservation.setRentACarReservation(rentACarReservation);
+
+        reservationRepository.save(reservation);
+        userService.save(user);
+
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public ResponseEntity<Boolean> reserveFlight(FlightReservationDTO dto) {
+        Reservation reservation = new Reservation();
+        RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        FlightReservation flightReservation = setUpFlightReservation(dto);
+        if (flightReservation == null) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+
+        user.getReservations().add(reservation);
+        reservation.setUser(user);
+
+        flightReservationRepository.save(flightReservation);
+        flightReservation.setReservation(reservation);
+        reservation.setFlightReservation(flightReservation);
 
         reservationRepository.save(reservation);
         userService.save(user);
@@ -178,4 +214,86 @@ public class ReservationService {
         }
         return true;
     }
+
+    // Incijalizacija flight rezervacije
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public FlightReservation setUpFlightReservation(FlightReservationDTO dto) {
+        FlightReservation flightReservation = new FlightReservation();
+
+        Flight flight = flightRepository.getOne(dto.getFlightId());
+
+        if (!isTicketAvailable(dto.getTicketId()))
+            return null;
+
+        if(!deleteQuickTicket(flight.getAirline().getId(), dto.getTicketId()))
+            return null;
+
+        Ticket t = null;
+        for(Ticket tic: flight.getTickets()){
+            if(tic.getId().equals(dto.getTicketId()))
+                t = tic;
+        }
+
+        flightReservation.setCarryOn(dto.getCarryOn());
+        flightReservation.setChecked(dto.getChecked());
+        flightReservation.setFlight(flight);
+        flightReservation.setFirstName(dto.getFirstName());
+        flightReservation.setLastName(dto.getLastName());
+        flightReservation.setPassport(dto.getPassport());
+        flightReservation.setTicket(t);
+
+        Airline airline = airlineService.findOne(flight.getAirline().getId());
+        float co = 0;
+        float c = 0;
+
+        for(LuggagePrice lp : airline.getLuggagePrices()){
+            if(lp.getType() == LuggageType.CARRY_ON)
+                co = lp.getPrice();
+
+            if(lp.getType() == LuggageType.CHECKED)
+                c = lp.getPrice();
+        }
+
+        float price = t.getPrice() * (1 - t.getDiscount()/100) + dto.getCarryOn() * co + dto.getChecked() * c;
+        flightReservation.setTotalPrice(price);
+
+        return flightReservation;
+    }
+
+    //Brisanje iz airline ako je brza rez
+    private boolean deleteQuickTicket(int airlineId, int ticketId){
+        Airline airline = airlineService.findOne(airlineId);
+
+        if (airline == null) {
+            return false;
+        }
+
+        Ticket tic = null;
+        for(Ticket t : airline.getDiscountTickets()){
+            if(t.getId().equals(ticketId)){
+                tic = t;
+                break;
+            }
+        }
+
+        if(tic == null) {
+            return true;
+        }
+        airline.getDiscountTickets().remove(tic);
+        airlineService.update(airline);
+        return true;
+    }
+
+    /*
+    Provera da li je neko u medjuvremenu rezervisao kartu
+     */
+    private boolean isTicketAvailable(Integer id) {
+        for (FlightReservation reservation: flightReservationRepository.findAll()) {
+            if (reservation.getTicket().getId().equals(id)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

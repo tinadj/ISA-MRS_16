@@ -30,6 +30,10 @@ public class FlightReservation implements Serializable {
 
     private Float totalPrice;
 
+    private String firstName;
+    private String lastName;
+    private String passport;
+
     public FlightReservation() { /* empty constructor */}
 
     public int getChecked() {
@@ -90,4 +94,27 @@ public class FlightReservation implements Serializable {
         this.reservation = reservation;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPassport() {
+        return passport;
+    }
+
+    public void setPassport(String passport) {
+        this.passport = passport;
+    }
 }
