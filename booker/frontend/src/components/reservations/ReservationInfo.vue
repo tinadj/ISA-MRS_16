@@ -15,7 +15,7 @@
 
         <!-- Elements to collapse -->
         <b-collapse v-bind:id="flightToggle">
-            <b-card>Flight reservation!</b-card>
+            <FlightReservationInfo v-if="hotelExists" v-bind:reservation="reservation.flightReservation"></FlightReservationInfo>
         </b-collapse>
 
         <b-collapse v-bind:id="hotelToggle">
@@ -32,13 +32,15 @@
     import {AXIOS} from '../../http-common'
     import RentACarReservationInfo from './RentACarReservationInfo'
     import HotelReservationInfo from './HotelReservationInfo'
+    import FlightReservationInfo from './FlightReservationInfo'
 
     export default {
         name: 'ReservationInfo',
         props: ["reservation"],
         components: {
             RentACarReservationInfo,
-            HotelReservationInfo
+            HotelReservationInfo,
+            FlightReservationInfo
         },
         data() {
             return {

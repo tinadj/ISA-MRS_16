@@ -2,7 +2,6 @@ package org.tim16.booker.dto;
 
 public class FlightReservationDTO {
 
-    private Integer id;
     private Integer flightId;
     private int checked;
     private int carryOn;
@@ -15,8 +14,7 @@ public class FlightReservationDTO {
 
     public FlightReservationDTO() {}
 
-    public FlightReservationDTO(Integer id, Integer flightId, int checked, int carryOn, String firstName, String lastName, String passport, int ticketId) {
-        this.id = id;
+    public FlightReservationDTO( Integer flightId, int checked, int carryOn, String firstName, String lastName, String passport, int ticketId) {
         this.flightId = flightId;
         this.checked = checked;
         this.carryOn = carryOn;
@@ -24,14 +22,6 @@ public class FlightReservationDTO {
         this.lastName = lastName;
         this.passport = passport;
         this.ticketId = ticketId;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Integer getFlightId() {

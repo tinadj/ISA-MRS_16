@@ -4,18 +4,26 @@
       <div id="user-profile-2" class="user-profile">
 			<div class="tab-content no-border padding-24">
 				<div id="home" class="tab-pane in active nina">
-            <div class="row padd">
-              <div class="col-md-7">
-              TICKET ID: {{item.id}}
 
-              PRICE: {{item.price}} - {{item.discount}}% =
-              {{item.price*(100 - item.discount)/100}}
+				<div class="col-md-7">
+                    <div class="row">
+                      <h1> {{flight.departure.substring(11,16)}} - {{flight.arrival.substring(11,16)}}</h1>
+                    </div>
+                    <div class="row">
+                      <h6 class="small-font"> {{flight.departureDestination.city}}  -    {{flight.arrivalDestination.city}}</h6>
+                    </div>
+              </div>
+
+               <div class="col-md-3">
+                  <h1> - {{item.discount}}%</h1> </br >PRICE:  {{item.price*(100 - item.discount)/100}}
+                </div>
+            </div>
+
+
             <div class="profile-info-value">
               <span>
-                  <b-button class="marg" variant="outline-primary">Reserve</b-button>
+                  <b-button class="marg" variant="outline-primary" v-on:click="reserve">Reserve</b-button>
               </span>
-            </div>
-            </div>
           </div>
           </div>
         </div>
@@ -41,11 +49,12 @@ export default {
     },
     mounted() {
     console.log(this.item)
-      let api = '/airlines/ticket/' + this.item.id + "/" + this.$route.params.airline;
+      let api = '/flights/tickets/' + this.item.id;
 	console.log(api)
       AXIOS.get(api)
       .then(response => {
         this.flight = response.data
+        console.log(response.data)
       })
     },
     methods: {
@@ -58,8 +67,33 @@ export default {
 
          reserve: function()
          {
-            let url = this.item.id + "/tickets";
-            this.$router.push(url)
+            const params = {
+                "flightId" : this.flight.id,
+                "checked" : 1,
+                "carryOn" : 1,
+                "firstName" : 'Nikolina',
+                "lastName" : 'Petrovic',
+                "passport" : '0303997',
+                "ticketId" : this.item.id
+                }
+
+                AXIOS.post('flight-reservations/reserve-flight', params)
+                .then(response => {
+                    if (response.status == 200) {
+                        this.success = true
+                    } else if (response.status = 403) {
+                        this.errorMessage = "Ticket is reserved in this period!"
+                        this.error = true
+                    } else {
+                        this.errorMessage = "Something went wrong!"
+                        this.error = true
+                    }
+                })
+                .catch(err => {
+                    this.errorMessage = "Something went wrong!"
+                    this.error = true
+                })
+
          }
     }
 }

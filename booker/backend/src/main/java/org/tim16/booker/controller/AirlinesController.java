@@ -18,6 +18,7 @@ import org.tim16.booker.model.utility.Destination;
 import org.tim16.booker.model.utility.Rate;
 import org.tim16.booker.service.AirlineService;
 import org.tim16.booker.service.DestinationService;
+import org.tim16.booker.service.FlightService;
 import org.tim16.booker.service.RateService;
 
 import javax.persistence.EntityNotFoundException;
@@ -176,11 +177,14 @@ public class AirlinesController {
     public ResponseEntity<Flight> findTicket(@PathVariable Integer id, @PathVariable Integer airline)
     {
         Airline air = service.findOne(airline);
-        Set<Flight> flights = air.getFlights();
+        FlightService fs = new FlightService();
+        List<Flight> flights = fs.findAll();
 
         for(Flight f : flights) {
-            if(f.findTicket(id) != null) {
-                return new ResponseEntity<>(f, HttpStatus.OK);
+            for(Ticket t : f.getTickets()){
+                if(t.getId().equals(id)){
+                    return new ResponseEntity<>(f, HttpStatus.OK);
+                }
             }
         }
 

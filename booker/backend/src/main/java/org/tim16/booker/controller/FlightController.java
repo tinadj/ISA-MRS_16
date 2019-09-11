@@ -375,6 +375,23 @@ public class FlightController {
     /*
     Dobavljanje ocene leta
      */
+    @GetMapping(path = "tickets/{id}")
+    public ResponseEntity<Flight> getFlight(@PathVariable Integer id) {
+        List<Flight> flights = flightService.findAll();
+
+        for(Flight f : flights) {
+            for(Ticket t : f.getTickets()){
+                if(t.getId().equals(id)){
+                    return new ResponseEntity<>(f, HttpStatus.OK);
+                }
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    /*
+    Dobavljanje ocene leta
+     */
     @GetMapping(path = "rating/{id}")
     public ResponseEntity<Float> getRating(@PathVariable Integer id) {
         Flight flight = flightService.findOne(id);
